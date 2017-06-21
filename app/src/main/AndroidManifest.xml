@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="thread.seopftware.mychef">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".IntroActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Login_choose" />
+        <activity android:name=".Login_login" />
+        <activity android:name=".Login_register" />
+        <activity android:name=".Login_register_chef" />
+        <activity
+            android:name=".Home_user"
+            android:label="@string/title_activity_home_user"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Home_chef"
+            android:label="@string/title_activity_home_chef"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Register_chef" />
+        <activity android:name=".Register_chef2" />
+        <activity android:name=".Register_chef3" />
+        <activity android:name=".Register_chef4" />
+        <activity android:name=".Register_chef5" />
+        <activity android:name=".Register_user"></activity>
+    </application>
+
+</manifest>

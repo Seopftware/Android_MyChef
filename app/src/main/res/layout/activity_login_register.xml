@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btnChef"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#5CC0B3"
+        android:drawablePadding="-20dp"
+        android:drawableTop="@drawable/chef"
+        android:onClick="onClickedChef"
+        android:paddingTop="70dp"
+        android:text="요리사로 함께하기"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/btnUser"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#E27C3E"
+        android:onClick="onClickedUser"
+        android:textColor="#FFFFFF"
+        android:paddingTop="70dp"
+        android:drawableTop="@drawable/family"
+        android:drawablePadding="-20dp"
+        android:text="서비스 이용자로 함께하기" />
+
+</LinearLayout>
