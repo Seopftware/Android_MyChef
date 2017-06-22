@@ -1,10 +1,12 @@
 package thread.seopftware.mychef;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 public class Register_chef4 extends AppCompatActivity {
 
@@ -31,5 +33,10 @@ public class Register_chef4 extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClickedNext(View v) {
+        Intent intent=new Intent(getApplicationContext(), Register_chef5.class);
+        startActivity(intent);
     }
 }
