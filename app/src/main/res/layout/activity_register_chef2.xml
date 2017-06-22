@@ -47,8 +47,9 @@
         app:layout_constraintTop_toTopOf="@+id/textView7"
         android:layout_marginTop="49dp" />
 
+
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_RegisterConfirm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#5CC0B3"
@@ -99,6 +100,7 @@
                 android:textSize="13sp" />
 
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -152,6 +154,25 @@
 
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            tools:layout_editor_absoluteY="396dp">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ex) 2016. 7 ~ 2017. 7"
+                android:textSize="10sp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp"
+                android:layout_marginLeft="70dp"/>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -49,6 +49,8 @@ public class Register_chef extends AppCompatActivity {
         Linkify.addLinks(tvLinkify, pattern1, "http://blog.naver.com/manadra", null, mTransform);
         Linkify.addLinks(tvLinkify, pattern2, "http://blog.naver.com/manadra", null, mTransform);
         Linkify.addLinks(tvLinkify, pattern3, "http://blog.naver.com/manadra", null, mTransform);
+
+
     }
 
     //액션바 백키 버튼 구현

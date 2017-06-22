@@ -48,7 +48,7 @@
         android:layout_marginTop="49dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_RegisterConfirm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#5CC0B3"
