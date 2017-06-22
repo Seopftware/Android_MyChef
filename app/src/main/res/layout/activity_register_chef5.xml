@@ -85,7 +85,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:background="#FFFFFF"
-            app:srcCompat="@drawable/user" />
+            app:srcCompat="@drawable/user"
+            android:clickable="true"/>
 
         <TextView
             android:id="@+id/textView10"
