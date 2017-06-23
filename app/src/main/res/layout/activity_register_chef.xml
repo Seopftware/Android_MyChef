@@ -68,9 +68,10 @@
             android:textSize="13sp" />
 
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:id="@+id/ll2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_weight="0.11"
             android:orientation="horizontal">
 
@@ -92,19 +93,28 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:background="#5CC0B3"
-                android:onClick="onClickedEmailCheck"
                 android:text="중복확인"
                 android:textColor="#FFFFFF"
                 android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp"
-            android:paddingTop="10dp">
+            tools:layout_editor_absoluteX="8dp">
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
 
             <EditText
                 android:id="@+id/et_Password"
@@ -118,7 +128,7 @@
                 android:textSize="13sp" />
 
             <EditText
-                android:id="@+id/etPasswordConfirm"
+                android:id="@+id/et_PasswordConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
@@ -129,47 +139,47 @@
                 android:paddingLeft="10dp"
                 android:textSize="13sp" />
 
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.11"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <EditText
+            android:id="@+id/editText11"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittext"
+            android:ems="12"
+            android:hint="휴대폰 번호 입력"
+            android:inputType="number"
+            android:paddingLeft="10dp"
+            android:textSize="13sp" />
+
+            <!--<Button-->
+            <!--android:id="@+id/button10"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:background="#5CC0B3"-->
+            <!--android:text="인증번호"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:textSize="13sp" />-->
+
+            </LinearLayout>
+
             <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="0.11"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:paddingTop="10dp">-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingTop="5dp">-->
 
-                <!--<EditText-->
-                    <!--android:id="@+id/editText11"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="40dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:background="@drawable/edittext"-->
-                    <!--android:ems="12"-->
-                    <!--android:hint="휴대폰 번호 입력"-->
-                    <!--android:inputType="number"-->
-                    <!--android:paddingLeft="10dp"-->
-                    <!--android:textSize="13sp" />-->
-
-                <!--<Button-->
-                    <!--android:id="@+id/button10"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="40dp"-->
-                    <!--android:layout_marginLeft="10dp"-->
-                    <!--android:background="#5CC0B3"-->
-                    <!--android:text="인증번호"-->
-                    <!--android:textColor="#FFFFFF"-->
-                    <!--android:textSize="13sp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:paddingTop="5dp">-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="인증번호를 클릭하시면 인증번호가 발송됩니다. (5 ~ 30초 소요)"-->
-                    <!--android:textSize="10sp"/>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="인증번호를 클릭하시면 인증번호가 발송됩니다. (5 ~ 30초 소요)"-->
+            <!--android:textSize="10sp"/>-->
             <!--</LinearLayout>-->
 
         </LinearLayout>
