@@ -1,11 +1,14 @@
 package thread.seopftware.mychef;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,13 +17,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Register_chef extends AppCompatActivity {
 
+    private static String TAG="Register_chef";
+
+
     EditText et_Name, et_Email, et_Password, et_PasswordConfirm;
     Button btn_EmailCheck;
+    HttpTask task;
+
 
 
     @Override
@@ -67,16 +81,11 @@ public class Register_chef extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String Email=et_Email.getText().toString();
-
-
+                InsertData task=new InsertData();
+                task.execute(Email);
             }
         });
-        LinearLayout ll= (LinearLayout) findViewById(R.id.ll3);
-        TextView tv=new TextView(this);
-        tv.setText(" *사용가능한 아아디 입니다.");
-        tv.setTextSize(10);
-        tv.setTextColor(Color.BLUE);
-        ll.addView(tv);
+
 
     }
 
@@ -100,19 +109,6 @@ public class Register_chef extends AppCompatActivity {
             return;
         }
 
-        // 이메일 입력 안했을 때
-        if(et_Email.getText().toString().length()==0) {
-            Toast.makeText(getApplicationContext(),"이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
-            et_Email.requestFocus();
-            return;
-        }
-
-        // 이메일 정규식 체크
-        if(EmailValid(et_Email.getText().toString())==false) {
-            Toast.makeText(getApplicationContext(), "올바른 E-mail 형식이 아닙니다.\nex)abcd@nova.com", Toast.LENGTH_SHORT).show();
-            et_Email.requestFocus();
-            return;
-        }
 
         // 비밀번호 입력 안했을 때
         if(et_Password.getText().toString().length()==0) {
@@ -166,5 +162,135 @@ public class Register_chef extends AppCompatActivity {
         Pattern pass =Pattern.compile(password1);
         Matcher word= pass.matcher(password);
         return word.matches();
+    }
+
+    // 안드로이드, php 통신
+    class HttpTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    //Email 중복체크
+    class InsertData extends AsyncTask<String, Void, String>{
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(Register_chef.this, "잠시만 기다려 주세요.", null,true,true);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            Log.d("Register_chef", "POST response :" +result);
+
+            // 이메일 입력 안했을 때
+            if(et_Email.getText().toString().length()==0) {
+                Toast.makeText(getApplicationContext(),"이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                et_Email.requestFocus();
+                return;
+            }
+
+            // 이메일 정규식 체크
+            else if(EmailValid(et_Email.getText().toString())==false) {
+                Toast.makeText(getApplicationContext(), "올바른 E-mail 형식이 아닙니다.\nex)abcd@nova.com", Toast.LENGTH_SHORT).show();
+                et_Email.requestFocus();
+                return;
+            } else {
+                if(Integer.parseInt(result)==0) {
+
+                    LinearLayout ll= (LinearLayout) findViewById(R.id.ll3);
+                    TextView tv=new TextView(getApplicationContext());
+                    ll.removeAllViews();
+                    tv.setText(" *사용가능한 아이디 입니다.");
+                    tv.setTextSize(10);
+                    tv.setTextColor(Color.BLUE);
+                    ll.addView(tv);
+
+
+
+                } else if(Integer.parseInt(result)==1) {
+
+                    LinearLayout ll= (LinearLayout) findViewById(R.id.ll3);
+                    TextView tv=new TextView(getApplicationContext());
+                    ll.removeAllViews();
+                    tv.setText(" *이미 존재하는 아이이디 입니다.");
+                   tv.setTextSize(10);
+                    tv.setTextColor(Color.RED);
+                    ll.addView(tv);
+                }
+
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String Email=(String) params[0];
+
+            String serverURL="http://115.71.239.151/emailcheck.php";
+            String postParameters = "Email=" +Email;
+
+            try{
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection=(HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode=httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code :"+responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode==HttpURLConnection.HTTP_OK) {
+                    inputStream=httpURLConnection.getInputStream();
+                } else {
+                    inputStream=httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader=new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
+
+                StringBuilder sb=new StringBuilder();
+                String line=null;
+
+                while((line=bufferedReader.readLine())!=null) {
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString();
+
+                } catch(Exception e) {
+                    Log.d(TAG, "InsertData: Error ", e);
+                    return new String("Error : "+e.getMessage());
+                }
+
+        }
     }
 }
