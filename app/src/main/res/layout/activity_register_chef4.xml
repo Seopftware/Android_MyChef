@@ -48,10 +48,10 @@
         android:layout_marginTop="49dp" />
 
     <Button
-        android:id="@+id/btn_RegisterConfirm"
+        android:id="@+id/btn_Register4Next"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#5CC0B3"
+        android:background="#E06736"
         android:onClick="onClickedNext"
         android:text="다음"
         android:textColor="#FFFFFF"
@@ -75,25 +75,25 @@
         app:layout_constraintTop_toBottomOf="@+id/progressBar3">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/et_Appeal"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/edittext"
             android:ems="10"
-            android:hint="나를 한마디로 표현하면?"
+            android:hint="나를 한마디로 표현하면? (한 문장으로)"
             android:inputType="textPersonName"
             android:paddingLeft="10dp"
             android:textSize="13sp" />
 
         <EditText
-            android:id="@+id/editText10"
+            android:id="@+id/et_Appeal2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext"
-            android:hint="안녕하세요! 요리가 좋아 요리와 결혼한 쉐프 김인섭입니다.\n호텔 메인쉐프 였던 아버지의 피를 물려받아 어릴적 부터 자연스레 요리에 입문하게 되었습니다. 이후 요리 고등학교 졸업 후 영국의 옥스브릿지 대학의 조리학과에 진학하게 되었습니다. 대학교 졸업 후 영구에서 미슐랭 별 3개 짜리의 레스토랑에서 5년간 근무했습니다. 이후 요리만하게 되는 근무 환경에 질리게 되어 독립을 준비하던 중 마이쉐프를 알게되었습니다. 마이쉐프를 통해 제2의 인생을 꿈꾸고 싶습니다. 감사합니다!!"
+            android:hint="자기소개를 입력해 주세요.\n안녕하세요! 요리가 좋아 요리와 결혼한 쉐프 김인섭입니다.\n호텔 메인 주방장 이셨던 아버지의 피를 물려받아 어릴적 부터 자연스레 요리에 입문하게 되었습니다. 이후 요리 고등학교 졸업 후 영국의 옥스브릿지 대학의 조리학과에 진학하게 되었습니다. 대학교 졸업 후 영국에서 미슐랭 별 3개 짜리의 레스토랑에서 5년간 근무했습니다. 이후 요리만하게 되는 근무 환경에 질리게 되어 독립을 준비하던 중 마이쉐프를 알게되었습니다. 마이쉐프를 통해 제2의 인생을 꿈꾸고 싶습니다. 감사합니다!!\n(200자 이내)"
             android:inputType="textMultiLine"
-            android:lines="10"
+            android:lines="12"
             android:paddingLeft="10dp"
             android:textSize="13sp" />
 

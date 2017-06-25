@@ -1,12 +1,16 @@
 package thread.seopftware.mychef;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
@@ -30,12 +34,17 @@ public class Register_chef extends AppCompatActivity {
 
     private static String TAG="Register_chef";
 
+    // SharedPreference에 값 담기=>마지막 액티비티에서 값을 꺼낼 예정
 
-    EditText et_Name, et_Email, et_Password, et_PasswordConfirm;
-    Button btn_EmailCheck;
-    HttpTask task;
+    public static final String REGISTER_CHEF="Register_Chef";
+    public static final String NAME="NameKey";
+    public static final String EMAIL="EmailKey";
+    public static final String PASSWORD="PasswordKey";
+    public static final String PASSWORDCONFIRM="PasswordConfirmKey";
+    public static final String PHONE="PhoneKey";
 
-
+    EditText et_Name, et_Email, et_Password, et_PasswordConfirm, et_Phone;
+    Button btn_EmailCheck, btn_RegisterConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +85,8 @@ public class Register_chef extends AppCompatActivity {
         et_Email= (EditText) findViewById(R.id.et_Email);
         et_Password= (EditText) findViewById(R.id.et_Password);
         et_PasswordConfirm= (EditText) findViewById(R.id.et_PasswordConfirm);
+        et_Phone= (EditText) findViewById(R.id.et_Phone);
+        btn_RegisterConfirm= (Button) findViewById(R.id.btn_RegisterNext);
         btn_EmailCheck= (Button) findViewById(R.id.btn_EmailCheck);
         btn_EmailCheck.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,10 +152,19 @@ public class Register_chef extends AppCompatActivity {
             return;
         }
 
+        // SharedPreference에 값 담기. 마지막 회원가입 화면에서 값 불러들이기
+        SharedPreferences pref=getSharedPreferences(REGISTER_CHEF, MODE_PRIVATE);
+        SharedPreferences.Editor editor=pref.edit();
 
+        editor.putString(NAME, et_Name.getText().toString());
+        editor.putString(EMAIL, et_Email.getText().toString());
+        editor.putString(PASSWORD, et_Password.getText().toString());
+        editor.putString(PASSWORDCONFIRM, et_PasswordConfirm.getText().toString());
+        editor.putString(PHONE, et_Phone.getText().toString());
+        editor.commit();
 
-//        Intent intent=new Intent(getApplicationContext(), Register_chef2.class);
-//        startActivity(intent);
+        Intent intent=new Intent(getApplicationContext(), Register_chef2.class);
+        startActivity(intent);
     }
 
 
@@ -164,25 +184,8 @@ public class Register_chef extends AppCompatActivity {
         return word.matches();
     }
 
-    // 안드로이드, php 통신
-    class HttpTask extends AsyncTask<Void, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
-        @Override
-        protected String doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-    }
-
-    //Email 중복체크
+    // Email 중복체크 (통신: Emailcheck_chef.php)
     class InsertData extends AsyncTask<String, Void, String>{
 
         ProgressDialog progressDialog;
@@ -223,7 +226,35 @@ public class Register_chef extends AppCompatActivity {
                     tv.setTextColor(Color.BLUE);
                     ll.addView(tv);
 
+                    btn_RegisterConfirm.setBackgroundColor(Color.rgb(224,103,54));
+                    btn_RegisterConfirm.setEnabled(true);
 
+                    et_Email.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                            LinearLayout ll= (LinearLayout) findViewById(R.id.ll3);
+                            TextView tv=new TextView(getApplicationContext());
+                            ll.removeAllViews();
+                            tv.setText(" *중복확인 버튼을 눌러주세요.");
+                            tv.setTextSize(10);
+                            tv.setTextColor(Color.RED);
+                            ll.addView(tv);
+                            btn_RegisterConfirm.setBackgroundColor(Color.rgb(189,189,189));
+                            btn_RegisterConfirm.setEnabled(false);
+
+                        }
+                    });
 
                 } else if(Integer.parseInt(result)==1) {
 
@@ -231,11 +262,13 @@ public class Register_chef extends AppCompatActivity {
                     TextView tv=new TextView(getApplicationContext());
                     ll.removeAllViews();
                     tv.setText(" *이미 존재하는 아이이디 입니다.");
-                   tv.setTextSize(10);
+                    tv.setTextSize(10);
                     tv.setTextColor(Color.RED);
                     ll.addView(tv);
-                }
 
+                    btn_RegisterConfirm.setBackgroundColor(Color.rgb(189,189,189));
+                    btn_RegisterConfirm.setEnabled(false);
+                }
             }
         }
 
@@ -244,7 +277,7 @@ public class Register_chef extends AppCompatActivity {
 
             String Email=(String) params[0];
 
-            String serverURL="http://115.71.239.151/emailcheck.php";
+            String serverURL="http://115.71.239.151/emailcheck_chef.php";
             String postParameters = "Email=" +Email;
 
             try{

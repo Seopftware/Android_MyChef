@@ -1,8 +1,11 @@
 package thread.seopftware.mychef;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -10,18 +13,49 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static thread.seopftware.mychef.Register_chef.EMAIL;
+import static thread.seopftware.mychef.Register_chef.NAME;
+import static thread.seopftware.mychef.Register_chef.PASSWORD;
+import static thread.seopftware.mychef.Register_chef.PASSWORDCONFIRM;
+import static thread.seopftware.mychef.Register_chef.PHONE;
+import static thread.seopftware.mychef.Register_chef.REGISTER_CHEF;
+import static thread.seopftware.mychef.Register_chef2.COMPANYDESCRIPTION;
+import static thread.seopftware.mychef.Register_chef2.COMPANYEND;
+import static thread.seopftware.mychef.Register_chef2.COMPANYNAME;
+import static thread.seopftware.mychef.Register_chef2.COMPANYSTART;
+import static thread.seopftware.mychef.Register_chef2.REGISTER_CHEF2;
+import static thread.seopftware.mychef.Register_chef3.CERTIFICATION;
+import static thread.seopftware.mychef.Register_chef3.CERTIFICATION2;
+import static thread.seopftware.mychef.Register_chef3.CERTIFICATION3;
+import static thread.seopftware.mychef.Register_chef3.REGISTER_CHEF3;
+import static thread.seopftware.mychef.Register_chef4.APPEAL;
+import static thread.seopftware.mychef.Register_chef4.APPEAL2;
+import static thread.seopftware.mychef.Register_chef4.REGISTER_CHEF4;
+
 public class Register_chef5 extends AppCompatActivity {
+
+    private static String TAG="Register_chef5";
+
 
     static final int REQUEST_TAKE_PHOTO = 2001;
     static final int REQUEST_TAKE_ALBUM = 2002;
@@ -30,14 +64,20 @@ public class Register_chef5 extends AppCompatActivity {
     ImageView iv_capture;
     String mCurrentPhotoPath;
     Uri photoURI, albumURI;
+    Button btn_RegisterConfirm;
     boolean isAlbum=false;
 
-
+    String Name, Email, Password, PasswordConfirm, Phone;
+    String CompanyName, CompanyStart, CompanyEnd, CompanyDescription;
+    String Certification, Certification2, Certification3;
+    String Appeal, Appeal2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_chef5);
+
+        btn_RegisterConfirm= (Button) findViewById(R.id.btn_RegisterConfirm);
 
         // Toolbar 옵션
         Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
@@ -72,6 +112,32 @@ public class Register_chef5 extends AppCompatActivity {
                dialog.show();
            }
         });
+
+        // Register_1 (회원가입 정보)
+        SharedPreferences pref=getSharedPreferences(REGISTER_CHEF, MODE_PRIVATE);
+        Name=pref.getString(NAME,"");
+        Email=pref.getString(EMAIL,"");
+        Password=pref.getString(PASSWORD,"");
+        PasswordConfirm=pref.getString(PASSWORDCONFIRM,"");
+        Phone=pref.getString(PHONE,"");
+
+        // Register_2 (경력 사항)
+        SharedPreferences pref2=getSharedPreferences(REGISTER_CHEF2, MODE_PRIVATE);
+        CompanyName=pref2.getString(COMPANYNAME,"");
+        CompanyStart=pref2.getString(COMPANYSTART,"");
+        CompanyEnd=pref2.getString(COMPANYEND,"");
+        CompanyDescription=pref2.getString(COMPANYDESCRIPTION,"");
+
+        // Register_3 (자격증 정보)
+        SharedPreferences pref3=getSharedPreferences(REGISTER_CHEF3, MODE_PRIVATE);
+        Certification=pref3.getString(CERTIFICATION,"");
+        Certification2=pref3.getString(CERTIFICATION2,"");
+        Certification3=pref3.getString(CERTIFICATION3,"");
+
+        // Register_4 (본인 소개)
+        SharedPreferences pref4=getSharedPreferences(REGISTER_CHEF4, MODE_PRIVATE);
+        Appeal=pref4.getString(APPEAL,"");
+        Appeal2=pref4.getString(APPEAL2,"");
 
 
     }
@@ -179,6 +245,129 @@ public class Register_chef5 extends AppCompatActivity {
                 photoURI=data.getData();
                 Glide.with(this).load(photoURI).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
                 break;
+        }
+    }
+
+    public void onClickedNext(View v) {
+        // 프로필 사진 등록 안했을 때
+        if(iv_capture.getDrawable()==null) {
+            Toast.makeText(getApplicationContext(),"프로필 사진을 등록해주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent=new Intent(getApplicationContext(), Login_login.class);
+        startActivity(intent);
+        finish();
+
+        String photoString=photoURI.toString();
+        Log.d("사진", "photoURI :"+photoURI);
+        Log.d("사진", "photoString :"+photoString);
+
+//        // db에 값 입력
+//        InsertData task=new InsertData();
+//        task.execute(Name, Email, Password, PasswordConfirm, Phone, CompanyName, CompanyStart, CompanyEnd, CompanyDescription, Certification, Certification2, Certification3, Appeal, Appeal2, photoString);
+//
+//        Intent intent=new Intent(getApplicationContext(), Login_login.class);
+//        startActivity(intent);
+//        finish();
+    }
+
+    class InsertData extends AsyncTask<String, Void, String> {
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(Register_chef5.this, "잠시만 기다려 주세요.", null, true, true);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Register_1 (회원가입)
+            String Name=(String) params[0];
+            String Email=(String) params[1];
+            String Password=(String) params[2];
+            String PasswordConfirm=(String) params[3];
+            String Phone=(String) params[4];
+
+            // Register_2 (경력사항)
+            String CompanyName=(String) params[5];
+            String CompanyStart=(String) params[6];
+            String CompanyEnd=(String) params[7];
+            String CompanyDescription=(String) params[8];
+
+            // Register_3 (자격증 정보)
+            String Certification=(String) params[9];
+            String Certification2=(String) params[10];
+            String Certification3=(String) params[11];
+
+            // Register_4 (본인 소개)
+            String Appeal=(String) params[12];
+            String Appeal2=(String) params[13];
+
+            //Register_5 (프로필)
+            String photoString=(String) params[14];
+
+            String serverURL="http://115.71.239.151/insert.php";
+            String postParameters = "Name=" +Name+" &Email=" +Email;
+
+            try{
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection=(HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode=httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code -"+responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode== HttpURLConnection.HTTP_OK) {
+                    inputStream=httpURLConnection.getInputStream();
+                } else {
+                    inputStream=httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader=new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
+
+                StringBuilder sb=new StringBuilder();
+                String line=null;
+
+                while((line=bufferedReader.readLine())!=null) {
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString();
+
+            } catch (Exception e) {
+                Log.d(TAG, "InsertData: Error ", e);
+                return new String("Error : "+e.getMessage());
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            Log.d(TAG, "POST response :" +result);
+
         }
     }
 }

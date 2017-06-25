@@ -19,10 +19,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btn_RegisterConfirm"
+        android:id="@+id/btn_RegisterNext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#5CC0B3"
+        android:background="#BDBDBD"
         android:onClick="onClickedNext"
         android:text="완료"
         android:textColor="#FFFFFF"
@@ -34,10 +34,11 @@
         android:id="@+id/firsttitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_RegisterConfirm"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_RegisterNext" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -92,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
-                android:background="#5CC0B3"
+                android:background="#E06736"
                 android:text="중복확인"
                 android:textColor="#FFFFFF"
                 android:textSize="13sp" />
@@ -103,9 +104,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:layout_editor_absoluteY="8dp"
-            tools:layout_editor_absoluteX="8dp">
-        </LinearLayout>
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp"></LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll"
@@ -140,33 +140,33 @@
                 android:textSize="13sp" />
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.11"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.11"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
-            <EditText
-            android:id="@+id/editText11"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@drawable/edittext"
-            android:ems="12"
-            android:hint="휴대폰 번호 입력"
-            android:inputType="number"
-            android:paddingLeft="10dp"
-            android:textSize="13sp" />
+                <EditText
+                    android:id="@+id/et_Phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext"
+                    android:ems="12"
+                    android:hint="휴대폰 번호 입력 (-,/ 기호 제외, 번호만 입력)"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:textSize="13sp" />
 
-            <!--<Button-->
-            <!--android:id="@+id/button10"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:background="#5CC0B3"-->
-            <!--android:text="인증번호"-->
-            <!--android:textColor="#FFFFFF"-->
-            <!--android:textSize="13sp" />-->
+                <!--<Button-->
+                <!--android:id="@+id/button10"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:background="#5CC0B3"-->
+                <!--android:text="인증번호"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="13sp" />-->
 
             </LinearLayout>
 

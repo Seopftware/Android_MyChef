@@ -27,7 +27,7 @@ public class Login_choose extends AppCompatActivity {
     }
 
     public void onClickedLogin(View v) {
-        Intent intent=new Intent(getApplicationContext(), Home_chef.class);
+        Intent intent=new Intent(getApplicationContext(), Login_login.class);
         startActivity(intent);
     }
 }

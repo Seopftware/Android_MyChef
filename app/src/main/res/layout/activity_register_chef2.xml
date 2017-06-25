@@ -49,10 +49,10 @@
 
 
     <Button
-        android:id="@+id/btn_RegisterConfirm"
+        android:id="@+id/btn_Register2Next"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#5CC0B3"
+        android:background="#E06736"
         android:onClick="onClickedNext"
         android:text="다음"
         android:textColor="#FFFFFF"
@@ -88,7 +88,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/et_CompanyName"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
@@ -117,7 +117,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/edtSDate"
+                android:id="@+id/et_CompanyStart"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
@@ -141,7 +141,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/edtDate"
+                android:id="@+id/et_CompanyEnd"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
@@ -189,7 +189,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/edtWork"
+                android:id="@+id/et_CompanyDescription"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_marginLeft="10dp"
@@ -197,7 +197,7 @@
                 android:background="@drawable/edittext"
                 android:ellipsize="end"
                 android:ems="20"
-                android:hint="주요 업무를 소개해주세요."
+                android:hint="주요 업무를 소개해주세요. (120자 이내)"
                 android:inputType="textMultiLine"
                 android:maxLines="4"
                 android:paddingLeft="10dp"

@@ -19,7 +19,7 @@ public class Login_login extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setTitle("요리 실력 어필");
+        actionBar.setTitle("로그인");
     }
 
     //액션바 빽키 구현
