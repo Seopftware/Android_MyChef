@@ -100,14 +100,14 @@
             android:textSize="10sp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="-8dp"
-        android:layout_marginRight="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_capture"
-        app:layout_constraintRight_toRightOf="@+id/iv_capture"
-        app:srcCompat="@drawable/camera" />
+    <!--<ImageView-->
+        <!--android:id="@+id/imageView4"-->
+        <!--android:layout_width="25dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_marginBottom="-8dp"-->
+        <!--android:layout_marginRight="0dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/iv_capture"-->
+        <!--app:layout_constraintRight_toRightOf="@+id/iv_capture"-->
+        <!--app:srcCompat="@drawable/camera" />-->
 
 </android.support.constraint.ConstraintLayout>
