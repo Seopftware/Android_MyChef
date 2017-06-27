@@ -30,6 +30,9 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static thread.seopftware.mychef.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login_choose.KAKAO_LOGINCHECK;
+
 public class Register_chef extends AppCompatActivity {
 
     private static String TAG="Register_chef";
@@ -41,10 +44,13 @@ public class Register_chef extends AppCompatActivity {
     public static final String EMAIL="EmailKey";
     public static final String PASSWORD="PasswordKey";
     public static final String PASSWORDCONFIRM="PasswordConfirmKey";
+    public static final String FBIDKEY="FBIDKey";
     public static final String PHONE="PhoneKey";
 
     EditText et_Name, et_Email, et_Password, et_PasswordConfirm, et_Phone;
     Button btn_EmailCheck, btn_RegisterConfirm;
+
+    String Password, PasswordConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,33 @@ public class Register_chef extends AppCompatActivity {
         Linkify.addLinks(tvLinkify, pattern2, "http://blog.naver.com/manadra", null, mTransform);
         Linkify.addLinks(tvLinkify, pattern3, "http://blog.naver.com/manadra", null, mTransform);
 
+        Log.d("TAG","FB_LOGINCHECK :" + FB_LOGINCHECK);
+        Log.d("TAG","KAKAO_LOGINCHECK :" + KAKAO_LOGINCHECK);
+
+        if(FB_LOGINCHECK!=null) {
+            Log.d("TAG","FB_LOGINCHECK :" + FB_LOGINCHECK);
+
+            // 1. 비번입력 받는 edit_text 지우기.
+            LinearLayout ll= (LinearLayout) findViewById(R.id.ll);
+            ll.removeAllViews();
+
+            // 2. 비빈 입력받는 edit_text에 기본 비밀번호 설정해주기
+            Password="1q2w3e4r#";
+            PasswordConfirm="1q2w3e4r#";
+
+        } else if(KAKAO_LOGINCHECK!=null) {
+            Log.d("TAG","KAKAO_LOGINCHECK :" + KAKAO_LOGINCHECK);
+
+            // 1. 비번입력 받는 edit_text 지우기.
+            LinearLayout ll= (LinearLayout) findViewById(R.id.ll);
+            ll.removeAllViews();
+
+            // 2. 비빈 입력받는 edit_text에 기본 비밀번호 설정해주기
+            Password="1q2w3e4r#";
+            PasswordConfirm="1q2w3e4r#";
+        }
+
+
         et_Name= (EditText) findViewById(R.id.et_Name);
         et_Email= (EditText) findViewById(R.id.et_Email);
         et_Password= (EditText) findViewById(R.id.et_Password);
@@ -113,58 +146,99 @@ public class Register_chef extends AppCompatActivity {
 
     public void onClickedNext(View V) {
 
-        // 이름 입력 안했을 때
-        if(et_Name.getText().toString().length()==0) {
-            Toast.makeText(getApplicationContext(),"이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
-            et_Name.requestFocus();
-            return;
+        // 앱을 통한 회원가입을 했을 때
+        if (FB_LOGINCHECK == null && KAKAO_LOGINCHECK == null) {
+
+            // 이름 입력 안했을 때
+            if (et_Name.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                et_Name.requestFocus();
+                return;
+            }
+
+            // 비밀번호 입력 안했을 때
+            if (et_Password.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), "Password를 입력하세요!", Toast.LENGTH_SHORT).show();
+                et_Password.requestFocus();
+                return;
+            }
+
+            // 비밀번호 정규식 체크
+            if (PasswordValid(et_Password.getText().toString()) == false) {
+                Toast.makeText(getApplicationContext(), "비밀번호는 '특수문자'를 포함하여 '여덟 글자 이상'을 입력하셔야 합니다.", Toast.LENGTH_SHORT).show();
+                et_Password.requestFocus();
+                return;
+            }
+
+            // 비밀번호 확인 입력 안했을 때
+            if (et_PasswordConfirm.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), "PasswordConfirm를 입력하세요!", Toast.LENGTH_SHORT).show();
+                et_PasswordConfirm.requestFocus();
+                return;
+
+            }
+
+            // 비밀번호 일치하지 않을 때
+            if (!et_Password.getText().toString().equals(et_PasswordConfirm.getText().toString())) {
+                Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                et_Password.setText("");
+                et_PasswordConfirm.setText("");
+                et_PasswordConfirm.requestFocus();
+                return;
+            }
+
+            // SharedPreference에 값 담기. 마지막 회원가입 화면에서 값 불러들이기
+            SharedPreferences pref = getSharedPreferences(REGISTER_CHEF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+
+            editor.putString(NAME, et_Name.getText().toString());
+            editor.putString(EMAIL, et_Email.getText().toString());
+            editor.putString(PASSWORD, et_Password.getText().toString());
+            editor.putString(PASSWORDCONFIRM, et_PasswordConfirm.getText().toString());
+            editor.putString(PHONE, et_Phone.getText().toString());
+            editor.commit();
+
+            Intent intent = new Intent(getApplicationContext(), Register_chef2.class);
+            startActivity(intent);
+
+        } else { // API를 통한 회원가입을 했을 때
+
+            // 이름 입력 안했을 때
+            if (et_Name.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                et_Name.requestFocus();
+                return;
+            }
+
+            // 이메일 입력 안했을 때
+            if (et_Email.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                et_Email.requestFocus();
+                return;
+            }
+
+            // 폰 번호 입력 안했을 때
+            if (et_Phone.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), "폰번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                et_Phone.requestFocus();
+                return;
+            }
+
+            // SharedPreference에 값 담기. 마지막 회원가입 화면에서 값 불러들이기
+            SharedPreferences pref = getSharedPreferences(REGISTER_CHEF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+
+            editor.putString(NAME, et_Name.getText().toString());
+            editor.putString(EMAIL, et_Email.getText().toString());
+            editor.putString(PASSWORD, Password);
+            editor.putString(PASSWORDCONFIRM, PasswordConfirm);
+            editor.putString(PHONE, et_Phone.getText().toString());
+            editor.putString(FBIDKEY, FB_LOGINCHECK);
+            editor.commit();
+
+            Intent intent = new Intent(getApplicationContext(), Register_chef2.class);
+            startActivity(intent);
         }
-
-
-        // 비밀번호 입력 안했을 때
-        if(et_Password.getText().toString().length()==0) {
-            Toast.makeText(getApplicationContext(), "Password를 입력하세요!", Toast.LENGTH_SHORT).show();
-            et_Password.requestFocus();
-            return;
-        }
-
-        // 비밀번호 정규식 체크
-        if(PasswordValid(et_Password.getText().toString())==false) {
-            Toast.makeText(getApplicationContext(), "비밀번호는 '특수문자'를 포함하여 '여덟 글자 이상'을 입력하셔야 합니다.", Toast.LENGTH_SHORT).show();
-            et_Password.requestFocus();
-            return;
-        }
-
-        // 비밀번호 확인 입력 안했을 때
-        if(et_PasswordConfirm.getText().toString().length()==0) {
-            Toast.makeText(getApplicationContext(), "PasswordConfirm를 입력하세요!", Toast.LENGTH_SHORT).show();
-            et_PasswordConfirm.requestFocus();
-            return;
-
-        }
-
-        // 비밀번호 일치하지 않을 때
-        if(!et_Password.getText().toString().equals(et_PasswordConfirm.getText().toString())) {
-            Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-            et_Password.setText("");
-            et_PasswordConfirm.setText("");
-            et_PasswordConfirm.requestFocus();
-            return;
-        }
-
-        // SharedPreference에 값 담기. 마지막 회원가입 화면에서 값 불러들이기
-        SharedPreferences pref=getSharedPreferences(REGISTER_CHEF, MODE_PRIVATE);
-        SharedPreferences.Editor editor=pref.edit();
-
-        editor.putString(NAME, et_Name.getText().toString());
-        editor.putString(EMAIL, et_Email.getText().toString());
-        editor.putString(PASSWORD, et_Password.getText().toString());
-        editor.putString(PASSWORDCONFIRM, et_PasswordConfirm.getText().toString());
-        editor.putString(PHONE, et_Phone.getText().toString());
-        editor.commit();
-
-        Intent intent=new Intent(getApplicationContext(), Register_chef2.class);
-        startActivity(intent);
     }
 
 

@@ -255,9 +255,16 @@ public class Register_chef5 extends AppCompatActivity {
             return;
         }
 
+//        SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
+//        SharedPreferences.Editor editor=autologin.edit();
+//        editor.putString("Email", Email);
+//        editor.putInt("Status", 1);
+
         Intent intent=new Intent(getApplicationContext(), Login_login.class);
         startActivity(intent);
         finish();
+
+        Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_SHORT).show();
 
         String photoString=photoURI.toString();
         Log.d("사진", "photoURI :"+photoURI);

@@ -72,10 +72,10 @@
             <!--android:layout_weight="1"-->
             <!--android:text="페이스북 로그인 api" />-->
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
@@ -107,6 +107,35 @@
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.facebook.login.widget.LoginButton
+                android:layout_marginTop="10dp"
+                android:id="@+id/fb_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:paddingTop="17dp"
+                android:paddingBottom="17dp"
+                android:textAlignment="center"
+                android:textSize="18sp"/>
+
+            <com.kakao.usermgmt.LoginButton
+                android:id="@+id/kakao_login_button"
+                android:layout_width="345dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -8,4 +8,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_home_user">Home_user</string>
     <string name="title_activity_home_chef">Home_chef</string>
+
+    //fb login api
+    <string name="facebook_app_id">1294099240688266</string>
+    <string name="kakao_app_key">54bfa137c740f8dabb8f928ec4c141fe</string>
+
+
 </resources>

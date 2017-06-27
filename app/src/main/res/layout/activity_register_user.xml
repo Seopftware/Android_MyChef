@@ -105,18 +105,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp"></LinearLayout>
+            tools:layout_editor_absoluteY="8dp">
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
             <EditText
+                android:layout_marginTop="10dp"
                 android:id="@+id/et_Password"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -139,36 +141,38 @@
                 android:paddingLeft="10dp"
                 android:textSize="13sp" />
 
-            <LinearLayout
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LL4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.11"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <EditText
+                android:id="@+id/et_Phone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.11"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/edittext"
+                android:ems="12"
+                android:hint="휴대폰 번호 입력 (- , / 기호 제외, 번호만 입력)"
+                android:inputType="number"
+                android:paddingLeft="10dp"
+                android:textSize="13sp" />
 
-                <EditText
-                    android:id="@+id/et_Phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/edittext"
-                    android:ems="12"
-                    android:hint="휴대폰 번호 입력 (-,/ 기호 제외, 번호만 입력)"
-                    android:inputType="number"
-                    android:paddingLeft="10dp"
-                    android:textSize="13sp" />
 
-                <!--<Button-->
-                <!--android:id="@+id/button10"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_marginLeft="10dp"-->
-                <!--android:background="#5CC0B3"-->
-                <!--android:text="인증번호"-->
-                <!--android:textColor="#FFFFFF"-->
-                <!--android:textSize="13sp" />-->
-
-            </LinearLayout>
+            <!--<Button-->
+            <!--android:id="@+id/button10"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:background="#5CC0B3"-->
+            <!--android:text="인증번호"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:textSize="13sp" />-->
 
             <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->
@@ -183,6 +187,6 @@
             <!--</LinearLayout>-->
 
         </LinearLayout>
-
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
