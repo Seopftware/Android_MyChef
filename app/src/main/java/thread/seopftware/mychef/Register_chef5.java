@@ -33,7 +33,12 @@ import java.net.URL;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static thread.seopftware.mychef.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login_choose.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Register_chef.CURRENTTIME;
 import static thread.seopftware.mychef.Register_chef.EMAIL;
+import static thread.seopftware.mychef.Register_chef.FB_ID;
+import static thread.seopftware.mychef.Register_chef.KAKAO_ID;
 import static thread.seopftware.mychef.Register_chef.NAME;
 import static thread.seopftware.mychef.Register_chef.PASSWORD;
 import static thread.seopftware.mychef.Register_chef.PASSWORDCONFIRM;
@@ -68,6 +73,7 @@ public class Register_chef5 extends AppCompatActivity {
     boolean isAlbum=false;
 
     String Name, Email, Password, PasswordConfirm, Phone;
+    String Fbapi, Kakaoapi, CurrentTime;
     String CompanyName, CompanyStart, CompanyEnd, CompanyDescription;
     String Certification, Certification2, Certification3;
     String Appeal, Appeal2;
@@ -120,6 +126,10 @@ public class Register_chef5 extends AppCompatActivity {
         Password=pref.getString(PASSWORD,"");
         PasswordConfirm=pref.getString(PASSWORDCONFIRM,"");
         Phone=pref.getString(PHONE,"");
+        Fbapi=pref.getString(FB_ID,"null");
+        Kakaoapi=pref.getString(KAKAO_ID,"null");
+        CurrentTime=pref.getString(CURRENTTIME, "");
+
 
         // Register_2 (경력 사항)
         SharedPreferences pref2=getSharedPreferences(REGISTER_CHEF2, MODE_PRIVATE);
@@ -131,18 +141,17 @@ public class Register_chef5 extends AppCompatActivity {
         // Register_3 (자격증 정보)
         SharedPreferences pref3=getSharedPreferences(REGISTER_CHEF3, MODE_PRIVATE);
         Certification=pref3.getString(CERTIFICATION,"");
-        Certification2=pref3.getString(CERTIFICATION2,"");
-        Certification3=pref3.getString(CERTIFICATION3,"");
+        Certification2=pref3.getString(CERTIFICATION2,"null");
+        Certification3=pref3.getString(CERTIFICATION3,"null");
 
         // Register_4 (본인 소개)
         SharedPreferences pref4=getSharedPreferences(REGISTER_CHEF4, MODE_PRIVATE);
         Appeal=pref4.getString(APPEAL,"");
         Appeal2=pref4.getString(APPEAL2,"");
 
-
     }
 
-    // Toolbar 빽키 구현ddaasd
+    // Toolbar 빽키 구현
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
@@ -255,25 +264,21 @@ public class Register_chef5 extends AppCompatActivity {
             return;
         }
 
-//        SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
-//        SharedPreferences.Editor editor=autologin.edit();
-//        editor.putString("Email", Email);
-//        editor.putInt("Status", 1);
-
-        Intent intent=new Intent(getApplicationContext(), Login_login.class);
-        startActivity(intent);
-        finish();
-
-        Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_SHORT).show();
+//        Intent intent=new Intent(getApplicationContext(), Home_chef.class);
+//        startActivity(intent);
+//        finish();
+//        Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_SHORT).show();
 
         String photoString=photoURI.toString();
         Log.d("사진", "photoURI :"+photoURI);
         Log.d("사진", "photoString :"+photoString);
 
-//        // db에 값 입력
-//        InsertData task=new InsertData();
-//        task.execute(Name, Email, Password, PasswordConfirm, Phone, CompanyName, CompanyStart, CompanyEnd, CompanyDescription, Certification, Certification2, Certification3, Appeal, Appeal2, photoString);
-//
+        // db에 값 입력
+        InsertData task=new InsertData();
+//        task.execute(Name, Email, Password, PasswordConfirm, Phone, Fbapi, Kakaoapi, CurrentTime, CompanyName, CompanyStart, CompanyEnd, CompanyDescription, Certification, Certification2, Certification3, Appeal, Appeal2, photoString);
+        task.execute(Name, Email, Password, PasswordConfirm, Phone, Fbapi, Kakaoapi, CurrentTime, Appeal, Appeal2, photoString);
+        //회원가입과 동시에 shared에 저장되어 있는 모든 값 날리기 edtitor.clear();
+
 //        Intent intent=new Intent(getApplicationContext(), Login_login.class);
 //        startActivity(intent);
 //        finish();
@@ -299,28 +304,42 @@ public class Register_chef5 extends AppCompatActivity {
             String Password=(String) params[2];
             String PasswordConfirm=(String) params[3];
             String Phone=(String) params[4];
+            String Api_Id=(String) params[5];
+            String Kakao_Id=(String) params[6];
+            String CurrentTime=(String) params[7];
 
-            // Register_2 (경력사항)
-            String CompanyName=(String) params[5];
-            String CompanyStart=(String) params[6];
-            String CompanyEnd=(String) params[7];
-            String CompanyDescription=(String) params[8];
+            Log.d(TAG, "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime);
 
-            // Register_3 (자격증 정보)
-            String Certification=(String) params[9];
-            String Certification2=(String) params[10];
-            String Certification3=(String) params[11];
+//            // Register_2 (경력사항)
+//            String CompanyName=(String) params[8];
+//            String CompanyStart=(String) params[9];
+//            String CompanyEnd=(String) params[10];
+//            String CompanyDescription=(String) params[11];
+//
+//            Log.d(TAG, "CompanyName : "+CompanyName+"CompanyStart : "+CompanyStart+"CompanyEnd : "+CompanyEnd+"CompanyDescription : "+CompanyDescription);
+
+//            // Register_3 (자격증 정보)
+//            String Certification=(String) params[8];
+//            String Certification2=(String) params[9];
+//            String Certification3=(String) params[10];
+//
+//            Log.d(TAG,"Certification : "+Certification+"Certification2 : "+Certification2+"Certification3 : "+Certification3);
 
             // Register_4 (본인 소개)
-            String Appeal=(String) params[12];
-            String Appeal2=(String) params[13];
+            String Appeal=(String) params[8];
+            String Appeal2=(String) params[9];
+
+            Log.d(TAG, "Appeal : "+Appeal+"Appeal 2: "+Appeal2);
 
             //Register_5 (프로필)
-            String photoString=(String) params[14];
+            String photoString=(String) params[10];
 
-            String serverURL="http://115.71.239.151/insert.php";
-            String postParameters = "Name=" +Name+" &Email=" +Email;
+            Log.d(TAG, "photoString : "+photoString);
 
+            String serverURL="http://115.71.239.151/register_chef.php";
+//            String postParameters = "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime+" &Certification="+Certification+" &Certification2="+Certification2+" &Certification3="+Certification3+" &Appeal="+Appeal+" &Appeal2="+Appeal2+" &photoString="+photoString;
+            String postParameters = "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime+" &Appeal="+Appeal+" &Appeal2="+Appeal2+" &photoString="+photoString;
+            Log.d(TAG, "postParameters : "+postParameters);
             try{
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection=(HttpURLConnection) url.openConnection();
@@ -374,6 +393,39 @@ public class Register_chef5 extends AppCompatActivity {
 
             progressDialog.dismiss();
             Log.d(TAG, "POST response :" +result);
+
+            if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
+            {
+                if(Integer.parseInt(result)==0) {
+                    Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+
+                    Intent intent=new Intent(Register_chef5.this, Login_login.class);
+                    startActivity(intent);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    finish();
+
+                } else if (Integer.parseInt(result)==1) {
+                    Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+            } else {
+                if(Integer.parseInt(result)==0) {
+                    Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+
+                    Intent intent=new Intent(Register_chef5.this, Home_chef.class);
+                    startActivity(intent);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    finish();
+
+                } else if (Integer.parseInt(result)==1) {
+                    Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+            }
+
+
 
         }
     }

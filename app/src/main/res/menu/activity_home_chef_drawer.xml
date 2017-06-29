@@ -3,35 +3,36 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:id="@+id/nav_orderlist"
+            android:icon="@drawable/orderlist"
             android:title="주문 현황" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:id="@+id/nav_menu"
+            android:icon="@drawable/menu"
             android:title="메뉴 관리" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/chat"
             android:title="1:1 문의현황" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:id="@+id/nav_account"
+            android:icon="@drawable/account"
             android:title="프로필 설정" />
-        <item
-            android:id="@+id/nav_maage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="고객센터" />
+
     </group>
 
     <item android:title="Settings">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:id="@+id/nav_call"
+                android:icon="@drawable/info"
+                android:title="고객센터" />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_menu_manage"
                 android:title="환경설정" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"
                 android:title="로그아웃" />
         </menu>

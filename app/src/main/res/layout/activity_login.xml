@@ -49,25 +49,27 @@
                 android:text="로그인 모드" />
 
             <RadioGroup
+                android:id="@+id/rg_Choose"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="쉐프"
-                    android:checked="true"/>
+                    android:checked="true"
+                    android:text="user" />
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/chef"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="서비스 이용자" />
+                    android:text="chef" />
+
             </RadioGroup>
         </LinearLayout>
 

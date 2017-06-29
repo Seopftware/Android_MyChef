@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class Register_chef4 extends AppCompatActivity {
+
+    private static String TAG="Register_chef4";
+
 
     public static final String REGISTER_CHEF4="Register_Chef4";
     public static final String APPEAL="APPEALKey";
@@ -73,6 +77,8 @@ public class Register_chef4 extends AppCompatActivity {
         editor.putString(APPEAL, et_Appeal.getText().toString());
         editor.putString(APPEAL2, et_Appeal2.getText().toString());
         editor.commit();
+
+        Log.d(TAG, "appeal: "+et_Appeal.getText().toString()+" appeal 2:"+et_Appeal2.getText().toString());
 
         Intent intent=new Intent(getApplicationContext(), Register_chef5.class);
         startActivity(intent);

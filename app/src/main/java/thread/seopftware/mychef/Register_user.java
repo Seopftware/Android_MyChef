@@ -2,6 +2,7 @@ package thread.seopftware.mychef;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,8 +32,14 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static thread.seopftware.mychef.Login_choose.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login_choose.FBEMAIL;
+import static thread.seopftware.mychef.Login_choose.FBNAME;
 import static thread.seopftware.mychef.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login_choose.KAEMAIL;
+import static thread.seopftware.mychef.Login_choose.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login_choose.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Login_choose.KANAME;
 
 public class Register_user extends AppCompatActivity {
 
@@ -57,6 +64,7 @@ public class Register_user extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
+
 
         //액션바 설정 부분
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,30 +99,6 @@ public class Register_user extends AppCompatActivity {
         Log.d("TAG","FB_LOGINCHECK :" + FB_LOGINCHECK);
         Log.d("TAG","KAKAO_LOGINCHECK :" + KAKAO_LOGINCHECK);
 
-        if(FB_LOGINCHECK!=null) {
-            Log.d("TAG","FB_LOGINCHECK :" + FB_LOGINCHECK);
-
-            // 1. 비번입력 받는 edit_text 지우기.
-            LinearLayout ll= (LinearLayout) findViewById(R.id.ll);
-            ll.removeAllViews();
-
-            // 2. 비빈 입력받는 edit_text에 기본 비밀번호 설정해주기
-            Password="1q2w3e4r#";
-            PasswordConfirm="1q2w3e4r#";
-
-        } else if(KAKAO_LOGINCHECK!=null) {
-            Log.d("TAG","KAKAO_LOGINCHECK :" + KAKAO_LOGINCHECK);
-
-            // 1. 비번입력 받는 edit_text 지우기.
-            LinearLayout ll= (LinearLayout) findViewById(R.id.ll);
-            ll.removeAllViews();
-
-            // 2. 비빈 입력받는 edit_text에 기본 비밀번호 설정해주기
-            Password="1q2w3e4r#";
-            PasswordConfirm="1q2w3e4r#";
-        }
-
-
         et_Name= (EditText) findViewById(R.id.et_Name);
         et_Email= (EditText) findViewById(R.id.et_Email);
         et_Password= (EditText) findViewById(R.id.et_Password);
@@ -130,6 +114,46 @@ public class Register_user extends AppCompatActivity {
                 task.execute(Email);
             }
         });
+
+        if (FB_LOGINCHECK != null) {
+            Log.d("TAG", "FB_LOGINCHECK :" + FB_LOGINCHECK);
+
+            // 1. 비번입력 받는 edit_text 지우기.
+            LinearLayout ll = (LinearLayout) findViewById(R.id.ll);
+            ll.removeAllViews();
+
+            // 2. 비빈 입력받는 edit_text에 기본 비밀번호 설정해주기
+            Password = "1q2w3e4r#";
+            PasswordConfirm = "1q2w3e4r#";
+
+            SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+            String fbname=pref.getString(FBNAME, "");
+            String fbemail=pref.getString(FBEMAIL, "");
+
+            Log.d(TAG, "fbname : "+fbname);
+            Log.d(TAG, "fbemail : "+fbemail);
+
+            et_Name.setText(fbname);
+            et_Email.setText(fbemail);
+
+        } else if (KAKAO_LOGINCHECK != null) {
+            Log.d("TAG", "KAKAO_LOGINCHECK :" + KAKAO_LOGINCHECK);
+
+            // 1. 비번입력 받는 edit_text 지우기.
+            LinearLayout ll = (LinearLayout) findViewById(R.id.ll);
+            ll.removeAllViews();
+
+            // 2. 비빈 입력받는 edit_text에 기본 비밀번호 설정해주기
+            Password = "1q2w3e4r#";
+            PasswordConfirm = "1q2w3e4r#";
+
+            SharedPreferences pref = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+            String kaname=pref.getString(KANAME, "");
+            String kaemail=pref.getString(KAEMAIL, "");
+
+            et_Name.setText(kaname);
+            et_Email.setText(kaemail);
+        }
 
     }
 
@@ -193,6 +217,8 @@ public class Register_user extends AppCompatActivity {
             String Phone=et_Phone.getText().toString();
             String Password=et_Password.getText().toString();
             String PasswordConfirm=et_PasswordConfirm.getText().toString();
+            String Api_Id=FB_LOGINCHECK;
+            String Kakao_Id=KAKAO_LOGINCHECK;
 
             // 가입시간 db에 기록
             long now=System.currentTimeMillis();
@@ -202,7 +228,7 @@ public class Register_user extends AppCompatActivity {
 
             //db에 회원가입 정보 삽입
             InsertData1 task=new InsertData1();
-            task.execute(Name, Email, Password, PasswordConfirm, Phone, CurrentTime);
+            task.execute(Name, Email, Password, PasswordConfirm, Phone, Api_Id, Kakao_Id, CurrentTime);
 
         } else { // API를 통한 회원가입을 했을 때
 
@@ -234,6 +260,7 @@ public class Register_user extends AppCompatActivity {
             String Password=PasswordConfirm;
             String PasswordConfirm=Password;
             String Api_Id=FB_LOGINCHECK;
+            String Kakao_Id=KAKAO_LOGINCHECK;
 
             // 가입시간 db에 기록
             long now=System.currentTimeMillis();
@@ -243,23 +270,9 @@ public class Register_user extends AppCompatActivity {
 
             //db에 회원가입 정보 삽입
             InsertData1 task=new InsertData1();
-            task.execute(Name, Email, Password, PasswordConfirm, Phone, Api_Id, CurrentTime);
+            task.execute(Name, Email, Password, PasswordConfirm, Phone, Api_Id, Kakao_Id, CurrentTime);
         }
 
-
-
-/*
-        // SharedPreference에 값 담기. 마지막 회원가입 화면에서 값 불러들이기
-        SharedPreferences pref=getSharedPreferences(REGISTER_USER, MODE_PRIVATE);
-        SharedPreferences.Editor editor=pref.edit();
-
-        editor.putString(USERNAME, et_Name.getText().toString());
-        editor.putString(USEREMAIL, et_Email.getText().toString());
-        editor.putString(USERPASSWORD, et_Password.getText().toString());
-        editor.putString(USERPASSWORDCONFIRM, et_PasswordConfirm.getText().toString());
-        editor.putString(USERPHONE, et_Phone.getText().toString());
-        editor.commit();
-*/
     }
 
     // 정규식을 이용한 이메일 형식 체크
@@ -441,12 +454,13 @@ public class Register_user extends AppCompatActivity {
             String PasswordConfirm=(String) params[3];
             String Phone=(String) params[4];
             String Api_Id=(String) params[5];
-            String CurrentTime=(String) params[6];
+            String Kakao_Id=(String) params[6];
+            String CurrentTime=(String) params[7];
 
-            Log.d(TAG, "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &CurrentTime="+CurrentTime);
-            Log.d(TAG, "Api_Id: "+Api_Id);
+            Log.d(TAG, "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime);
+
             String serverURL="http://115.71.239.151/register_user.php";
-            String postParameters = "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &CurrentTime="+CurrentTime;
+            String postParameters = "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime;
 
             try{
                 URL url = new URL(serverURL);
@@ -504,9 +518,19 @@ public class Register_user extends AppCompatActivity {
             if(Integer.parseInt(result)==0) {
                 Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
 
-                Intent intent=new Intent(Register_user.this, Home_user.class);
-                startActivity(intent);
-                finish();
+                if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) {
+                    Intent intent=new Intent(Register_user.this, Login_login.class);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+                    Intent intent=new Intent(Register_user.this, Home_user.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+
+
             } else if (Integer.parseInt(result)==1) {
                 Toast.makeText(getApplicationContext(), "error 발생", Toast.LENGTH_SHORT).show();
                 return;

@@ -1,20 +1,35 @@
 package thread.seopftware.mychef;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.facebook.login.LoginManager;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+
+import static thread.seopftware.mychef.Login_choose.AUTOLOGIN;
+import static thread.seopftware.mychef.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login_choose.KAKAO_LOGINCHECK;
 
 public class Home_chef extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private BackPressCloseHandler backPressCloseHandler; // 백키 구현
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +37,12 @@ public class Home_chef extends AppCompatActivity
         setContentView(R.layout.activity_home_chef);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setTitle("MyChef");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,17 +101,51 @@ public class Home_chef extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_orderlist) { // 1. 주문현황
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_menu) { // 2. 메뉴 관리
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_chat) { // 3. 1:1 문의 현황
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_account) { // 4. 프로필 설정
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_call) { // 5.고객센터
+
+        } else if (id == R.id.nav_settings) { // 6.환경설정
+
+        } else if (id == R.id.nav_logout)  { // 7. 로그아웃
+
+            SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor=autologin.edit();
+            editor.clear();
+            editor.commit();
+            finish();
+
+            if(KAKAO_LOGINCHECK!=null) {
+                //카카오톡 로그아웃
+                UserManagement.requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onCompleteLogout() {
+                        Intent intent=new Intent(getApplicationContext(), Login_choose.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+
+            else if(FB_LOGINCHECK!=null) {
+                //페이스북 로그아웃
+                LoginManager.getInstance().logOut();
+                Intent intent=new Intent(getApplicationContext(), Login_choose.class);
+                startActivity(intent);
+                finish();
+            }
+
+            else {
+                Intent intent=new Intent(getApplicationContext(), Login_choose.class);
+                startActivity(intent);
+                finish();
+            }
 
         }
 
@@ -98,4 +153,5 @@ public class Home_chef extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

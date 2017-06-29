@@ -47,11 +47,19 @@ public class Login_choose extends AppCompatActivity {
     public static String FB_LOGINCHECK=null;
     public static String KAKAO_LOGINCHECK=null;
 
+    public static final String FACEBOOKLOGIN = "FacebookApi_Login";
+    public static final String FBNAME = "FB_NameKey";
+    public static final String FBEMAIL = "FB_EmailKey";
+
+
     //KAKAO LOGIN API
     private SessionCallback callback;
+    public static final String KAKAOLOGIN = "KakaoApi_Login";
+    public static final String KANAME = "KA_NameKey";
+    public static final String KAEMAIL = "KA_EmailKey";
+
 
     private static String TAG="Login_choose";
-
     public static final String AUTOLOGIN="Auto_login";
 
     Button btnRegister;
@@ -67,6 +75,22 @@ public class Login_choose extends AppCompatActivity {
         SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
         int status=autologin.getInt("Status", 0);
 
+        // 저장 값들 초기화
+        FB_LOGINCHECK=null;
+        KAKAO_LOGINCHECK=null;
+
+        //fb api 저장값 초기화
+        SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
+        editor.commit();
+
+        //ka api 저장값 초기화
+        SharedPreferences pref2 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = pref2.edit();
+        editor2.clear();
+        editor2.commit();
+
         Log.d(TAG, "status: "+status);
 
             if(status==1) {
@@ -76,7 +100,9 @@ public class Login_choose extends AppCompatActivity {
             }
 
             else if(status==2) {
-
+                Intent intent=new Intent(getApplicationContext(), Home_chef.class);
+                startActivity(intent);
+                finish();
             }
 
         callbackManager = CallbackManager.Factory.create();  //로그인 응답을 처리할 콜백 관리자
@@ -110,6 +136,12 @@ public class Login_choose extends AppCompatActivity {
                                     Log.d("TAG","페이스북 이메일 -> " + Email);
                                     Log.d("TAG","페이스북 이름 -> " + name);
                                     Log.d("TAG","페이스북 성별 -> " + gender);
+
+                                    SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = pref.edit();
+                                    editor.putString(FBNAME, name);
+                                    editor.putString(FBEMAIL, Email);
+                                    editor.commit();
 
 
                                 } catch (Exception e) {
@@ -200,6 +232,12 @@ public class Login_choose extends AppCompatActivity {
                     Log.e("UserName", userName);
                     Log.e("Email", Email);
 
+                    SharedPreferences pref = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString(KANAME, userName);
+                    editor.putString(KAEMAIL, Email);
+                    editor.commit();
+
                     // 만약에 db에 id값이 존재 한다면 쉐프 or 유저 화면으로, db에 id값이 존재하지 않는다면 회원가입 선택화면으로.
                     CheckKA_Id check=new CheckKA_Id();
                     check.execute(KAKAO_LOGINCHECK);
@@ -256,12 +294,14 @@ public class Login_choose extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            Log.d(TAG, "POST kakao login response :" +result);
+            Log.d(TAG, "POST fb login response :" +result);
+            Log.d(TAG, "POST fb id :" +FB_LOGINCHECK);
 
             if(Integer.parseInt(result)==1) {
                 Intent intent=new Intent(getApplicationContext(), Login_register.class);
                 startActivity(intent);
                 finish();
+
             } else if (Integer.parseInt(result)==2) {
                 Intent intent=new Intent(getApplicationContext(), Home_user.class);
                 startActivity(intent);
@@ -355,7 +395,7 @@ public class Login_choose extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            Log.d(TAG, "POST fb login response :" +result);
+            Log.d(TAG, "POST kakao login response :" +result);
 
             if(Integer.parseInt(result)==1) {
                 Intent intent=new Intent(getApplicationContext(), Login_register.class);
