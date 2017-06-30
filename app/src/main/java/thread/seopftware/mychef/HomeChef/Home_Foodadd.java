@@ -2,6 +2,7 @@ package thread.seopftware.mychef.HomeChef;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +23,18 @@ import java.io.IOException;
 
 import thread.seopftware.mychef.R;
 
+import static thread.seopftware.mychef.Login.Login_choose.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_choose.FBEMAIL;
+import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_choose.KAEMAIL;
+import static thread.seopftware.mychef.Login.Login_choose.KAKAOLOGIN;
+import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
+
 public class Home_Foodadd extends AppCompatActivity {
+
+    private static String TAG="Home_Foodadd";
 
     //이미지 관련 함수
     ImageView iv_capture;
@@ -31,6 +44,8 @@ public class Home_Foodadd extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 2001;
     static final int REQUEST_TAKE_ALBUM = 2002;
     static final int REQUEST_IMAGE_CROP = 2003;
+    public static final int AREACHOOSE = 999;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,8 +204,38 @@ public class Home_Foodadd extends AppCompatActivity {
         }
     }
 
+    // 등록 버튼 클릭
     public void onClickedConfirm(View v) {
+
+        String chefemail=null;
+
+        if(FB_LOGINCHECK!=null) {
+            SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+            chefemail=pref.getString(FBEMAIL, "");
+            Log.d(TAG, "FB chefemail: "+chefemail);
+        } else if(KAKAO_LOGINCHECK!=null) {
+            SharedPreferences pref = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+            chefemail=pref.getString(KAEMAIL, "");
+            Log.d(TAG, "KA chefemail: "+chefemail);
+        } else { // 일반
+            SharedPreferences pref = getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+            chefemail=pref.getString(CHEFNORMALLEMAIL, "");
+            Log.d(TAG, "Normal chefemail: "+chefemail);
+        }
+
+
+
+
 
 
     }
+
 }
+
+/*
+    // 지역선택 검색기능
+    public void onClickedSelectArea(View v) {
+        Intent intent=new Intent(this, Home_Choosearea.class);
+        startActivity(intent);
+    }
+*/

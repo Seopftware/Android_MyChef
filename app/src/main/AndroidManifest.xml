@@ -50,14 +50,13 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity android:name=".HomeChef.Home_chef_menu" />
         <activity android:name=".HomeChef.Fragment_Menu" />
         <activity android:name=".HomeChef.Fragment2_Chat" />
         <activity android:name=".HomeChef.Fragment3_Profile" />
         <activity android:name=".HomeChef.Fragment4_Call" />
         <activity android:name=".HomeChef.Fragment5_Setting" />
-        <activity android:name=".HomeChef.Home_FoodAdd" />
-        <activity android:name=".HomeChef.Home_Foodadd"></activity>
+        <activity android:name=".HomeChef.Home_Foodadd" />
+        <activity android:name=".HomeChef.Home_Choosearea" android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"></activity>
     </application>
 
 </manifest>

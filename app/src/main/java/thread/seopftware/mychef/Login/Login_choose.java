@@ -24,7 +24,6 @@ import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
@@ -125,7 +124,7 @@ public class Login_choose extends AppCompatActivity {
                 String UserId=loginResult.getAccessToken().getUserId();
                 FB_LOGINCHECK=UserId;
 
-                //loginResult.getAccessToken() 정보를 가지고 유저 정보를 가져올수 있습니다.
+                //loginResult.getAccessToken() 정보를 가지고 유저 정보를 가져올 수 있습니다.
                 GraphRequest request =GraphRequest.newMeRequest(loginResult.getAccessToken() ,
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
@@ -175,14 +174,6 @@ public class Login_choose extends AppCompatActivity {
         //kakao login api
         /**카카오톡 로그아웃 요청**/
         //한번 로그인이 성공하면 세션 정보가 남아있어서 로그인창이 뜨지 않고 바로 onSuccess()메서드를 호출합니다.
-        //테스트 하시기 편하라고 매번 로그아웃 요청을 수행하도록 코드를 넣었습니다 ^^
-        UserManagement.requestLogout(new LogoutResponseCallback() {
-            @Override
-            public void onCompleteLogout() {
-                //로그아웃 성공 후 하고싶은 내용 코딩 ~
-            }
-        });
-
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
 
@@ -301,12 +292,12 @@ public class Login_choose extends AppCompatActivity {
             Log.d(TAG, "POST fb login response :" +result);
             Log.d(TAG, "POST fb id :" +FB_LOGINCHECK);
 
-            if(Integer.parseInt(result)==1) {
+            if(Integer.parseInt(result)==1) { // 일치하는 FB API ID값이 없을 때 회원가입 화면으로
                 Intent intent=new Intent(getApplicationContext(), Login_register.class);
                 startActivity(intent);
                 finish();
 
-            } else if (Integer.parseInt(result)==2) {
+            } else if (Integer.parseInt(result)==2) { // 유저 DB 테이블에서 일치하는 FB API ID 값이 있을 때.
                 Intent intent=new Intent(getApplicationContext(), Home_user.class);
                 startActivity(intent);
                 finish();
@@ -316,7 +307,7 @@ public class Login_choose extends AppCompatActivity {
                 editor.putInt("Status", 1);
                 editor.commit();
 
-            } else if(Integer.parseInt(result)==3) {
+            } else if(Integer.parseInt(result)==3) { // 쉐프 DB 테이블에서 일치하는 FB API ID 값이 있을 때.
                 Intent intent=new Intent(getApplicationContext(), Home_chef.class);
                 startActivity(intent);
                 finish();

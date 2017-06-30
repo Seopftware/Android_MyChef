@@ -54,7 +54,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_FoodNameKorea"
+                    android:id="@+id/et_KoreaName"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/edittext"
@@ -82,7 +82,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_FoodNameEnglish"
+                    android:id="@+id/et_EnglishName"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/edittext"
@@ -111,7 +111,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_FoodPrice"
+                    android:id="@+id/et_Price"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/edittext"
@@ -140,12 +140,12 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_FoodDescription"
+                    android:id="@+id/et_Description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edittext"
-                    android:ems="150"
-                    android:hint="요리에 대한 상세한 설명을 해주세요.\n예시)\n겨울철 흰 눈이 생각나는 해산물 크림 리조또와 바다내음이 풍부한 랍스터 요리입니다. 누구나 좋아하는 크림 리조또에 통통한 새우와 싱싱한 갑오징어, 톡톡 튀는 보리로 다채로운 식감을 더해 플레이팅만의 리조또를 완성했습니다. 리조또를 한입 떠서 랍스타와 함께 먹으면 크림의 깊은 풍미가 입안 가득 퍼지는 행복을 만끽하게 되실 것 입니다! "
+                    android:ems="200"
+                    android:hint="요리에 대한 상세한 설명을 해주세요.(200자 내외)\n\n예시)\n겨울철 흰 눈이 생각나는 해산물 크림 리조또와 바다내음이 풍부한 랍스터 요리입니다. 누구나 좋아하는 크림 리조또에 통통한 새우와 싱싱한 갑오징어, 톡톡 튀는 보리로 다채로운 식감을 더해 플레이팅만의 리조또를 완성했습니다. 리조또를 한입 떠서 랍스타와 함께 먹으면 크림의 깊은 풍미가 입안 가득 퍼지는 행복을 만끽하게 되실 것 입니다!"
                     android:inputType="textMultiLine"
                     android:lines="15"
                     android:paddingLeft="10dp"
@@ -167,16 +167,15 @@
                     android:layout_gravity="start"
                     android:text="재료 설명"
                     android:textSize="13sp"
-                    android:hint="재료에 대한 상세한 설명을 해주세요.\n예시)\n새우(베트남산), 랍스타(러시아), 백미(국내산), 보리(국내산), 갑오징어, 생크림, 청양고추, 방울토마토, 레디쉬, 양파, 베이컨, 양송이 버섯, 소금, 후추, 건새우, 다시마, 그라노 파다노 치즈"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_FoodIngredients"
+                    android:id="@+id/et_Ingredients"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edittext"
-                    android:ems="100"
-                    android:hint="재료에 대한 상세한 설명을 해주세요.\n예시)\n새우(베트남산), 백미(국내산), 보리(국내산), 갑오징어, 생크림, 청양고추, 방울토마토, 레디쉬, 양파, 베이컨, 양송이 버섯, 소금, 후추, 건새우, 다시마, 그라노 파다노 치즈"
+                    android:ems="150"
+                    android:hint="재료에 대한 상세한 설명을 해주세요.(150자 내외)\n\n예시)\n새우(베트남산), 백미(국내산), 보리(국내산), 갑오징어, 생크림, 청양고추, 방울토마토, 레디쉬, 양파, 베이컨, 양송이 버섯, 소금, 후추, 건새우, 다시마, 그라노 파다노 치즈"
                     android:inputType="textMultiLine"
                     android:lines="12"
                     android:paddingLeft="10dp"
@@ -213,56 +212,43 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0.11"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/text_area"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:text="출장 가능지"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_Email"
+                    android:id="@+id/et_Area"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
                     android:background="@drawable/edittext"
                     android:ems="20"
-                    android:hint="출장 가능 지역을 선택해 주세요."
-                    android:inputType="textEmailAddress"
+                    android:hint="출장 가능 범위에 대해 설명해주세요. ex) 강남권"
+                    android:inputType="text"
                     android:paddingLeft="10dp"
                     android:textSize="13sp" />
 
-                <Button
-                    android:id="@+id/btn_EmailCheck"
-                    android:layout_width="54dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="#E06736"
-                    android:text="검색"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp" />
+                <!--<Button-->
+                <!--android:id="@+id/btn_EmailCheck"-->
+                <!--android:layout_width="54dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:background="#E06736"-->
+                <!--android:onClick="onClickedSelectArea"-->
+                <!--android:text="검색"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="13sp" />-->
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical"
-                app:layout_constraintVertical_bias="0.0">
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="* 현재 서울 지역만 출장 가능합니다."
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-
-
 
             <Button
                 android:id="@+id/button3"

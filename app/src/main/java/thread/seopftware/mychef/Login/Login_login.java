@@ -2,6 +2,7 @@ package thread.seopftware.mychef.Login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -22,13 +23,14 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import thread.seopftware.mychef.HomeChef.Home_chef;
 import thread.seopftware.mychef.Home_user;
 import thread.seopftware.mychef.R;
 
 public class Login_login extends AppCompatActivity {
 
     private static String TAG = "Login_login";
+    public static final String CHEFNORMALLOGIN="Chef_NormaLoginkey";
+    public static final String CHEFNORMALLEMAIL="Chef_NormaLoginkey";
 
     EditText et_Email, et_Password;
     RadioGroup rg_Choose;
@@ -109,6 +111,11 @@ public class Login_login extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
+
+//            String Value=result;
+//            String[] split=Value.split("#@#");
+//            String chef_id=split[0];
+
             Log.d(TAG, "POST response :" +result);
 
             if(Integer.parseInt(result)==2) {
@@ -116,6 +123,12 @@ public class Login_login extends AppCompatActivity {
                 Intent intent=new Intent(Login_login.this, Home_user.class);
                 startActivity(intent);
                 finish();
+
+                SharedPreferences pref = getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString(CHEFNORMALLEMAIL, et_Email.getText().toString());
+                editor.commit();
+
 
             } else if (Integer.parseInt(result)==1) {
                 Toast.makeText(getApplicationContext(), "이메일 또는 비밀번호를 다시 확인해주세요." , Toast.LENGTH_LONG).show();
@@ -199,15 +212,16 @@ public class Login_login extends AppCompatActivity {
             progressDialog.dismiss();
             Log.d(TAG, "POST response :" +result);
 
-            if(Integer.parseInt(result)==2) {
-                Toast.makeText(getApplicationContext(), "접속을 환영합니다!" , Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(Login_login.this, Home_chef.class);
-                startActivity(intent);
-                finish();
 
-            } else if (Integer.parseInt(result)==1) {
-                Toast.makeText(getApplicationContext(), "이메일 또는 비밀번호를 다시 확인해주세요." , Toast.LENGTH_LONG).show();
-            }
+//            if(Integer.parseInt(result)==2) {
+//                Toast.makeText(getApplicationContext(), "접속을 환영합니다!" , Toast.LENGTH_LONG).show();
+//                Intent intent=new Intent(Login_login.this, Home_chef.class);
+//                startActivity(intent);
+//                finish();
+//
+//            } else if (Integer.parseInt(result)==1) {
+//                Toast.makeText(getApplicationContext(), "이메일 또는 비밀번호를 다시 확인해주세요." , Toast.LENGTH_LONG).show();
+//            }
         }
 
         @Override
