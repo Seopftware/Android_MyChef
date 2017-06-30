@@ -2,54 +2,62 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="thread.seopftware.mychef">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".Login.GlobalApplication"
         android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".GlobalApplication"
-        android:icon="@mipmap/ic_launcher">
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_app_key"/>
-
-        <activity android:name=".IntroActivity">
+        <activity android:name=".Login.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login_choose" />
-        <activity android:name=".Login_login" />
-        <activity android:name=".Login_register" />
-        <activity android:name=".Login_register_chef" />
+        <activity android:name=".Login.Login_choose" />
+        <activity android:name=".Login.Login_login" />
+        <activity android:name=".Login.Login_register" />
+        <activity android:name=".Register.Login_register_chef" />
         <activity
             android:name=".Home_user"
             android:label="@string/title_activity_home_user"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Home_chef"
+            android:name=".HomeChef.Home_chef"
             android:label="@string/title_activity_home_chef"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Register_chef" />
-        <activity android:name=".Register_chef2" />
-        <activity android:name=".Register_chef3" />
-        <activity android:name=".Register_chef4" />
-        <activity android:name=".Register_chef5" />
-        <activity android:name=".Register_user"/>
-
-            <activity android:name="com.facebook.FacebookActivity"
-                android:configChanges=
-                    "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-                android:label="@string/app_name">
-
-        </activity>
+        <activity android:name=".Register.Register_chef" />
+        <activity android:name=".Register.Register_chef2" />
+        <activity android:name=".Register.Register_chef3" />
+        <activity android:name=".Register.Register_chef4" />
+        <activity android:name=".Register.Register_chef5" />
+        <activity android:name=".Register.Register_user" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity android:name=".HomeChef.Home_chef_menu" />
+        <activity android:name=".HomeChef.Fragment_Menu" />
+        <activity android:name=".HomeChef.Fragment2_Chat" />
+        <activity android:name=".HomeChef.Fragment3_Profile" />
+        <activity android:name=".HomeChef.Fragment4_Call" />
+        <activity android:name=".HomeChef.Fragment5_Setting" />
+        <activity android:name=".HomeChef.Home_FoodAdd" />
+        <activity android:name=".HomeChef.Home_Foodadd"></activity>
     </application>
 
 </manifest>

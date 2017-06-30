@@ -12,7 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import static thread.seopftware.mychef.Login_choose.AUTOLOGIN;
+import thread.seopftware.mychef.R;
+
+import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
 
 public class Home_user extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

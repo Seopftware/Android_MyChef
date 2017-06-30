@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="thread.seopftware.mychef.Login_register_chef">
+    tools:context="thread.seopftware.mychef.Register.Login_register_chef">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

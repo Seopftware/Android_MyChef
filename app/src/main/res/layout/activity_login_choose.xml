@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E27C3E"
-    tools:context="thread.seopftware.mychef.Login_choose">
+    tools:context="thread.seopftware.mychef.Login.Login_choose">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -91,7 +91,7 @@
 
             <view
                 class="android.support.v4.widget.Space"
-                id="@+id/view"
+                android:id="@+id/view"
                 layout_weight="1"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content" />

@@ -1,9 +1,12 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+
+import thread.seopftware.mychef.Login.Login_choose;
+import thread.seopftware.mychef.R;
 
 public class IntroActivity extends AppCompatActivity {
 

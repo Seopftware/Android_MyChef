@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="thread.seopftware.mychef.HomeChef.Home_Foodadd">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="274dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.11"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_korea"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:text="한글 요리명"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_FoodNameKorea"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edittext"
+                    android:ems="20"
+                    android:hint="ex) 해산물 크림 리조또 \u0026 랍스타"
+                    android:inputType="text"
+                    android:paddingLeft="10dp"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.11"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/text_english"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:text="영어 요리명"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_FoodNameEnglish"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edittext"
+                    android:ems="20"
+                    android:hint="ex) Seafood Cream Risotto \u0026 Robstar"
+                    android:inputType="text"
+                    android:paddingLeft="10dp"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.11"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/text_price"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:inputType="number"
+                    android:text="가격 (원)"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_FoodPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edittext"
+                    android:ems="20"
+                    android:hint="1인 기준으로 작성 ex) 1인 30,000 원"
+                    android:inputType="text"
+                    android:paddingLeft="10dp"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.11"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/text_Description"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:text="요리 설명"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_FoodDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext"
+                    android:ems="150"
+                    android:hint="요리에 대한 상세한 설명을 해주세요.\n예시)\n겨울철 흰 눈이 생각나는 해산물 크림 리조또와 바다내음이 풍부한 랍스터 요리입니다. 누구나 좋아하는 크림 리조또에 통통한 새우와 싱싱한 갑오징어, 톡톡 튀는 보리로 다채로운 식감을 더해 플레이팅만의 리조또를 완성했습니다. 리조또를 한입 떠서 랍스타와 함께 먹으면 크림의 깊은 풍미가 입안 가득 퍼지는 행복을 만끽하게 되실 것 입니다! "
+                    android:inputType="textMultiLine"
+                    android:lines="15"
+                    android:paddingLeft="10dp"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.11"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/text_Ingredients"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:text="재료 설명"
+                    android:textSize="13sp"
+                    android:hint="재료에 대한 상세한 설명을 해주세요.\n예시)\n새우(베트남산), 랍스타(러시아), 백미(국내산), 보리(국내산), 갑오징어, 생크림, 청양고추, 방울토마토, 레디쉬, 양파, 베이컨, 양송이 버섯, 소금, 후추, 건새우, 다시마, 그라노 파다노 치즈"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_FoodIngredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext"
+                    android:ems="100"
+                    android:hint="재료에 대한 상세한 설명을 해주세요.\n예시)\n새우(베트남산), 백미(국내산), 보리(국내산), 갑오징어, 생크림, 청양고추, 방울토마토, 레디쉬, 양파, 베이컨, 양송이 버섯, 소금, 후추, 건새우, 다시마, 그라노 파다노 치즈"
+                    android:inputType="textMultiLine"
+                    android:lines="12"
+                    android:paddingLeft="10dp"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.11"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:hint="재료에 대한 상세한 설명을 해주세요.\n예시)\n새우(베트남산), 랍스타(러시아), 백미(국내산), 보리(국내산), 갑오징어, 생크림, 청양고추, 방울토마토, 레디쉬, 양파, 베이컨, 양송이 버섯, 소금, 후추, 건새우, 다시마, 그라노 파다노 치즈"
+                    android:text="사진 업로드"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/iv_capture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/photo1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="0.11"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_Email"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext"
+                    android:ems="20"
+                    android:hint="출장 가능 지역을 선택해 주세요."
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="10dp"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btn_EmailCheck"
+                    android:layout_width="54dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#E06736"
+                    android:text="검색"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="* 현재 서울 지역만 출장 가능합니다."
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+
+
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="#E06736"
+                android:onClick="onClickedConfirm"
+                android:text="등록하기"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

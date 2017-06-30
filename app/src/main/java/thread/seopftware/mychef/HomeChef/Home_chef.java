@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.HomeChef;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,9 +20,14 @@ import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
-import static thread.seopftware.mychef.Login_choose.AUTOLOGIN;
-import static thread.seopftware.mychef.Login_choose.FB_LOGINCHECK;
-import static thread.seopftware.mychef.Login_choose.KAKAO_LOGINCHECK;
+import thread.seopftware.mychef.Login.Login_choose;
+import thread.seopftware.mychef.R;
+import thread.seopftware.mychef.etc.BackPressCloseHandler;
+
+import static android.graphics.Color.BLACK;
+import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
+import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
 
 public class Home_chef extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,12 +48,21 @@ public class Home_chef extends AppCompatActivity
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setTitle("MyChef");
 
+//        final int abTitleId = getResources().getIdentifier("action_bar_title", "id", "android");
+//        findViewById(abTitleId).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(),"클릭!! 홈으로", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setBackgroundColor(BLACK);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent=new Intent(getApplicationContext(), Home_Foodadd.class);
+                startActivity(intent);
             }
         });
 

@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.Login;
 
 import android.app.Activity;
 import android.app.Application;

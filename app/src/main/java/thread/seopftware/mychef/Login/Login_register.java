@@ -1,9 +1,13 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import thread.seopftware.mychef.R;
+import thread.seopftware.mychef.Register.Register_chef;
+import thread.seopftware.mychef.Register.Register_user;
 
 public class Login_register extends AppCompatActivity {
 

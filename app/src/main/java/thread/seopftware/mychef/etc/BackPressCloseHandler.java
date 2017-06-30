@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.etc;
 
 import android.app.Activity;
 import android.widget.Toast;

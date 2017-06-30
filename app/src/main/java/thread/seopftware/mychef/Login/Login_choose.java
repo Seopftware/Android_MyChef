@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.Login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -38,6 +38,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import thread.seopftware.mychef.HomeChef.Home_chef;
+import thread.seopftware.mychef.Home_user;
+import thread.seopftware.mychef.R;
 
 public class Login_choose extends AppCompatActivity {
 

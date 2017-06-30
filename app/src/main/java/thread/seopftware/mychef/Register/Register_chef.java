@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.Register;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -32,14 +32,16 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static thread.seopftware.mychef.Login_choose.FACEBOOKLOGIN;
-import static thread.seopftware.mychef.Login_choose.FBEMAIL;
-import static thread.seopftware.mychef.Login_choose.FBNAME;
-import static thread.seopftware.mychef.Login_choose.FB_LOGINCHECK;
-import static thread.seopftware.mychef.Login_choose.KAEMAIL;
-import static thread.seopftware.mychef.Login_choose.KAKAOLOGIN;
-import static thread.seopftware.mychef.Login_choose.KAKAO_LOGINCHECK;
-import static thread.seopftware.mychef.Login_choose.KANAME;
+import thread.seopftware.mychef.R;
+
+import static thread.seopftware.mychef.Login.Login_choose.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_choose.FBEMAIL;
+import static thread.seopftware.mychef.Login.Login_choose.FBNAME;
+import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_choose.KAEMAIL;
+import static thread.seopftware.mychef.Login.Login_choose.KAKAOLOGIN;
+import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_choose.KANAME;
 
 public class Register_chef extends AppCompatActivity {
 

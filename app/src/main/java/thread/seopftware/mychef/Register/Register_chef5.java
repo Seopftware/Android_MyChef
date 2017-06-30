@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.Register;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -32,30 +32,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import thread.seopftware.mychef.HomeChef.Home_chef;
+import thread.seopftware.mychef.Login.Login_login;
+import thread.seopftware.mychef.R;
 
-import static thread.seopftware.mychef.Login_choose.FB_LOGINCHECK;
-import static thread.seopftware.mychef.Login_choose.KAKAO_LOGINCHECK;
-import static thread.seopftware.mychef.Register_chef.CURRENTTIME;
-import static thread.seopftware.mychef.Register_chef.EMAIL;
-import static thread.seopftware.mychef.Register_chef.FB_ID;
-import static thread.seopftware.mychef.Register_chef.KAKAO_ID;
-import static thread.seopftware.mychef.Register_chef.NAME;
-import static thread.seopftware.mychef.Register_chef.PASSWORD;
-import static thread.seopftware.mychef.Register_chef.PASSWORDCONFIRM;
-import static thread.seopftware.mychef.Register_chef.PHONE;
-import static thread.seopftware.mychef.Register_chef.REGISTER_CHEF;
-import static thread.seopftware.mychef.Register_chef2.COMPANYDESCRIPTION;
-import static thread.seopftware.mychef.Register_chef2.COMPANYEND;
-import static thread.seopftware.mychef.Register_chef2.COMPANYNAME;
-import static thread.seopftware.mychef.Register_chef2.COMPANYSTART;
-import static thread.seopftware.mychef.Register_chef2.REGISTER_CHEF2;
-import static thread.seopftware.mychef.Register_chef3.CERTIFICATION;
-import static thread.seopftware.mychef.Register_chef3.CERTIFICATION2;
-import static thread.seopftware.mychef.Register_chef3.CERTIFICATION3;
-import static thread.seopftware.mychef.Register_chef3.REGISTER_CHEF3;
-import static thread.seopftware.mychef.Register_chef4.APPEAL;
-import static thread.seopftware.mychef.Register_chef4.APPEAL2;
-import static thread.seopftware.mychef.Register_chef4.REGISTER_CHEF4;
+import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
 
 public class Register_chef5 extends AppCompatActivity {
 
@@ -69,8 +51,8 @@ public class Register_chef5 extends AppCompatActivity {
     ImageView iv_capture;
     String mCurrentPhotoPath;
     Uri photoURI, albumURI;
-    Button btn_RegisterConfirm;
     boolean isAlbum=false;
+    Button btn_RegisterConfirm;
 
     String Name, Email, Password, PasswordConfirm, Phone;
     String Fbapi, Kakaoapi, CurrentTime;
@@ -120,34 +102,34 @@ public class Register_chef5 extends AppCompatActivity {
         });
 
         // Register_1 (회원가입 정보)
-        SharedPreferences pref=getSharedPreferences(REGISTER_CHEF, MODE_PRIVATE);
-        Name=pref.getString(NAME,"");
-        Email=pref.getString(EMAIL,"");
-        Password=pref.getString(PASSWORD,"");
-        PasswordConfirm=pref.getString(PASSWORDCONFIRM,"");
-        Phone=pref.getString(PHONE,"");
-        Fbapi=pref.getString(FB_ID,"null");
-        Kakaoapi=pref.getString(KAKAO_ID,"null");
-        CurrentTime=pref.getString(CURRENTTIME, "");
+        SharedPreferences pref=getSharedPreferences(Register_chef.REGISTER_CHEF, MODE_PRIVATE);
+        Name=pref.getString(Register_chef.NAME,"");
+        Email=pref.getString(Register_chef.EMAIL,"");
+        Password=pref.getString(Register_chef.PASSWORD,"");
+        PasswordConfirm=pref.getString(Register_chef.PASSWORDCONFIRM,"");
+        Phone=pref.getString(Register_chef.PHONE,"");
+        Fbapi=pref.getString(Register_chef.FB_ID,"null");
+        Kakaoapi=pref.getString(Register_chef.KAKAO_ID,"null");
+        CurrentTime=pref.getString(Register_chef.CURRENTTIME, "");
 
 
         // Register_2 (경력 사항)
-        SharedPreferences pref2=getSharedPreferences(REGISTER_CHEF2, MODE_PRIVATE);
-        CompanyName=pref2.getString(COMPANYNAME,"");
-        CompanyStart=pref2.getString(COMPANYSTART,"");
-        CompanyEnd=pref2.getString(COMPANYEND,"");
-        CompanyDescription=pref2.getString(COMPANYDESCRIPTION,"");
+        SharedPreferences pref2=getSharedPreferences(Register_chef2.REGISTER_CHEF2, MODE_PRIVATE);
+        CompanyName=pref2.getString(Register_chef2.COMPANYNAME,"");
+        CompanyStart=pref2.getString(Register_chef2.COMPANYSTART,"");
+        CompanyEnd=pref2.getString(Register_chef2.COMPANYEND,"");
+        CompanyDescription=pref2.getString(Register_chef2.COMPANYDESCRIPTION,"");
 
         // Register_3 (자격증 정보)
-        SharedPreferences pref3=getSharedPreferences(REGISTER_CHEF3, MODE_PRIVATE);
-        Certification=pref3.getString(CERTIFICATION,"");
-        Certification2=pref3.getString(CERTIFICATION2,"null");
-        Certification3=pref3.getString(CERTIFICATION3,"null");
+        SharedPreferences pref3=getSharedPreferences(Register_chef3.REGISTER_CHEF3, MODE_PRIVATE);
+        Certification=pref3.getString(Register_chef3.CERTIFICATION,"");
+        Certification2=pref3.getString(Register_chef3.CERTIFICATION2,"null");
+        Certification3=pref3.getString(Register_chef3.CERTIFICATION3,"null");
 
         // Register_4 (본인 소개)
-        SharedPreferences pref4=getSharedPreferences(REGISTER_CHEF4, MODE_PRIVATE);
-        Appeal=pref4.getString(APPEAL,"");
-        Appeal2=pref4.getString(APPEAL2,"");
+        SharedPreferences pref4=getSharedPreferences(Register_chef4.REGISTER_CHEF4, MODE_PRIVATE);
+        Appeal=pref4.getString(Register_chef4.APPEAL,"");
+        Appeal2=pref4.getString(Register_chef4.APPEAL2,"");
 
     }
 
