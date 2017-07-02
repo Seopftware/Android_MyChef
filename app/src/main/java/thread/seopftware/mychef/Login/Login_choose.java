@@ -41,14 +41,15 @@ import java.net.URL;
 import thread.seopftware.mychef.HomeChef.Home_chef;
 import thread.seopftware.mychef.Home_user;
 import thread.seopftware.mychef.R;
+import thread.seopftware.mychef.photoexercise;
 
 public class Login_choose extends AppCompatActivity {
 
     //FB LOGIN API
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    public static String FB_LOGINCHECK=null;
-    public static String KAKAO_LOGINCHECK=null;
+    public static String FB_LOGINCHECK="0";
+    public static String KAKAO_LOGINCHECK="0";
 
     public static final String FACEBOOKLOGIN = "FacebookApi_Login";
     public static final String FBNAME = "FB_NameKey";
@@ -79,8 +80,8 @@ public class Login_choose extends AppCompatActivity {
         int status=autologin.getInt("Status", 0);
 
         // 저장 값들 초기화
-        FB_LOGINCHECK=null;
-        KAKAO_LOGINCHECK=null;
+        FB_LOGINCHECK="0";
+        KAKAO_LOGINCHECK="0";
 
         //fb api 저장값 초기화
         SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
@@ -254,7 +255,7 @@ public class Login_choose extends AppCompatActivity {
     }
 
     public void onClickedLogin(View v) {
-        Intent intent=new Intent(getApplicationContext(), Login_login.class);
+        Intent intent=new Intent(getApplicationContext(), photoexercise.class);
         startActivity(intent);
     }
 

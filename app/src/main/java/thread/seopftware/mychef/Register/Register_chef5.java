@@ -4,8 +4,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,20 +22,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import thread.seopftware.mychef.HomeChef.Home_chef;
-import thread.seopftware.mychef.Login.Login_login;
 import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
@@ -43,22 +48,33 @@ public class Register_chef5 extends AppCompatActivity {
 
     private static String TAG="Register_chef5";
 
+    ProgressDialog progressDialog;
 
-    static final int REQUEST_TAKE_PHOTO = 2001;
-    static final int REQUEST_TAKE_ALBUM = 2002;
+    static final int REQUEST_CAMERA = 2001;
+    static final int REQUEST_ALBUM = 2002;
     static final int REQUEST_IMAGE_CROP = 2003;
+
+    //카메라
+    boolean isAlbum=false; // 카메라인지 앨범인지 구별하기 위한 변수
+    String encoded_string, image_name; // 파일 경로, 파일 이름
 
     ImageView iv_capture;
     String mCurrentPhotoPath;
-    Uri photoURI, albumURI;
-    boolean isAlbum=false;
-    Button btn_RegisterConfirm;
+    Bitmap camera_bitmap;
+    Uri camera_uri;
 
+
+    //앨범
+    String imageFileName;
+    Bitmap album_bitmap;
+    Uri album_uri;
+
+    // DB에 입력되는 변수들
     String Name, Email, Password, PasswordConfirm, Phone;
     String Fbapi, Kakaoapi, CurrentTime;
-    String CompanyName, CompanyStart, CompanyEnd, CompanyDescription;
-    String Certification, Certification2, Certification3;
     String Appeal, Appeal2;
+    Button btn_RegisterConfirm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,60 +92,46 @@ public class Register_chef5 extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setTitle("프로필 사진");
 
-        // 프로필 이미지
-        iv_capture= (ImageView) findViewById(R.id.iv_capture);
-        iv_capture.setOnClickListener(new View.OnClickListener() {
-
-           @Override
-           public void onClick(View v) {
-             final CharSequence[] items=new CharSequence[] {"Choose from Gallery", "Take a Camera"};
-               AlertDialog.Builder dialog=new AlertDialog.Builder(Register_chef5.this);
-               dialog.setTitle("MENU");
-               dialog.setItems(items, new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int which) {
-                   if(items[which]=="Take a Camera") {
-                       captureCamera();
-                   }
-
-                   if(items[which]=="Choose from Gallery") {
-                       getAlbum();
-                   }
-               }
-               });
-               dialog.show();
-           }
-        });
-
+        //저장값 불러오기
         // Register_1 (회원가입 정보)
         SharedPreferences pref=getSharedPreferences(Register_chef.REGISTER_CHEF, MODE_PRIVATE);
         Name=pref.getString(Register_chef.NAME,"");
         Email=pref.getString(Register_chef.EMAIL,"");
         Password=pref.getString(Register_chef.PASSWORD,"");
-        PasswordConfirm=pref.getString(Register_chef.PASSWORDCONFIRM,"");
         Phone=pref.getString(Register_chef.PHONE,"");
-        Fbapi=pref.getString(Register_chef.FB_ID,"null");
-        Kakaoapi=pref.getString(Register_chef.KAKAO_ID,"null");
+//        Fbapi=pref.getString(Register_chef.FB_ID,"null");
+//        Kakaoapi=pref.getString(Register_chef.KAKAO_ID,"null");
         CurrentTime=pref.getString(Register_chef.CURRENTTIME, "");
-
-
-        // Register_2 (경력 사항)
-        SharedPreferences pref2=getSharedPreferences(Register_chef2.REGISTER_CHEF2, MODE_PRIVATE);
-        CompanyName=pref2.getString(Register_chef2.COMPANYNAME,"");
-        CompanyStart=pref2.getString(Register_chef2.COMPANYSTART,"");
-        CompanyEnd=pref2.getString(Register_chef2.COMPANYEND,"");
-        CompanyDescription=pref2.getString(Register_chef2.COMPANYDESCRIPTION,"");
-
-        // Register_3 (자격증 정보)
-        SharedPreferences pref3=getSharedPreferences(Register_chef3.REGISTER_CHEF3, MODE_PRIVATE);
-        Certification=pref3.getString(Register_chef3.CERTIFICATION,"");
-        Certification2=pref3.getString(Register_chef3.CERTIFICATION2,"null");
-        Certification3=pref3.getString(Register_chef3.CERTIFICATION3,"null");
 
         // Register_4 (본인 소개)
         SharedPreferences pref4=getSharedPreferences(Register_chef4.REGISTER_CHEF4, MODE_PRIVATE);
         Appeal=pref4.getString(Register_chef4.APPEAL,"");
         Appeal2=pref4.getString(Register_chef4.APPEAL2,"");
+
+        // 프로필 이미지
+        iv_capture= (ImageView) findViewById(R.id.iv_capture);
+        iv_capture.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                final CharSequence[] items=new CharSequence[] {"Choose from Gallery", "Take a Camera"};
+                AlertDialog.Builder dialog=new AlertDialog.Builder(Register_chef5.this);
+                dialog.setTitle("MENU");
+                dialog.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(items[which]=="Take a Camera") {
+                            captureCamera();
+                        }
+
+                        if(items[which]=="Choose from Gallery") {
+                            showFileChooser();
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        });
 
     }
 
@@ -144,6 +146,7 @@ public class Register_chef5 extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //===============================================카메라촬영==========================================================
     // 사진찍기
     public void captureCamera(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -157,30 +160,21 @@ public class Register_chef5 extends AppCompatActivity {
             }
 
             if (photoFile != null) {
-                photoURI = Uri.fromFile(photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                camera_uri = Uri.fromFile(photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, camera_uri);
+                startActivityForResult(takePictureIntent, REQUEST_CAMERA);
             }
         }
-    }
-
-    // 앨범 호출
-    public void getAlbum(){
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        startActivityForResult(intent, REQUEST_TAKE_ALBUM);
     }
 
     // 이미지 크랍
     public void cropImage(){
         Intent cropIntent = new Intent("com.android.camera.action.CROP");
-        cropIntent.setDataAndType(photoURI, "image/*");
+        cropIntent.setDataAndType(camera_uri, "image/*");
         cropIntent.putExtra("scale", true);
 
         if(isAlbum == false) {
-            cropIntent.putExtra("output", photoURI); // 크랍된 이미지를 해당 경로에 저장
-        } else if(isAlbum == true){
-            cropIntent.putExtra("output", albumURI); // 크랍된 이미지를 해당 경로에 저장
+            cropIntent.putExtra("output", camera_uri); // 카메라 크랍된 이미지를 해당 경로에 저장
         }
 
         startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
@@ -190,8 +184,13 @@ public class Register_chef5 extends AppCompatActivity {
     private File createImageFile() throws IOException {
 
         // 특정 경로와 폴더를 지정하지 않고, 메모리 최상 위치에 저장 방법
-        String imageFileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
+        imageFileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
         File storageDir = new File(Environment.getExternalStorageDirectory(), imageFileName);
+        try{
+            storageDir.getParentFile().mkdirs();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mCurrentPhotoPath = storageDir.getAbsolutePath();
         return storageDir;
     }
@@ -205,36 +204,52 @@ public class Register_chef5 extends AppCompatActivity {
         this.sendBroadcast(mediaScanIntent);
     }
 
+    //===============================================앨범선택==========================================================
+    // 앨범 호출
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_ALBUM);
+    }
+
+    private String getStringImage (Bitmap bmp){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode){
-            case REQUEST_TAKE_PHOTO:
+            case REQUEST_CAMERA:
                 isAlbum = false;
                 cropImage();
                 break;
 
-            case REQUEST_TAKE_ALBUM:
+            case REQUEST_ALBUM:
                 isAlbum = true;
-                File albumFile = null;
+                Uri filePath = data.getData();
+                Glide.with(this).load(filePath).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
                 try {
-                    albumFile = createImageFile();
+                    //Getting the Bitmap from Gallery
+                    album_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(albumFile != null){
-                    albumURI = Uri.fromFile(albumFile);
-                }
-                photoURI = data.getData();
-                Glide.with(this).load(photoURI).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
                 break;
 
             case REQUEST_IMAGE_CROP:
                 galleryAddPic();
-                photoURI=data.getData();
-                Glide.with(this).load(photoURI).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
+                camera_uri=data.getData();
+                Log.d(TAG, "camera_uri (카메라): "+camera_uri);
+                Glide.with(this).load(camera_uri).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
                 break;
         }
     }
@@ -246,169 +261,214 @@ public class Register_chef5 extends AppCompatActivity {
             return;
         }
 
-//        Intent intent=new Intent(getApplicationContext(), Home_chef.class);
-//        startActivity(intent);
-//        finish();
-//        Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "isAlbum : (true or false) :" +isAlbum );
 
-        String photoString=photoURI.toString();
-        Log.d("사진", "photoURI :"+photoURI);
-        Log.d("사진", "photoString :"+photoString);
+        if(isAlbum==false) {
+            Log.d(TAG, "camera_uri (백그라운드): "+camera_uri);
 
-        // db에 값 입력
-        InsertData task=new InsertData();
-//        task.execute(Name, Email, Password, PasswordConfirm, Phone, Fbapi, Kakaoapi, CurrentTime, CompanyName, CompanyStart, CompanyEnd, CompanyDescription, Certification, Certification2, Certification3, Appeal, Appeal2, photoString);
-        task.execute(Name, Email, Password, PasswordConfirm, Phone, Fbapi, Kakaoapi, CurrentTime, Appeal, Appeal2, photoString);
-        //회원가입과 동시에 shared에 저장되어 있는 모든 값 날리기 edtitor.clear();
+            camera_bitmap = BitmapFactory.decodeFile(camera_uri.getPath());
+            Log.d(TAG, "camera_bitmap: "+camera_bitmap+"file uri : "+camera_uri);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            camera_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            camera_bitmap.recycle();
 
-//        Intent intent=new Intent(getApplicationContext(), Login_login.class);
-//        startActivity(intent);
-//        finish();
+            byte[] array = stream.toByteArray();
+            encoded_string = Base64.encodeToString(array, 0);
+            Camera_Upload();
+
+        } else if (isAlbum==true) {
+            Album_Upload();
+        }
+
     }
 
-    class InsertData extends AsyncTask<String, Void, String> {
+       private void Camera_Upload() {
+        //Showing the progress dialog
+        final ProgressDialog loading = ProgressDialog.show(this,"Uploading...","Please wait...",false,false);
 
-        ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(Register_chef5.this, "잠시만 기다려 주세요.", null, true, true);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            // Register_1 (회원가입)
-            String Name=(String) params[0];
-            String Email=(String) params[1];
-            String Password=(String) params[2];
-            String PasswordConfirm=(String) params[3];
-            String Phone=(String) params[4];
-            String Api_Id=(String) params[5];
-            String Kakao_Id=(String) params[6];
-            String CurrentTime=(String) params[7];
-
-            Log.d(TAG, "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime);
-
-//            // Register_2 (경력사항)
-//            String CompanyName=(String) params[8];
-//            String CompanyStart=(String) params[9];
-//            String CompanyEnd=(String) params[10];
-//            String CompanyDescription=(String) params[11];
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.POST, "http://115.71.239.151/register_chef.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, "Volley Response is : "+response);
+                        loading.dismiss();
 //
-//            Log.d(TAG, "CompanyName : "+CompanyName+"CompanyStart : "+CompanyStart+"CompanyEnd : "+CompanyEnd+"CompanyDescription : "+CompanyDescription);
-
-//            // Register_3 (자격증 정보)
-//            String Certification=(String) params[8];
-//            String Certification2=(String) params[9];
-//            String Certification3=(String) params[10];
+//                        if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
+//                        {
+//                            if(Integer.parseInt(response)==0) {
+//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
 //
-//            Log.d(TAG,"Certification : "+Certification+"Certification2 : "+Certification2+"Certification3 : "+Certification3);
+//                                Intent intent=new Intent(Register_chef5.this, Login_login.class);
+//                                startActivity(intent);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                                finish();
+//
+//                                progressDialog.dismiss();
+//
+//
+//                            } else if (Integer.parseInt(response)==1) {
+//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+//                                return;
+//
+//
+//                            }
+//
+//                        } else {
+//                            if(Integer.parseInt(response)==0) {
+//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+//
+//                                Intent intent=new Intent(Register_chef5.this, Home_chef.class);
+//                                startActivity(intent);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                                finish();
+//
+//                                progressDialog.dismiss();
+//
+//
+//                            } else if (Integer.parseInt(response)==1) {
+//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//                        }
 
-            // Register_4 (본인 소개)
-            String Appeal=(String) params[8];
-            String Appeal2=(String) params[9];
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                //Dismissing the progress dialog
+                loading.dismiss();
 
-            Log.d(TAG, "Appeal : "+Appeal+"Appeal 2: "+Appeal2);
-
-            //Register_5 (프로필)
-            String photoString=(String) params[10];
-
-            Log.d(TAG, "photoString : "+photoString);
-
-            String serverURL="http://115.71.239.151/register_chef.php";
-//            String postParameters = "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime+" &Certification="+Certification+" &Certification2="+Certification2+" &Certification3="+Certification3+" &Appeal="+Appeal+" &Appeal2="+Appeal2+" &photoString="+photoString;
-            String postParameters = "Name=" +Name+" &Email=" +Email+" &Password="+Password+" &PasswordConfirm="+PasswordConfirm+" &Phone="+Phone+" &Api_Id="+Api_Id+" &Kakao_Id="+Kakao_Id+" &CurrentTime="+CurrentTime+" &Appeal="+Appeal+" &Appeal2="+Appeal2+" &photoString="+photoString;
-            Log.d(TAG, "postParameters : "+postParameters);
-            try{
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection=(HttpURLConnection) url.openConnection();
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-
-                OutputStream outputStream=httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-                int responseStatusCode=httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code -"+responseStatusCode);
-
-                InputStream inputStream;
-                if(responseStatusCode== HttpURLConnection.HTTP_OK) {
-                    inputStream=httpURLConnection.getInputStream();
-                } else {
-                    inputStream=httpURLConnection.getErrorStream();
-                }
-
-                InputStreamReader inputStreamReader=new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
-
-                StringBuilder sb=new StringBuilder();
-                String line=null;
-
-                while((line=bufferedReader.readLine())!=null) {
-                    sb.append(line);
-                }
-
-                bufferedReader.close();
-
-                return sb.toString();
-
-            } catch (Exception e) {
-                Log.d(TAG, "InsertData: Error ", e);
-                return new String("Error : "+e.getMessage());
+                //Showing toast
+                Toast.makeText(getApplicationContext(), volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
             }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> map = new HashMap<>();
 
-        }
 
-        @Override
-        protected void onPostExecute(String result) {
+                Log.d(TAG, " Name:"+Name+" Email: "+Email+" Password: "+Password+" Phone: "+Phone+"\n");
 
-            super.onPostExecute(result);
+                map.put("Name", Name);
+                map.put("Email", Email);
+                map.put("Password", Password);
+                map.put("Phone", Phone);
+                map.put("Fbapi", FB_LOGINCHECK);
+                map.put("Kakaoapi", KAKAO_LOGINCHECK);
+                map.put("CurrentTime", CurrentTime);
+                map.put("Appeal", Appeal);
+                map.put("Appeal2", Appeal2);
+                map.put("encoded_string",encoded_string);
+                map.put("image_name", imageFileName);
 
-            progressDialog.dismiss();
-            Log.d(TAG, "POST response :" +result);
-
-            if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
-            {
-                if(Integer.parseInt(result)==0) {
-                    Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
-
-                    Intent intent=new Intent(Register_chef5.this, Login_login.class);
-                    startActivity(intent);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    finish();
-
-                } else if (Integer.parseInt(result)==1) {
-                    Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-            } else {
-                if(Integer.parseInt(result)==0) {
-                    Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
-
-                    Intent intent=new Intent(Register_chef5.this, Home_chef.class);
-                    startActivity(intent);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    finish();
-
-                } else if (Integer.parseInt(result)==1) {
-                    Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
+                return map;
             }
-
-
-
-        }
+        };
+        requestQueue.add(request);
     }
+
+    private void Album_Upload(){
+        //Showing the progress dialog
+        final ProgressDialog loading = ProgressDialog.show(this,"Uploading...","Please wait...",false,false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://115.71.239.151/register_chef.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Disimissing the progress dialog
+                        loading.dismiss();
+                        //Showing toast message of the response
+                        Toast.makeText(getApplicationContext(), response , Toast.LENGTH_LONG).show();
+
+                        Log.d(TAG, "Volley Response is : "+response);
+                        loading.dismiss();
+//
+//                        if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
+//                        {
+//                            if(Integer.parseInt(response)==0) {
+//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+//
+//                                Intent intent=new Intent(Register_chef5.this, Login_login.class);
+//                                startActivity(intent);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                                finish();
+//
+//                                progressDialog.dismiss();
+//
+//
+//                            } else if (Integer.parseInt(response)==1) {
+//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+//                                return;
+//
+//
+//                            }
+//
+//                        } else {
+//                            if(Integer.parseInt(response)==0) {
+//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+//
+//                                Intent intent=new Intent(Register_chef5.this, Home_chef.class);
+//                                startActivity(intent);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                                finish();
+//
+//                                progressDialog.dismiss();
+//
+//
+//                            } else if (Integer.parseInt(response)==1) {
+//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Dismissing the progress dialog
+                        loading.dismiss();
+
+                        //Showing toast
+                        Toast.makeText(getApplicationContext(), volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                loading.dismiss();
+                //Converting Bitmap to String
+                String image = getStringImage(album_bitmap);
+                String CameraFileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
+
+                //Creating parameters
+                Map<String,String> map = new Hashtable<>();
+
+                Log.d(TAG, "겔러리에서 사진 가지고 온 후 "+" Name:"+Name+" Email: "+Email+" Password: "+Password+" Phone: "+Phone+"\n");
+                Log.d(TAG, "FBapi : "+FB_LOGINCHECK);
+                Log.d(TAG, "KAKAOapi : "+KAKAO_LOGINCHECK);
+
+                //Adding parameters
+                map.put("Name", Name);
+                map.put("Email", Email);
+                map.put("Password", Password);
+                map.put("Phone", Phone);
+                map.put("Fbapi", FB_LOGINCHECK);
+                map.put("Kakaoapi", KAKAO_LOGINCHECK);
+                map.put("CurrentTime", CurrentTime);
+                map.put("Appeal", Appeal);
+                map.put("Appeal2", Appeal2);
+                map.put("encoded_string",image);
+                map.put("image_name", CameraFileName);
+
+                //returning parameters
+                return map;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
 }

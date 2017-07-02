@@ -3,6 +3,7 @@ package thread.seopftware.mychef.HomeChef;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -45,6 +46,11 @@ public class Home_Foodadd extends AppCompatActivity {
     static final int REQUEST_TAKE_ALBUM = 2002;
     static final int REQUEST_IMAGE_CROP = 2003;
     public static final int AREACHOOSE = 999;
+
+    String encoded_string, image_name;
+    Bitmap bitmap;
+    File file;
+    Uri file_uri;
 
 
     @Override
@@ -206,6 +212,8 @@ public class Home_Foodadd extends AppCompatActivity {
 
     // 등록 버튼 클릭
     public void onClickedConfirm(View v) {
+
+        finish();
 
         String chefemail=null;
 

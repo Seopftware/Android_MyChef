@@ -121,7 +121,7 @@ public class Register_chef extends AppCompatActivity {
             }
         });
 
-        if (FB_LOGINCHECK != null) {
+        if (!FB_LOGINCHECK.equals("0")) {
             Log.d("TAG", "FB_LOGINCHECK :" + FB_LOGINCHECK);
 
             // 1. 비번입력 받는 edit_text 지우기.
@@ -142,7 +142,7 @@ public class Register_chef extends AppCompatActivity {
             et_Name.setText(fbname);
             et_Email.setText(fbemail);
 
-        } else if (KAKAO_LOGINCHECK != null) {
+        } else if (!KAKAO_LOGINCHECK.equals("0")) {
             Log.d("TAG", "KAKAO_LOGINCHECK :" + KAKAO_LOGINCHECK);
 
             // 1. 비번입력 받는 edit_text 지우기.
@@ -178,7 +178,7 @@ public class Register_chef extends AppCompatActivity {
     public void onClickedNext(View V) {
 
         // 앱을 통한 회원가입을 했을 때
-        if (FB_LOGINCHECK == null && KAKAO_LOGINCHECK == null) {
+        if (FB_LOGINCHECK.equals("0") && KAKAO_LOGINCHECK.equals("0")) {
 
             // 이름 입력 안했을 때
             if (et_Name.getText().toString().length() == 0) {
