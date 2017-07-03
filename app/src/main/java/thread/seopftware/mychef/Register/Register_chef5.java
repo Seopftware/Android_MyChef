@@ -39,6 +39,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import thread.seopftware.mychef.HomeChef.Home_chef;
+import thread.seopftware.mychef.Login.Login_login;
 import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
@@ -56,7 +58,7 @@ public class Register_chef5 extends AppCompatActivity {
 
     //카메라
     boolean isAlbum=false; // 카메라인지 앨범인지 구별하기 위한 변수
-    String encoded_string, image_name; // 파일 경로, 파일 이름
+    String encoded_string; // 파일 경로, 파일 이름
 
     ImageView iv_capture;
     String mCurrentPhotoPath;
@@ -235,11 +237,11 @@ public class Register_chef5 extends AppCompatActivity {
 
             case REQUEST_ALBUM:
                 isAlbum = true;
-                Uri filePath = data.getData();
-                Glide.with(this).load(filePath).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
+                album_uri = data.getData();
+                Glide.with(this).load(album_uri).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
                 try {
                     //Getting the Bitmap from Gallery
-                    album_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                    album_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), album_uri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -293,44 +295,44 @@ public class Register_chef5 extends AppCompatActivity {
                     public void onResponse(String response) {
                         Log.d(TAG, "Volley Response is : "+response);
                         loading.dismiss();
-//
-//                        if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
-//                        {
-//                            if(Integer.parseInt(response)==0) {
-//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
-//
-//                                Intent intent=new Intent(Register_chef5.this, Login_login.class);
-//                                startActivity(intent);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                                finish();
-//
-//                                progressDialog.dismiss();
-//
-//
-//                            } else if (Integer.parseInt(response)==1) {
-//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
-//                                return;
-//
-//
-//                            }
-//
-//                        } else {
-//                            if(Integer.parseInt(response)==0) {
-//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
-//
-//                                Intent intent=new Intent(Register_chef5.this, Home_chef.class);
-//                                startActivity(intent);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                                finish();
-//
-//                                progressDialog.dismiss();
-//
-//
-//                            } else if (Integer.parseInt(response)==1) {
-//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
-//                                return;
-//                            }
-//                        }
+
+                        if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
+                        {
+                            if(Integer.parseInt(response)==0) {
+                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+
+                                Intent intent=new Intent(Register_chef5.this, Login_login.class);
+                                startActivity(intent);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                finish();
+
+                                progressDialog.dismiss();
+
+
+                            } else if (Integer.parseInt(response)==1) {
+                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+                                return;
+
+
+                            }
+
+                        } else {
+                            if(Integer.parseInt(response)==0) {
+                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+
+                                Intent intent=new Intent(Register_chef5.this, Home_chef.class);
+                                startActivity(intent);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                finish();
+
+                                progressDialog.dismiss();
+
+
+                            } else if (Integer.parseInt(response)==1) {
+                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
 
                     }
                 }, new Response.ErrorListener() {
@@ -382,44 +384,44 @@ public class Register_chef5 extends AppCompatActivity {
 
                         Log.d(TAG, "Volley Response is : "+response);
                         loading.dismiss();
-//
-//                        if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
-//                        {
-//                            if(Integer.parseInt(response)==0) {
-//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
-//
-//                                Intent intent=new Intent(Register_chef5.this, Login_login.class);
-//                                startActivity(intent);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                                finish();
-//
-//                                progressDialog.dismiss();
-//
-//
-//                            } else if (Integer.parseInt(response)==1) {
-//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
-//                                return;
-//
-//
-//                            }
-//
-//                        } else {
-//                            if(Integer.parseInt(response)==0) {
-//                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
-//
-//                                Intent intent=new Intent(Register_chef5.this, Home_chef.class);
-//                                startActivity(intent);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                                finish();
-//
-//                                progressDialog.dismiss();
-//
-//
-//                            } else if (Integer.parseInt(response)==1) {
-//                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
-//                                return;
-//                            }
-//                        }
+
+                        if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
+                        {
+                            if(Integer.parseInt(response)==0) {
+                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+
+                                Intent intent=new Intent(Register_chef5.this, Login_login.class);
+                                startActivity(intent);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                finish();
+
+                                progressDialog.dismiss();
+
+
+                            } else if (Integer.parseInt(response)==1) {
+                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+                                return;
+
+
+                            }
+
+                        } else {
+                            if(Integer.parseInt(response)==0) {
+                                Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
+
+                                Intent intent=new Intent(Register_chef5.this, Home_chef.class);
+                                startActivity(intent);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                finish();
+
+                                progressDialog.dismiss();
+
+
+                            } else if (Integer.parseInt(response)==1) {
+                                Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
                     }
                 },
                 new Response.ErrorListener() {
