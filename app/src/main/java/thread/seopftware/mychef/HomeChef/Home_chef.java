@@ -26,7 +26,9 @@ import thread.seopftware.mychef.etc.BackPressCloseHandler;
 
 import static android.graphics.Color.BLACK;
 import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
+import static thread.seopftware.mychef.Login.Login_choose.FACEBOOKLOGIN;
 import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_choose.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
 
 public class Home_chef extends AppCompatActivity
@@ -142,6 +144,16 @@ public class Home_chef extends AppCompatActivity
                         Intent intent=new Intent(getApplicationContext(), Login_choose.class);
                         startActivity(intent);
                         finish();
+
+                        KAKAO_LOGINCHECK="0";
+
+                        //ka api 저장값 초기화
+                        SharedPreferences pref2 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+                        SharedPreferences.Editor editor2 = pref2.edit();
+                        editor2.clear();
+                        editor2.commit();
+
+
                     }
                 });
             }
@@ -149,17 +161,23 @@ public class Home_chef extends AppCompatActivity
             else if(FB_LOGINCHECK!=null) {
                 //페이스북 로그아웃
                 LoginManager.getInstance().logOut();
-                Intent intent=new Intent(getApplicationContext(), Login_choose.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(getApplicationContext(), Login_choose.class);
+                startActivity(intent1);
                 finish();
+
+                //fb api 저장값 초기화
+                SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = pref.edit();
+                editor1.clear();
+                editor1.commit();
+                FB_LOGINCHECK = "0";
             }
 
             else {
-                Intent intent=new Intent(getApplicationContext(), Login_choose.class);
-                startActivity(intent);
+                Intent intent2=new Intent(getApplicationContext(), Login_choose.class);
+                startActivity(intent2);
                 finish();
             }
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

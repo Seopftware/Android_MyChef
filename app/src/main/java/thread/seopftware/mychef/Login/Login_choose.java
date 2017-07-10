@@ -79,22 +79,6 @@ public class Login_choose extends AppCompatActivity {
         SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
         int status=autologin.getInt("Status", 0);
 
-        // 저장 값들 초기화
-        FB_LOGINCHECK="0";
-        KAKAO_LOGINCHECK="0";
-
-        //fb api 저장값 초기화
-        SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.clear();
-        editor.commit();
-
-        //ka api 저장값 초기화
-        SharedPreferences pref2 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-        SharedPreferences.Editor editor2 = pref2.edit();
-        editor2.clear();
-        editor2.commit();
-
         Log.d(TAG, "status: "+status);
 
             if(status==1) {
@@ -376,13 +360,13 @@ public class Login_choose extends AppCompatActivity {
 
     class CheckKA_Id extends AsyncTask<String, Void, String> {
 
-        ProgressDialog progressDialog;
+//        ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(Login_choose.this, "Please Wait",null,true,true);
+//            progressDialog = ProgressDialog.show(Login_choose.this, "Please Wait",null,true,true);
 
         }
 
@@ -390,16 +374,16 @@ public class Login_choose extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
             Log.d(TAG, "POST kakao login response :" +result);
 
             if(Integer.parseInt(result)==1) {
-                Intent intent=new Intent(getApplicationContext(), Login_register.class);
+                Intent intent=new Intent(Login_choose.this, Login_register.class);
                 startActivity(intent);
                 finish();
 
             } else if (Integer.parseInt(result)==2) {
-                Intent intent=new Intent(getApplicationContext(), Home_user.class);
+                Intent intent=new Intent(Login_choose.this, Home_user.class);
                 startActivity(intent);
                 finish();
 
