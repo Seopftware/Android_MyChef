@@ -23,7 +23,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import thread.seopftware.mychef.Home_user;
+import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.R;
 
 public class Login_login extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.etc;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,6 +29,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import thread.seopftware.mychef.R;
 
 public class photoexercise extends AppCompatActivity implements View.OnClickListener  {
 

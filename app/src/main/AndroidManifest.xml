@@ -9,13 +9,13 @@
     <application
         android:name=".Login.GlobalApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true">
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -35,7 +35,7 @@
         <activity android:name=".Login.Login_register" />
         <activity android:name=".Register.Login_register_chef" />
         <activity
-            android:name=".Home_user"
+            android:name=".HomeUser.Home_user"
             android:label="@string/title_activity_home_user"
             android:theme="@style/AppTheme" />
         <activity
@@ -61,7 +61,8 @@
         <activity
             android:name=".HomeChef.Home_Choosearea"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
-        <activity android:name=".photoexercise"></activity>
+        <activity android:name=".etc.photoexercise" />
+        <activity android:name=".fragment_order"></activity>
     </application>
 
 </manifest>

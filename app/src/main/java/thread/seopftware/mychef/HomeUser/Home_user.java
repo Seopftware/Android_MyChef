@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.HomeUser;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

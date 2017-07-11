@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import thread.seopftware.mychef.Home_user;
+import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.Login.Login_login;
 import thread.seopftware.mychef.R;
 

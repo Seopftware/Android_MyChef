@@ -39,9 +39,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import thread.seopftware.mychef.HomeChef.Home_chef;
-import thread.seopftware.mychef.Home_user;
+import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.R;
-import thread.seopftware.mychef.photoexercise;
+import thread.seopftware.mychef.etc.photoexercise;
 
 public class Login_choose extends AppCompatActivity {
 

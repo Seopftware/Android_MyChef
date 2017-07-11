@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -36,6 +38,14 @@ public class Home_chef extends AppCompatActivity
 
     private BackPressCloseHandler backPressCloseHandler; // 백키 구현
 
+    private Fragment Fragment_Order;
+    private Fragment Fragment_Menu;
+    private Fragment Fragment2_Chat;
+    private Fragment Fragment3_Profile;
+    private Fragment Fragment4_Call;
+    private Fragment Fragment5_Setting;
+
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +58,8 @@ public class Home_chef extends AppCompatActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setTitle("MyChef");
 
+//         MyChef 클릭 이벤트
 //        final int abTitleId = getResources().getIdentifier("action_bar_title", "id", "android");
 //        findViewById(abTitleId).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -58,7 +68,23 @@ public class Home_chef extends AppCompatActivity
 //            }
 //        });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        // Fragment
+        Fragment_Order=new Fragment_Order();
+        Fragment_Menu=new Fragment_Menu();
+        Fragment2_Chat=new Fragment2_Chat();
+        Fragment3_Profile=new Fragment3_Profile();
+        Fragment4_Call=new Fragment4_Call();
+        Fragment5_Setting=new Fragment5_Setting();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.container, Fragment_Order);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+//        Fragment_Menu fragment_menu=(Fragment_Menu) getSupportFragmentManager().findFragmentById(R.id.Fragment_Menu);
+//        fragment_menu.addItem("korea", "english", "price");
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundColor(BLACK);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,21 +141,27 @@ public class Home_chef extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.nav_orderlist) { // 1. 주문현황
-
+            transaction.replace(R.id.container, Fragment_Order);
+            fab.hide();
         } else if (id == R.id.nav_menu) { // 2. 메뉴 관리
-
+            transaction.replace(R.id.container, Fragment_Menu);
+            fab.show();
         } else if (id == R.id.nav_chat) { // 3. 1:1 문의 현황
-
+            transaction.replace(R.id.container, Fragment2_Chat);
+            fab.hide();
         } else if (id == R.id.nav_account) { // 4. 프로필 설정
-
+            transaction.replace(R.id.container, Fragment3_Profile);
+            fab.hide();
         } else if (id == R.id.nav_call) { // 5.고객센터
-
+            transaction.replace(R.id.container, Fragment4_Call);
+            fab.hide();
         } else if (id == R.id.nav_settings) { // 6.환경설정
-
+            transaction.replace(R.id.container, Fragment5_Setting);
+            fab.hide();
         } else if (id == R.id.nav_logout)  { // 7. 로그아웃
-
             SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
             SharedPreferences.Editor editor=autologin.edit();
             editor.clear();
@@ -180,6 +212,10 @@ public class Home_chef extends AppCompatActivity
             }
         }
 
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        // Drawer들 아이템 한개 클릭하고 나면 Drawer창이 닫힘.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
