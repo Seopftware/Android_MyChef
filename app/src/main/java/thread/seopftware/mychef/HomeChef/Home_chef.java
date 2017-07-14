@@ -28,10 +28,10 @@ import thread.seopftware.mychef.etc.BackPressCloseHandler;
 
 import static android.graphics.Color.BLACK;
 import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
-import static thread.seopftware.mychef.Login.Login_choose.FACEBOOKLOGIN;
-import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
-import static thread.seopftware.mychef.Login.Login_choose.KAKAOLOGIN;
-import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
 public class Home_chef extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -86,6 +86,7 @@ public class Home_chef extends AppCompatActivity
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundColor(BLACK);
+        fab.hide();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

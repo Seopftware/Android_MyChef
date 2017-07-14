@@ -29,6 +29,10 @@ import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -49,9 +53,9 @@ import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
-public class Home_Foodadd extends AppCompatActivity {
+public class Home_Foodmodify extends AppCompatActivity {
 
-    private static String TAG="Home_Foodadd";
+    private static String TAG="Home_Foodmodify";
 
     //이미지 관련 함수
     ImageView iv_capture;
@@ -76,13 +80,14 @@ public class Home_Foodadd extends AppCompatActivity {
     // 입력값 변수들
     EditText et_KoreaName, et_EnglishName, et_Price, et_Description, et_Ingredients, et_Area;
     Bitmap first_bitmap, second_bitmap, third_bitmap;
+    String id;
 
     ImageView iv_first, iv_second, iv_third;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_foodadd);
+        setContentView(R.layout.activity_home_foodmodify);
 
         // 변수 객체 선언
         et_KoreaName= (EditText) findViewById(R.id.et_KoreaName);
@@ -100,14 +105,16 @@ public class Home_Foodadd extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setTitle("요리 등록");
+        actionBar.setTitle("요리 수정");
+
+        getDataFromDB();
 
         // 메인 이미지
         iv_capture= (ImageView) findViewById(R.id.iv_capture);
         iv_capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    showFileChooser();
+                showFileChooser();
             }
         });
 
@@ -124,6 +131,72 @@ public class Home_Foodadd extends AppCompatActivity {
 //        });
 
     }
+
+    private void getDataFromDB() {
+        Intent intent=getIntent();
+        id=intent.getExtras().getString("Id");
+
+        Log.d(TAG, "id : "+id);
+
+
+        String url = "http://115.71.239.151/foodmodify.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("parsing", response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("result");
+
+                    JSONObject jo = jsonArray.getJSONObject(0);
+
+
+                    String Id=jo.getString("id");
+                    String KoreaName=jo.getString("KoreaName");
+                    String EnglishName=jo.getString("EnglishName");
+                    String Price=jo.getString("Price");
+                    String Description=jo.getString("Description");
+                    String Ingredients=jo.getString("Description");
+                    String Area=jo.getString("Description");
+                    String imagePath=jo.getString("imagePath");
+
+                    et_KoreaName.setText(KoreaName);
+                    et_EnglishName.setText(EnglishName);
+                    et_Price.setText(Price);
+                    et_Description.setText(Description);
+                    et_Ingredients.setText(Ingredients);
+                    et_Area.setText(Area);
+                    Glide.with(getApplicationContext()).load("http://115.71.239.151/"+imagePath).into(iv_capture);
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Anything you want
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Log.d(TAG, "보내는 ID : "+id);
+                Map<String,String> map = new Hashtable<>();
+                map.put("Id", id);
+
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
 
     // 멀티 이미지 선택 함수
     public void start() {
@@ -146,12 +219,12 @@ public class Home_Foodadd extends AppCompatActivity {
 
         int l=images.size();
 
-            if(l>=1) {
-                image_first=images.get(0).getPath();
-                Glide.with(this).load(image_first).into(iv_first);
+        if(l>=1) {
+            image_first=images.get(0).getPath();
+            Glide.with(this).load(image_first).into(iv_first);
 
 
-                if(l>=2) {
+            if(l>=2) {
                 image_second=images.get(1).getPath();
                 Glide.with(this).load(image_second).into(iv_second);
 
@@ -161,9 +234,9 @@ public class Home_Foodadd extends AppCompatActivity {
 
 //                    ImageButton ib= (ImageButton) findViewById(R.id.button_pick_image);
 //                    ib.setImageResource(R.drawable.change);
-                    }
                 }
             }
+        }
 
     }
 
@@ -296,17 +369,18 @@ public class Home_Foodadd extends AppCompatActivity {
     private void InsertDB() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(this,"Uploading...","Please wait...",false,false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://115.71.239.151/foodadd.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://115.71.239.151/foodupdate.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-                        //Disimissing the progress dialog
-//                        //Showing toast message of the response
-//                        Toast.makeText(getApplicationContext(), response , Toast.LENGTH_LONG).show();
-
                         Log.d(TAG, "Volley Response is : "+response);
                         loading.dismiss();
+
+                        if(response.equals("0")) {
+                        Toast.makeText(getApplicationContext(), "수정이 완료 되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                        }
 
                     }
                 },
@@ -367,8 +441,8 @@ public class Home_Foodadd extends AppCompatActivity {
                     Log.d(TAG, "Normal chefemail: "+ChefEmail);
                 }
 
-
                 //Adding parameters, 입력 변수들
+                map.put("Id", id); // 0
                 map.put("KoreaName", KoreaName); // 1
                 map.put("EnglishName", EnglishName); // 2
                 map.put("Price", Price); // 3

@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="thread.seopftware.mychef.HomeChef.Home_Foodadd"
-    android:background="#FFFFFF">
+    tools:context="thread.seopftware.mychef.HomeChef.Home_Foodmodify">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -31,8 +30,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.0"
-        android:scrollbars="none">
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -229,63 +227,63 @@
                 android:orientation="horizontal">
 
                 <!--<LinearLayout-->
-                    <!--android:layout_width="70dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:orientation="vertical">-->
+                <!--android:layout_width="70dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:orientation="vertical">-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/pic_View"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="start"-->
-                        <!--android:text=" (추가사진)"-->
-                        <!--android:textSize="13sp"-->
-                        <!--android:textStyle="bold" />-->
+                <!--<TextView-->
+                <!--android:id="@+id/pic_View"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:text=" (추가사진)"-->
+                <!--android:textSize="13sp"-->
+                <!--android:textStyle="bold" />-->
 
-                    <!--<ImageButton-->
-                        <!--android:id="@+id/button_pick_image"-->
-                        <!--android:layout_width="30dp"-->
-                        <!--android:layout_height="30dp"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:background="#00000000"-->
-                        <!--android:scaleType="centerInside"-->
-                        <!--app:srcCompat="@drawable/circleadd" />-->
+                <!--<ImageButton-->
+                <!--android:id="@+id/button_pick_image"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="#00000000"-->
+                <!--android:scaleType="centerInside"-->
+                <!--app:srcCompat="@drawable/circleadd" />-->
 
                 <!--</LinearLayout>-->
 
                 <!--<HorizontalScrollView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="120dp">-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="120dp">-->
 
-                    <!--<LinearLayout-->
-                        <!--android:id="@+id/Linear"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:orientation="horizontal">-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/Linear"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:orientation="horizontal">-->
 
-                        <!--<ImageView-->
-                            <!--android:id="@+id/iv_first"-->
-                            <!--android:layout_width="150dp"-->
-                            <!--android:layout_height="match_parent"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:paddingLeft="10dp" />-->
+                <!--<ImageView-->
+                <!--android:id="@+id/iv_first"-->
+                <!--android:layout_width="150dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--android:paddingLeft="10dp" />-->
 
-                        <!--<ImageView-->
-                            <!--android:id="@+id/iv_second"-->
-                            <!--android:layout_width="150dp"-->
-                            <!--android:layout_height="match_parent"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:paddingLeft="10dp" />-->
+                <!--<ImageView-->
+                <!--android:id="@+id/iv_second"-->
+                <!--android:layout_width="150dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--android:paddingLeft="10dp" />-->
 
-                        <!--<ImageView-->
-                            <!--android:id="@+id/iv_third"-->
-                            <!--android:layout_width="150dp"-->
-                            <!--android:layout_height="match_parent"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:paddingLeft="10dp" />-->
+                <!--<ImageView-->
+                <!--android:id="@+id/iv_third"-->
+                <!--android:layout_width="150dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--android:paddingLeft="10dp" />-->
 
-                    <!--</LinearLayout>-->
+                <!--</LinearLayout>-->
                 <!--</HorizontalScrollView>-->
 
                 <LinearLayout
@@ -345,7 +343,7 @@
                 android:layout_marginTop="30dp"
                 android:background="#E06736"
                 android:onClick="onClickedConfirm"
-                android:text="등록하기"
+                android:text="수정하기"
                 android:textColor="#FFFFFF"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />

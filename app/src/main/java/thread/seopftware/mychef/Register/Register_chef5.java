@@ -43,8 +43,9 @@ import thread.seopftware.mychef.HomeChef.Home_chef;
 import thread.seopftware.mychef.Login.Login_login;
 import thread.seopftware.mychef.R;
 
-import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
-import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
+
 
 public class Register_chef5 extends AppCompatActivity {
 

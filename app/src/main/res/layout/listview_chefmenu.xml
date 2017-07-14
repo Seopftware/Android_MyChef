@@ -1,49 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_weight="9">
+    android:background="#FFFFFF">
 
     <ImageView
         android:id="@+id/iv_Food"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:srcCompat="@drawable/chef" />
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp" />
 
     <LinearLayout
-        android:layout_width="120dp"
-        android:layout_height="match_parent"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical"
-        android:paddingLeft="10dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.201"
+        app:layout_constraintLeft_toRightOf="@+id/iv_Food"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="40dp">
 
         <TextView
             android:id="@+id/tv_KoreaName"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="bottom"
-            android:text="TextView"
-            android:textAlignment="center" />
+            android:text="KoreaName"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Notification.Title"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/tv_EnglishName"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="bottom"
-            android:text="TextView"
-            android:textAlignment="center" />
+            android:text="EnglishName"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="italic" />
 
+        <TextView
+            android:id="@+id/tv_Price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:paddingTop="10dp"/>
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_Price"
-        android:layout_width="110dp"
+        android:id="@+id/tv_Date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingLeft="10dp"
-        android:text="TextView" />
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:text="date"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_Id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:text="Id"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="150dp" />
+
+</android.support.constraint.ConstraintLayout>

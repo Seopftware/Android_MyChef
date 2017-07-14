@@ -43,24 +43,24 @@ import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.R;
 import thread.seopftware.mychef.etc.photoexercise;
 
+import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.FBNAME;
+import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KANAME;
+
 public class Login_choose extends AppCompatActivity {
 
     //FB LOGIN API
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    public static String FB_LOGINCHECK="0";
-    public static String KAKAO_LOGINCHECK="0";
 
-    public static final String FACEBOOKLOGIN = "FacebookApi_Login";
-    public static final String FBNAME = "FB_NameKey";
-    public static final String FBEMAIL = "FB_EmailKey";
+    // 카카오
+    private Login_choose.SessionCallback callback;
 
-
-    //KAKAO LOGIN API
-    private SessionCallback callback;
-    public static final String KAKAOLOGIN = "KakaoApi_Login";
-    public static final String KANAME = "KA_NameKey";
-    public static final String KAEMAIL = "KA_EmailKey";
 
 
     private static String TAG="Login_choose";
@@ -72,6 +72,7 @@ public class Login_choose extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //==========================================================FB LOGIN API START=============================================================
         FacebookSdk.sdkInitialize(getApplicationContext()); // SDK 초기화 (setContentView 보다 먼저 실행되어야함)
         setContentView(R.layout.activity_login_choose);

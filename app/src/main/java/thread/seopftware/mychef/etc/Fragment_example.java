@@ -1,4 +1,4 @@
-package thread.seopftware.mychef.HomeChef;
+package thread.seopftware.mychef.etc;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 
 import thread.seopftware.mychef.R;
 
-public class Fragment4_Call extends Fragment {
+/**
+ * Created by MSI on 2017-07-14.
+ */
+
+public class Fragment_example extends Fragment {
 
     // 생성자
-    public Fragment4_Call() {
+    public Fragment_example() {
 
     }
 
@@ -31,6 +35,4 @@ public class Fragment4_Call extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
     }
-
-
 }

@@ -31,6 +31,19 @@ public class Login_login extends AppCompatActivity {
     private static String TAG = "Login_login";
     public static final String CHEFNORMALLOGIN="Chef_NormaLoginkey";
     public static final String CHEFNORMALLEMAIL="Chef_NormaLoginkey";
+    public static String FB_LOGINCHECK="0";
+    public static String KAKAO_LOGINCHECK="0";
+
+    public static final String FACEBOOKLOGIN = "FacebookApi_Login";
+    public static final String FBNAME = "FB_NameKey";
+    public static final String FBEMAIL = "FB_EmailKey";
+
+
+    //KAKAO LOGIN API
+
+    public static final String KAKAOLOGIN = "KakaoApi_Login";
+    public static final String KANAME = "KA_NameKey";
+    public static final String KAEMAIL = "KA_EmailKey";
 
     EditText et_Email, et_Password;
     RadioGroup rg_Choose;

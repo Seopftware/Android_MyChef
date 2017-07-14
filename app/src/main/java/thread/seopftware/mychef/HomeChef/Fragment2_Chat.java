@@ -20,8 +20,8 @@ public class Fragment2_Chat extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("MyChef_Chat");
 
-        adapter=new ListViewAdapter_Menu();
-        setListAdapter(adapter);
+//        adapter=new ListViewAdapter_Menu();
+//        setListAdapter(adapter);
 
 //        adapter.addItem("korea", "english", "price");
 //        adapter.addItem("korea1", "english2", "price3");

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="thread.seopftware.mychef.Chef_Change_Appeal"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView17">
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="자기소개 수정"
+            android:textColor="@android:color/black" />
+
+        <EditText
+            android:id="@+id/et_Appeal2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext"
+            android:hint="자기소개를 입력해 주세요.\n안녕하세요! 요리가 좋아 요리와 결혼한 쉐프 김인섭입니다.\n호텔 메인 주방장 이셨던 아버지의 피를 물려받아 어릴적 부터 자연스레 요리에 입문하게 되었습니다. 이후 요리 고등학교 졸업 후 영국의 옥스브릿지 대학의 조리학과에 진학하게 되었습니다. 대학교 졸업 후 영국에서 미슐랭 별 3개 짜리의 레스토랑에서 5년간 근무했습니다. 이후 요리만하게 되는 근무 환경에 질리게 되어 독립을 준비하던 중 마이쉐프를 알게되었습니다. 마이쉐프를 통해 제2의 인생을 꿈꾸고 싶습니다. 감사합니다!!\n(200자 이내)"
+            android:inputType="textMultiLine"
+            android:lines="12"
+            android:paddingLeft="10dp"
+            android:textSize="13sp" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="32dp"
+        android:background="#E06736"
+        android:onClick="onClickedConfirm"
+        android:text="완료"
+        android:textColor="#FFFFFF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="0dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="0dp"
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="자신의 소개를 변경하실 수 있습니다."
+        android:textAlignment="textStart"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+</android.support.constraint.ConstraintLayout>

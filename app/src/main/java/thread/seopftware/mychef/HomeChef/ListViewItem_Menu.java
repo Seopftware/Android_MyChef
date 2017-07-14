@@ -6,10 +6,16 @@ package thread.seopftware.mychef.HomeChef;
 
 public class ListViewItem_Menu {
 
-    private String KoreaName;
-    private String EnglishName;
-    private String Price;
-    private String ImagePath;
+    String Id;
+    String KoreaName;
+    String EnglishName;
+    String Price;
+    String Date;
+    String ImagePath;
+
+    public void setId(String id) {
+        Id = id;
+    }
 
     public void setEnglishName(String englishName) {
         EnglishName = englishName;
@@ -27,6 +33,13 @@ public class ListViewItem_Menu {
         ImagePath=imagePath;
     }
 
+    public void setDate(String date) {
+        Date = date;
+    }
+
+    public String getId() {
+        return this.Id;
+    }
 
     public String getKoreaName() {
         return this.KoreaName;
@@ -43,4 +56,9 @@ public class ListViewItem_Menu {
     public String getImagePath() {
         return this.ImagePath;
     }
+
+    public String getDate() {
+        return this.Date;
+    }
+
 }

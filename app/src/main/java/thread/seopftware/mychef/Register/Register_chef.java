@@ -34,14 +34,14 @@ import java.util.regex.Pattern;
 
 import thread.seopftware.mychef.R;
 
-import static thread.seopftware.mychef.Login.Login_choose.FACEBOOKLOGIN;
-import static thread.seopftware.mychef.Login.Login_choose.FBEMAIL;
-import static thread.seopftware.mychef.Login.Login_choose.FBNAME;
-import static thread.seopftware.mychef.Login.Login_choose.FB_LOGINCHECK;
-import static thread.seopftware.mychef.Login.Login_choose.KAEMAIL;
-import static thread.seopftware.mychef.Login.Login_choose.KAKAOLOGIN;
-import static thread.seopftware.mychef.Login.Login_choose.KAKAO_LOGINCHECK;
-import static thread.seopftware.mychef.Login.Login_choose.KANAME;
+import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.FBNAME;
+import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KANAME;
 
 public class Register_chef extends AppCompatActivity {
 

@@ -6,13 +6,296 @@
     android:layout_height="match_parent"
     tools:context="thread.seopftware.mychef.HomeChef.Fragment3_Profile">
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="profile"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="0dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_Profile"
+        app:layout_constraintVertical_bias="0.113"
+        android:id="@+id/linearLayout5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/ex_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="이름"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="NAME"
+                android:textAlignment="textEnd"
+                android:textColor="@color/com_facebook_blue"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#BDBDBD" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/ex_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:text="연락처"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_Call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="CALL"
+                android:textAlignment="textEnd"
+                android:textColor="@color/com_facebook_blue"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#BDBDBD" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/ex_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:text="이메일"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_Email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="EMAIL"
+                android:textAlignment="textEnd"
+                android:textColor="@color/com_facebook_blue"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/iv_Profile"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="#00000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.062"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/ex_camera"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_Profile"
+        app:layout_constraintRight_toRightOf="@+id/iv_Profile"
+        app:srcCompat="@drawable/circlecamera" />
+
+    <LinearLayout
+        android:id="@+id/SecondLinear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="39dp"
+        android:layout_marginTop="32dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+        app:layout_constraintVertical_bias="0.105">
+
+        <LinearLayout
+            android:id="@+id/Linear_SNS"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="4"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/ex_SNS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="SNS 연동"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_SNS"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="160dp"
+                android:scaleType="centerInside" />
+
+            <TextView
+                android:id="@+id/tv_SNS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginLeft="10dp"
+                android:gravity="right"
+                android:text="SNS"
+                android:textAlignment="textEnd"
+                android:textColor="@color/com_facebook_blue"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#BDBDBD" />
+
+        <LinearLayout
+            android:id="@+id/appealchange"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:id="@+id/ex_Introduce"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="자기소개 변경"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/rightarrow" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/lastview"
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="5dp"
+            android:background="#BDBDBD" />
+
+        <LinearLayout
+            android:id="@+id/passwordchange"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/ex_Password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="비밀번호 변경"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/rightarrow" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 </android.support.constraint.ConstraintLayout>

@@ -62,7 +62,12 @@
             android:name=".HomeChef.Home_Choosearea"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
         <activity android:name=".etc.photoexercise" />
-        <activity android:name=".fragment_order"></activity>
+        <activity android:name=".HomeChef.Fragment_Order" />
+        <activity android:name=".HomeChef.Home_Foodmodify" />
+        <activity android:name=".HomeChef.Home_Foodlook" />
+        <activity android:name=".HomeChef.Home_Chef_Introduce" />
+        <activity android:name=".Chef_Change_Appeal" />
+        <activity android:name=".Chef_Change_Password"></activity>
     </application>
 
 </manifest>

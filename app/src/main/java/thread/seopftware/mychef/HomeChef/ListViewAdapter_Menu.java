@@ -21,14 +21,14 @@ import thread.seopftware.mychef.R;
 public class ListViewAdapter_Menu extends BaseAdapter {
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<ListViewItem_Menu> listViewItemList = new ArrayList<ListViewItem_Menu>();
+    ArrayList<ListViewItem_Menu> listViewItemList ;
 
     // ListViewAdapter의 생성자
-    public ListViewAdapter_Menu() {
-
+    public ListViewAdapter_Menu(ArrayList<ListViewItem_Menu> listViewItemList) {
+        this.listViewItemList=listViewItemList;
     }
 
-    // Adapter에 사용되는 데이터의 개수를 기턴.
+    // Adapter에 사용되는 데이터의 개수를 리턴.
     @Override
     public int getCount() {
         return listViewItemList.size();
@@ -51,16 +51,20 @@ public class ListViewAdapter_Menu extends BaseAdapter {
         ListViewItem_Menu listViewItem=listViewItemList.get(position);
 
         // 화면에 표시될 View(Layout이 inflate된)으로 부터 위젯에 대한 참조 획득
+        TextView Id= (TextView) convertView.findViewById(R.id.tv_Id);
         TextView KoreaName= (TextView) convertView.findViewById(R.id.tv_KoreaName);
         TextView EnglishName= (TextView) convertView.findViewById(R.id.tv_EnglishName);
         TextView Price= (TextView) convertView.findViewById(R.id.tv_Price);
+        TextView Date= (TextView) convertView.findViewById(R.id.tv_Date);
         ImageView iv_Food= (ImageView) convertView.findViewById(R.id.iv_Food);
         Glide.with(context).load(listViewItem.getImagePath()).into(iv_Food);
 
         // 아이템 내 각 위젯에 데이터 반영
+        Id.setText(listViewItem.getId());
         KoreaName.setText(listViewItem.getKoreaName());
         EnglishName.setText(listViewItem.getEnglishName());
         Price.setText(listViewItem.getPrice());
+        Date.setText(listViewItem.getDate());
 
         return convertView;
     }
@@ -78,12 +82,15 @@ public class ListViewAdapter_Menu extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수.
-    public void addItem(String KoreaName, String EnglishName, String Price, String ImagePath) {
+    public void addItem(String Id, String KoreaName, String EnglishName, String Price, String Date, String ImagePath) {
+//        ListViewItem_Menu item=new ListViewItem_Menu(Id, KoreaName, EnglishName, Price, Date, ImagePath);
         ListViewItem_Menu item=new ListViewItem_Menu();
 
+        item.setId(Id);
         item.setKoreaName(KoreaName);
         item.setEnglishName(EnglishName);
         item.setPrice(Price);
+        item.setDate(Date);
         item.setImagePath(ImagePath);
 
         listViewItemList.add(item);
