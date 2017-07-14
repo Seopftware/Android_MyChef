@@ -44,9 +44,11 @@ import thread.seopftware.mychef.R;
 import thread.seopftware.mychef.etc.photoexercise;
 
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FBNAME;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
 import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
@@ -60,7 +62,6 @@ public class Login_choose extends AppCompatActivity {
 
     // 카카오
     private Login_choose.SessionCallback callback;
-
 
 
     private static String TAG="Login_choose";
@@ -79,6 +80,7 @@ public class Login_choose extends AppCompatActivity {
 
         SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
         int status=autologin.getInt("Status", 0);
+
 
         Log.d(TAG, "status: "+status);
 
@@ -107,7 +109,7 @@ public class Login_choose extends AppCompatActivity {
                 Log.e("유저아이디",loginResult.getAccessToken().getUserId());
                 Log.e("퍼미션 리스트",loginResult.getAccessToken().getPermissions()+"");
 
-                String UserId=loginResult.getAccessToken().getUserId();
+                final String UserId=loginResult.getAccessToken().getUserId();
                 FB_LOGINCHECK=UserId;
 
                 //loginResult.getAccessToken() 정보를 가지고 유저 정보를 가져올 수 있습니다.
@@ -125,11 +127,13 @@ public class Login_choose extends AppCompatActivity {
                                     Log.d("TAG","페이스북 이메일 -> " + Email);
                                     Log.d("TAG","페이스북 이름 -> " + name);
                                     Log.d("TAG","페이스북 성별 -> " + gender);
+                                    Log.d("TAG","페이스북 API ID -> " +UserId);
 
                                     SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
                                     SharedPreferences.Editor editor = pref.edit();
                                     editor.putString(FBNAME, name);
                                     editor.putString(FBEMAIL, Email);
+                                    editor.putString(FBAPI, UserId);
                                     editor.commit();
 
 
@@ -212,12 +216,16 @@ public class Login_choose extends AppCompatActivity {
                     Log.e("UserId", userId);
                     Log.e("UserName", userName);
                     Log.e("Email", Email);
+                    Log.e(TAG, "SHARED PREFERENCE 카카오");
 
                     SharedPreferences pref = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
+                    editor.clear();
                     editor.putString(KANAME, userName);
                     editor.putString(KAEMAIL, Email);
+                    editor.putString(KAAPI, userId);
                     editor.commit();
+                    editor.apply();
 
                     // 만약에 db에 id값이 존재 한다면 쉐프 or 유저 화면으로, db에 id값이 존재하지 않는다면 회원가입 선택화면으로.
                     CheckKA_Id check=new CheckKA_Id();

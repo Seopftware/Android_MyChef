@@ -38,8 +38,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
 import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
@@ -188,8 +190,14 @@ public class Fragment_Menu extends ListFragment {
 
                 String ChefEmail;
 
-                Log.d(TAG, "FB_LOGINCHECK : "+FB_LOGINCHECK);
-                Log.d(TAG, "KAKAO_LOGINCHECK : "+KAKAO_LOGINCHECK);
+                SharedPreferences pref1 = getActivity().getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+                KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
+
+                SharedPreferences pref2 = getActivity().getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+                FB_LOGINCHECK=pref2.getString(FBAPI, "0");
+
+                Log.d(TAG, "KAKAO API :"+KAKAO_LOGINCHECK);
+                Log.d(TAG, "FB API :"+FB_LOGINCHECK);
 
                 if(!FB_LOGINCHECK.equals("0")) {
                     SharedPreferences pref = getActivity().getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);

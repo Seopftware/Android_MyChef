@@ -29,6 +29,7 @@ import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
 import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
@@ -57,6 +58,12 @@ public class Chef_Change_Password extends AppCompatActivity {
         et_CurrentPW= (EditText) findViewById(R.id.et_CurrentPW);
         et_ChangePW= (EditText) findViewById(R.id.et_ChangePW);
         et_ConfirmPW= (EditText) findViewById(R.id.et_ConfirmPW);
+
+        SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "");
+
+        SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+        FB_LOGINCHECK=pref2.getString(KAAPI, "");
 
         if(!FB_LOGINCHECK.equals("0")) {
             SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);

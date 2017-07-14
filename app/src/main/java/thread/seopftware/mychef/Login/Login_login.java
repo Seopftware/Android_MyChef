@@ -37,6 +37,7 @@ public class Login_login extends AppCompatActivity {
     public static final String FACEBOOKLOGIN = "FacebookApi_Login";
     public static final String FBNAME = "FB_NameKey";
     public static final String FBEMAIL = "FB_EmailKey";
+    public static final String FBAPI = "FB_ApiKey";
 
 
     //KAKAO LOGIN API
@@ -44,13 +45,10 @@ public class Login_login extends AppCompatActivity {
     public static final String KAKAOLOGIN = "KakaoApi_Login";
     public static final String KANAME = "KA_NameKey";
     public static final String KAEMAIL = "KA_EmailKey";
+    public static final String KAAPI = "KA_ApiKey";
 
     EditText et_Email, et_Password;
     RadioGroup rg_Choose;
-//    RadioButton rb;
-//    int id;
-//    String choose;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,10 +123,6 @@ public class Login_login extends AppCompatActivity {
 
             progressDialog.dismiss();
 
-//            String Value=result;
-//            String[] split=Value.split("#@#");
-//            String chef_id=split[0];
-
             Log.d(TAG, "POST response :" +result);
 
             if(Integer.parseInt(result)==2) {
@@ -151,7 +145,6 @@ public class Login_login extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-//            String Choose=(String) params[0];
             String InputEmail=(String) params[0];
             String InputPassword=(String) params[1];
 

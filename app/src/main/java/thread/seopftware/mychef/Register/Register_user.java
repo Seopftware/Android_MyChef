@@ -40,6 +40,7 @@ import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FBNAME;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
 import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
@@ -119,7 +120,13 @@ public class Register_user extends AppCompatActivity {
             }
         });
 
-        if (FB_LOGINCHECK != null) {
+        SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "");
+
+        SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+        FB_LOGINCHECK=pref2.getString(KAAPI, "");
+
+        if (!FB_LOGINCHECK.equals("0")) {
             Log.d("TAG", "FB_LOGINCHECK :" + FB_LOGINCHECK);
 
             // 1. 비번입력 받는 edit_text 지우기.
@@ -140,7 +147,7 @@ public class Register_user extends AppCompatActivity {
             et_Name.setText(fbname);
             et_Email.setText(fbemail);
 
-        } else if (KAKAO_LOGINCHECK != null) {
+        } else if (!KAKAO_LOGINCHECK.equals("0")) {
             Log.d("TAG", "KAKAO_LOGINCHECK :" + KAKAO_LOGINCHECK);
 
             // 1. 비번입력 받는 edit_text 지우기.

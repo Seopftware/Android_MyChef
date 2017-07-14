@@ -49,6 +49,7 @@ import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
 import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
@@ -423,9 +424,11 @@ public class Home_Foodmodify extends AppCompatActivity {
 
                 //요리사 정보를 불러들이기 위한 요리사 이메일 저장
                 String ChefEmail; // 9
+                SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+                KAKAO_LOGINCHECK=pref1.getString(KAAPI, "");
 
-                Log.d(TAG, "FB_LOGINCHECK : "+FB_LOGINCHECK);
-                Log.d(TAG, "KAKAO_LOGINCHECK : "+KAKAO_LOGINCHECK);
+                SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+                FB_LOGINCHECK=pref2.getString(KAAPI, "");
 
                 if(!FB_LOGINCHECK.equals("0")) {
                     SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);

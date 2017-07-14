@@ -14,13 +14,29 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Hashtable;
+import java.util.Map;
 
 import thread.seopftware.mychef.Login.Login_choose;
 import thread.seopftware.mychef.R;
@@ -28,13 +44,21 @@ import thread.seopftware.mychef.etc.BackPressCloseHandler;
 
 import static android.graphics.Color.BLACK;
 import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
+import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
+import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
 public class Home_chef extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static String TAG="Home_chef";
 
     private BackPressCloseHandler backPressCloseHandler; // 백키 구현
 
@@ -46,6 +70,11 @@ public class Home_chef extends AppCompatActivity
     private Fragment Fragment5_Setting;
 
     FloatingActionButton fab;
+
+    String ChefEmail;
+    String Name;
+
+    TextView tv_ChefName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +88,24 @@ public class Home_chef extends AppCompatActivity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
 
-//         MyChef 클릭 이벤트
-//        final int abTitleId = getResources().getIdentifier("action_bar_title", "id", "android");
-//        findViewById(abTitleId).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(),"클릭!! 홈으로", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerview = navigationView.getHeaderView(0);
+        tv_ChefName= (TextView) headerview.findViewById(R.id.tv_ChefName);
+        tv_ChefName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, Fragment3_Profile);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
+        getName();
 
         // Fragment
         Fragment_Order=new Fragment_Order();
@@ -80,9 +119,6 @@ public class Home_chef extends AppCompatActivity
         transaction.add(R.id.container, Fragment_Order);
         transaction.addToBackStack(null);
         transaction.commit();
-
-//        Fragment_Menu fragment_menu=(Fragment_Menu) getSupportFragmentManager().findFragmentById(R.id.Fragment_Menu);
-//        fragment_menu.addItem("korea", "english", "price");
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundColor(BLACK);
@@ -101,8 +137,11 @@ public class Home_chef extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+
+
     }
 
     @Override
@@ -124,12 +163,8 @@ public class Home_chef extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
@@ -220,6 +255,74 @@ public class Home_chef extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // 이메일 값 보내고 이름 받아오기
+    // 쉐프 프로필 정보 받아오는 함수
+    private void getName() {
+
+        String url = "http://115.71.239.151/Chef_getName.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("parsing", response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("result");
+
+                    JSONObject jo = jsonArray.getJSONObject(0);
+
+                    // 데이터 불러들이기
+                    Name=jo.getString("name"); // 0
+
+                    // 데이터 뷰에 입력시키기
+                    tv_ChefName.setText(Name);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Anything you want
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+                KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
+
+                SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+                FB_LOGINCHECK=pref2.getString(FBAPI, "0");
+
+                if(!FB_LOGINCHECK.equals("0")) {
+                    SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+                    ChefEmail=pref.getString(FBEMAIL, "");
+                    Log.d(TAG, "FB chefemail: "+ChefEmail);
+                } else if(!KAKAO_LOGINCHECK.equals("0")) {
+                    SharedPreferences pref = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+                    ChefEmail=pref.getString(KAEMAIL, "");
+                    Log.d(TAG, "KA chefemail: "+ChefEmail);
+                } else { // 일반
+                    SharedPreferences pref = getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+                    ChefEmail=pref.getString(CHEFNORMALLEMAIL, "");
+                    Log.d(TAG, "Normal chefemail: "+ChefEmail);
+                }
+
+                Log.d(TAG, "쉐프 Email : "+ChefEmail);
+                Map<String,String> map = new Hashtable<>();
+                map.put("Chef_Email", ChefEmail);
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
     }
 
 }
