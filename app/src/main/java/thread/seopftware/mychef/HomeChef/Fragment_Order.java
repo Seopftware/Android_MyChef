@@ -1,19 +1,27 @@
 package thread.seopftware.mychef.HomeChef;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+
+import com.astuetz.PagerSlidingTabStrip;
+
+import thread.seopftware.mychef.R;
 
 /**
  * Created by MSI on 2017-07-11.
  */
 
-public class Fragment_Order extends ListFragment {
+public class Fragment_Order extends Fragment {
 
-    ListViewAdapter_Order adapter;
+    ViewPager viewPager;
+    PagerSlidingTabStrip tabs;
 
     // 생성자
     public Fragment_Order() {
@@ -22,37 +30,62 @@ public class Fragment_Order extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle("MyChef_Home");
+        getActivity().setTitle("MyChef_주문내역");
+        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.activity_fragment1_user_order, container, false);
 
-        adapter=new ListViewAdapter_Order();
-        setListAdapter(adapter);
+        viewPager= (ViewPager) rootview.findViewById(R.id.viewPager);
+        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager()));
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setCurrentItem(0);
 
-//        adapter.addItem("korea", "english", "price", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea1", "english2", "price3", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea1", "english2", "price3", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea", "english", "price", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea1", "english2", "price3", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea1", "english2", "price3", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea", "english", "price", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea1", "english2", "price3", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
-//        adapter.addItem("korea1", "english2", "price3", "http://115.71.239.151/foodimage/tmp_1499671034785.jpg");
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        tabs= (PagerSlidingTabStrip) rootview.findViewById(R.id.tabs);
+        tabs.setShouldExpand(true);
+        tabs.setViewPager(viewPager);
+
+        return rootview;
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        ListViewItem_Menu item =(ListViewItem_Menu) l.getItemAtPosition(position);
-
-        String KoreaName=item.getKoreaName();
-        String EnglishName=item.getEnglishName();
-        String Price=item.getPrice();
-
-        super.onListItemClick(l, v, position, id);
     }
 
-    public void addItem(String KoreaName, String EnglishName, String Price, String ImagePath) {
-        adapter.addItem(KoreaName, EnglishName, Price, ImagePath);
+    // 페이지마다 보여줄 타이틀을 정해준다.
+    private String[] pageTitle = {"예약 중인 출장", "완료된 출장", "취소된 출장"};
+    private class PagerAdapter extends FragmentPagerAdapter {
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
+
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return pageTitle[position];
+        }
+
+        /**
+         * View Pager의 Fragment 들은 각각 Index를 가진다. * Android OS로 부터 요청된 Pager의 Index를 보내주면, * 해당되는 Fragment를 리턴시킨다. * @param position * @return
+         */
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                Log.d("pos", String.valueOf(position));
+                return new OrderList_chef_viewpager();
+            } else if (position == 1) {
+                return new OrderList_chef_viewpager2();
+            } else {
+                return new OrderList_chef_viewpager3();
+            }
+        }
+
+        /**
+         * View Pager에 몇개의 Fragment가 들어가는지 설정 * @return
+         */
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 }

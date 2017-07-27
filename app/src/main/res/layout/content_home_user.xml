@@ -6,16 +6,18 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="thread.seopftware.mychef.HomeUser.Home_user"
-    tools:showIn="@layout/app_bar_home_user">
+    tools:showIn="@layout/app_bar_home_user"
+    android:id="@+id/usercontainer">
 
-    <ImageView
-        android:id="@+id/imageView3"
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/mainexam"
-        android:scaleType="fitXY"
-        tools:layout_editor_absoluteY="-1dp" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

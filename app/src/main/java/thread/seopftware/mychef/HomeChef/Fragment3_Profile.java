@@ -36,8 +36,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import thread.seopftware.mychef.Chef_Change_Appeal;
-import thread.seopftware.mychef.Chef_Change_Password;
 import thread.seopftware.mychef.R;
 
 import static android.content.Context.MODE_PRIVATE;

@@ -35,9 +35,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +45,7 @@ import thread.seopftware.mychef.R;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
 import static thread.seopftware.mychef.Login.Login_login.KAAPI;
@@ -158,8 +157,8 @@ public class Home_Foodmodify extends AppCompatActivity {
                     String EnglishName=jo.getString("EnglishName");
                     String Price=jo.getString("Price");
                     String Description=jo.getString("Description");
-                    String Ingredients=jo.getString("Description");
-                    String Area=jo.getString("Description");
+                    String Ingredients=jo.getString("Ingredients");
+                    String Area=jo.getString("Area");
                     String imagePath=jo.getString("imagePath");
 
                     et_KoreaName.setText(KoreaName);
@@ -425,10 +424,10 @@ public class Home_Foodmodify extends AppCompatActivity {
                 //요리사 정보를 불러들이기 위한 요리사 이메일 저장
                 String ChefEmail; // 9
                 SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-                KAKAO_LOGINCHECK=pref1.getString(KAAPI, "");
+                KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
 
                 SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-                FB_LOGINCHECK=pref2.getString(KAAPI, "");
+                FB_LOGINCHECK=pref2.getString(FBAPI, "0");
 
                 if(!FB_LOGINCHECK.equals("0")) {
                     SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
@@ -473,16 +472,6 @@ public class Home_Foodmodify extends AppCompatActivity {
 //
 //                map.put("image_Path3", image_third); // 10
 //                map.put("image_Name3", imageName3); // 4
-
-                long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd");
-                String CurrentTime = sdfNow.format(date);
-
-                Log.d(TAG, "register_chef time: " + CurrentTime);
-
-                map.put("created", CurrentTime);
-
 
 
                 //returning parameters

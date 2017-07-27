@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.HomeChef;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,16 +19,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
 import static thread.seopftware.mychef.Login.Login_login.KAAPI;
@@ -36,19 +37,17 @@ import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
-
-public class Chef_Change_Appeal extends AppCompatActivity {
+public class Chef_Change_Password extends AppCompatActivity {
 
     private static String TAG="Chef_Change_Appeal";
 
-    EditText et_Appeal2;
-    String Appeal2;
+    EditText et_CurrentPW, et_ChangePW, et_ConfirmPW;
     String ChefEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chef_change_appeal);
+        setContentView(R.layout.activity_chef__change__password);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,15 +56,17 @@ public class Chef_Change_Appeal extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setTitle("프로필 수정");
+        actionBar.setTitle("비밀번호 변경");
 
-        et_Appeal2= (EditText) findViewById(R.id.et_Appeal2);
+        et_CurrentPW= (EditText) findViewById(R.id.et_CurrentPW);
+        et_ChangePW= (EditText) findViewById(R.id.et_ChangePW);
+        et_ConfirmPW= (EditText) findViewById(R.id.et_ConfirmPW);
 
         SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "");
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
 
         SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-        FB_LOGINCHECK=pref2.getString(KAAPI, "");
+        FB_LOGINCHECK=pref2.getString(FBAPI, "0");
 
         if(!FB_LOGINCHECK.equals("0")) {
             SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
@@ -86,7 +87,6 @@ public class Chef_Change_Appeal extends AppCompatActivity {
 
         }
 
-        getData(); // 데이터 뿌려주기
     }
 
     //액션바 백키 버튼 구현
@@ -100,71 +100,52 @@ public class Chef_Change_Appeal extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // 정규식을 이용한 비밀번호 형식 체크
+    private boolean PasswordValid(String password) {
+        String password1 = "^[a-zA-Z0-9!@.#$%^&*?_~]{8,16}$";
+        Pattern pass = Pattern.compile(password1);
+        Matcher word = pass.matcher(password);
+        return word.matches();
+    }
+
     public void onClickedConfirm(View v) {
 
-        // 한글 요리명 입력 안했을 때
-        if (et_Appeal2.getText().toString().length() == 0) {
-            Toast.makeText(getApplicationContext(), "자기 소개를 입력해주세요.", Toast.LENGTH_SHORT).show();
-            et_Appeal2.requestFocus();
+        // 비밀번호 입력 안했을 때
+        if (et_CurrentPW.getText().toString().length() == 0) {
+            Toast.makeText(getApplicationContext(), "현재 비밀번호를 입력하세요!", Toast.LENGTH_SHORT).show();
+            et_CurrentPW.requestFocus();
+            return;
+        }
+
+        // 비밀번호 정규식 체크
+        if (PasswordValid(et_ChangePW.getText().toString()) == false) {
+            Toast.makeText(getApplicationContext(), "비밀번호는 '특수문자'를 포함하여 '여덟 글자 이상'을 입력하셔야 합니다.", Toast.LENGTH_SHORT).show();
+            et_ChangePW.requestFocus();
+            return;
+        }
+
+        // 비밀번호 확인 입력 안했을 때
+        if (et_ConfirmPW.getText().toString().length() == 0) {
+            Toast.makeText(getApplicationContext(), "비밀번호 확인을 입력하세요!", Toast.LENGTH_SHORT).show();
+            et_ConfirmPW.requestFocus();
+            return;
+
+        }
+
+        // 비밀번호 일치하지 않을 때
+        if (!et_ChangePW.getText().toString().equals(et_ConfirmPW.getText().toString())) {
+            Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+            et_ChangePW.requestFocus();
             return;
         }
 
         updateData(); // 데이터 업데이트 시키기
     }
 
-    // 1. 데이터 뿌려주기
-    private void getData() {
-
-        String url = "http://115.71.239.151/Chef_Change_Appeal.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                Log.d("parsing", response);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("result");
-
-                    JSONObject jo = jsonArray.getJSONObject(0);
-
-                    // 데이터 불러들이기
-                    Appeal2=jo.getString("appeal2");
-
-                    // 데이터 뷰에 입력시키기
-                    et_Appeal2.setText(Appeal2);
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Anything you want
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Log.d(TAG, "쉐프 Email : "+ChefEmail);
-                Map<String,String> map = new Hashtable<>();
-                map.put("Chef_Email", ChefEmail);
-
-                return map;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(stringRequest);
-    }
-
-
-    // 2. 데이터 db 업데이트
+    // 1. 데이터 db 업데이트
     private void updateData() {
 
-        String url = "http://115.71.239.151/Chef_Change_AppealUpdate.php";
+        String url = "http://115.71.239.151/Chef_Change_Password.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -172,12 +153,12 @@ public class Chef_Change_Appeal extends AppCompatActivity {
                 Log.d("parsing", response);
 
                 if(Integer.parseInt(response)==0) {
-                    Toast.makeText(getApplicationContext(), "자기소개 변경이 완료되었습니다." , Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(), "비밀번호 변경이 완료되었습니다." , Toast.LENGTH_LONG).show();
                     finish();
 
                 } else if (Integer.parseInt(response)==1) {
-                    Toast.makeText(getApplicationContext(), "error 발생", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "현재 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    et_CurrentPW.requestFocus();
                     return;
                 }
 
@@ -192,10 +173,14 @@ public class Chef_Change_Appeal extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String,String> map = new Hashtable<>();
-                String updateAppeal=et_Appeal2.getText().toString();
+
+                String CurrentPW=et_CurrentPW.getText().toString();
+                String ChangePW=et_ChangePW.getText().toString();
 
                 map.put("ChefEmail", ChefEmail);
-                map.put("UpdateAppeal", updateAppeal);
+                map.put("CurrentPW", CurrentPW);
+                map.put("ChangePW", ChangePW);
+
 
                 return map;
             }

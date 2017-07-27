@@ -1,5 +1,6 @@
 package thread.seopftware.mychef.Login;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,8 +24,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import thread.seopftware.mychef.HomeChef.Home_chef;
 import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.R;
+
+import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
 
 public class Login_login extends AppCompatActivity {
 
@@ -46,6 +50,7 @@ public class Login_login extends AppCompatActivity {
     public static final String KANAME = "KA_NameKey";
     public static final String KAEMAIL = "KA_EmailKey";
     public static final String KAAPI = "KA_ApiKey";
+
 
     EditText et_Email, et_Password;
     RadioGroup rg_Choose;
@@ -96,11 +101,17 @@ public class Login_login extends AppCompatActivity {
         if(choose.equals("user")) {
             Login_UserCheck login=new Login_UserCheck();
             login.execute(InputEmail, InputPassword);
+
+
         } else if(choose.equals("chef")) {
             Login_ChefCheck login=new Login_ChefCheck();
             login.execute(InputEmail, InputPassword);
         }
 
+        SharedPreferences pref = getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(CHEFNORMALLEMAIL, et_Email.getText().toString());
+        editor.commit();
 
 
     }
@@ -126,15 +137,18 @@ public class Login_login extends AppCompatActivity {
             Log.d(TAG, "POST response :" +result);
 
             if(Integer.parseInt(result)==2) {
-                Toast.makeText(getApplicationContext(), "접속을 환영합니다!" , Toast.LENGTH_LONG).show();
+
+                SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor=autologin.edit();
+                editor.putInt("Status", 1);
+                editor.commit();
+
+
                 Intent intent=new Intent(Login_login.this, Home_user.class);
                 startActivity(intent);
                 finish();
 
-                SharedPreferences pref = getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putString(CHEFNORMALLEMAIL, et_Email.getText().toString());
-                editor.commit();
+
 
 
             } else if (Integer.parseInt(result)==1) {
@@ -219,21 +233,25 @@ public class Login_login extends AppCompatActivity {
             Log.d(TAG, "POST response :" +result);
 
 
-//            if(Integer.parseInt(result)==2) {
-//                Toast.makeText(getApplicationContext(), "접속을 환영합니다!" , Toast.LENGTH_LONG).show();
-//                Intent intent=new Intent(Login_login.this, Home_chef.class);
-//                startActivity(intent);
-//                finish();
-//
-//            } else if (Integer.parseInt(result)==1) {
-//                Toast.makeText(getApplicationContext(), "이메일 또는 비밀번호를 다시 확인해주세요." , Toast.LENGTH_LONG).show();
-//            }
+            if(Integer.parseInt(result)==2) {
+
+                SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor=autologin.edit();
+                editor.putInt("Status", 2);
+                editor.commit();
+
+                Intent intent=new Intent(Login_login.this, Home_chef.class);
+                startActivity(intent);
+                finish();
+
+            } else if (Integer.parseInt(result)==1) {
+                Toast.makeText(getApplicationContext(), "이메일 또는 비밀번호를 다시 확인해주세요." , Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
         protected String doInBackground(String... params) {
 
-//            String Choose=(String) params[0];
             String InputEmail=(String) params[0];
             String InputPassword=(String) params[1];
 

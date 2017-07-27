@@ -41,7 +41,6 @@ import java.net.URL;
 import thread.seopftware.mychef.HomeChef.Home_chef;
 import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.R;
-import thread.seopftware.mychef.etc.photoexercise;
 
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FBAPI;
@@ -248,7 +247,7 @@ public class Login_choose extends AppCompatActivity {
     }
 
     public void onClickedLogin(View v) {
-        Intent intent=new Intent(getApplicationContext(), photoexercise.class);
+        Intent intent=new Intent(getApplicationContext(), Login_login.class);
         startActivity(intent);
     }
 

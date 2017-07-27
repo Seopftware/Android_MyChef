@@ -43,6 +43,7 @@ import thread.seopftware.mychef.R;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
 import static thread.seopftware.mychef.Login.Login_login.KAAPI;
@@ -302,12 +303,13 @@ public class Home_Foodadd extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-                        //Disimissing the progress dialog
-//                        //Showing toast message of the response
-//                        Toast.makeText(getApplicationContext(), response , Toast.LENGTH_LONG).show();
-
                         Log.d(TAG, "Volley Response is : "+response);
                         loading.dismiss();
+
+                        if(response.equals("0")) {
+                            Toast.makeText(getApplicationContext(), "메뉴 등록을 완료했습니다.", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
 
                     }
                 },
@@ -353,10 +355,10 @@ public class Home_Foodadd extends AppCompatActivity {
 
 
                 SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-                KAKAO_LOGINCHECK=pref1.getString(KAAPI, "");
+                KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
 
                 SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-                FB_LOGINCHECK=pref2.getString(KAAPI, "");
+                FB_LOGINCHECK=pref2.getString(FBAPI, "0");
 
                 if(!FB_LOGINCHECK.equals("0")) {
                     SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
@@ -372,6 +374,7 @@ public class Home_Foodadd extends AppCompatActivity {
                     Log.d(TAG, "Normal chefemail: "+ChefEmail);
                 }
 
+                Log.d(TAG, "KA chefemail: "+ChefEmail);
 
                 //Adding parameters, 입력 변수들
                 map.put("KoreaName", KoreaName); // 1

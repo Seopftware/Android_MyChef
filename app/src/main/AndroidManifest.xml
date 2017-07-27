@@ -52,7 +52,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity android:name=".HomeChef.Fragment_Menu" />
+        <activity android:name=".HomeChef.Fragment1_Menu" />
         <activity android:name=".HomeChef.Fragment2_Chat" />
         <activity android:name=".HomeChef.Fragment3_Profile" />
         <activity android:name=".HomeChef.Fragment4_Call" />
@@ -61,13 +61,24 @@
         <activity
             android:name=".HomeChef.Home_Choosearea"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
-        <activity android:name=".etc.photoexercise" />
         <activity android:name=".HomeChef.Fragment_Order" />
         <activity android:name=".HomeChef.Home_Foodmodify" />
         <activity android:name=".HomeChef.Home_Foodlook" />
         <activity android:name=".HomeChef.Home_Chef_Introduce" />
-        <activity android:name=".Chef_Change_Appeal" />
-        <activity android:name=".Chef_Change_Password"></activity>
+        <activity android:name=".HomeChef.Chef_Change_Appeal" />
+        <!-- <activity android:name=".HomeUser.Fragment_User_Menu"/> -->
+        <!-- <activity android:name=".HomeUser.Fragment1_User_Order"/> -->
+        <!-- <activity android:name="HomeUser.Fragment2_User_Chat"/> -->
+        <!-- <activity android:name="HomeUser.Fragment3_User_Call"/> -->
+        <!-- <activity android:name="HomeUser.Fragment4_User_Setting"/> -->
+        <activity android:name=".HomeChef.Chef_Change_Password" />
+        <activity android:name=".HomeUser.Fragment_User_Cart" />
+        <activity android:name=".HomeUser.Fragment_User_Search" />
+        <activity android:name=".HomeUser.ChildFragment" />
+        <activity android:name=".HomeUser.User_Payment_CardRegister" />
+        <activity android:name=".HomeUser.User_Payment" />
+        <activity android:name=".HomeUser.User_Payment_Address" />
+        <activity android:name=".User_Reply"></activity>
     </application>
 
 </manifest>

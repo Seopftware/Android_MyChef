@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
 import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.FBNAME;
 import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
@@ -123,10 +124,10 @@ public class Register_chef extends AppCompatActivity {
         });
 
         SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "");
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
 
         SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-        FB_LOGINCHECK=pref2.getString(KAAPI, "");
+        FB_LOGINCHECK=pref2.getString(FBAPI, "0");
 
         if (!FB_LOGINCHECK.equals("0")) {
             Log.d("TAG", "FB_LOGINCHECK :" + FB_LOGINCHECK);

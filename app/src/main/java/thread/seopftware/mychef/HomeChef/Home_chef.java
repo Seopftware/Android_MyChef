@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -62,13 +63,6 @@ public class Home_chef extends AppCompatActivity
 
     private BackPressCloseHandler backPressCloseHandler; // 백키 구현
 
-    private Fragment Fragment_Order;
-    private Fragment Fragment_Menu;
-    private Fragment Fragment2_Chat;
-    private Fragment Fragment3_Profile;
-    private Fragment Fragment4_Call;
-    private Fragment Fragment5_Setting;
-
     FloatingActionButton fab;
 
     String ChefEmail;
@@ -76,12 +70,16 @@ public class Home_chef extends AppCompatActivity
 
     TextView tv_ChefName;
 
+    Fragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_chef);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        displaySelectedScreen(R.id.nav_orderlist);
 
         ActionBar actionBar=getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -95,10 +93,14 @@ public class Home_chef extends AppCompatActivity
         tv_ChefName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, Fragment3_Profile);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+                fragment= new Fragment3_Profile();
+
+                if(fragment!=null) {
+                    FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.content_frame, fragment);
+                    transaction.commit();
+                }
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
@@ -107,20 +109,8 @@ public class Home_chef extends AppCompatActivity
         });
         getName();
 
-        // Fragment
-        Fragment_Order=new Fragment_Order();
-        Fragment_Menu=new Fragment_Menu();
-        Fragment2_Chat=new Fragment2_Chat();
-        Fragment3_Profile=new Fragment3_Profile();
-        Fragment4_Call=new Fragment4_Call();
-        Fragment5_Setting=new Fragment5_Setting();
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.container, Fragment_Order);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.bringToFront();
         fab.setBackgroundColor(BLACK);
         fab.hide();
         fab.setOnClickListener(new View.OnClickListener() {
@@ -136,11 +126,6 @@ public class Home_chef extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-
-
 
     }
 
@@ -166,6 +151,11 @@ public class Home_chef extends AppCompatActivity
 
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Log.d("오긴오나?", "음..");
+
+            Intent intent=new Intent(getApplicationContext(), Home_Foodadd.class);
+            startActivity(intent);
+
             return true;
         }
 
@@ -175,85 +165,9 @@ public class Home_chef extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        if (id == R.id.nav_orderlist) { // 1. 주문현황
-            transaction.replace(R.id.container, Fragment_Order);
-            fab.hide();
-        } else if (id == R.id.nav_menu) { // 2. 메뉴 관리
-            transaction.replace(R.id.container, Fragment_Menu);
-            fab.show();
-        } else if (id == R.id.nav_chat) { // 3. 1:1 문의 현황
-            transaction.replace(R.id.container, Fragment2_Chat);
-            fab.hide();
-        } else if (id == R.id.nav_account) { // 4. 프로필 설정
-            transaction.replace(R.id.container, Fragment3_Profile);
-            fab.hide();
-        } else if (id == R.id.nav_call) { // 5.고객센터
-            transaction.replace(R.id.container, Fragment4_Call);
-            fab.hide();
-        } else if (id == R.id.nav_settings) { // 6.환경설정
-            transaction.replace(R.id.container, Fragment5_Setting);
-            fab.hide();
-        } else if (id == R.id.nav_logout)  { // 7. 로그아웃
-            SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor=autologin.edit();
-            editor.clear();
-            editor.commit();
-            finish();
+        displaySelectedScreen(item.getItemId());
 
-            if(KAKAO_LOGINCHECK!=null) {
-                //카카오톡 로그아웃
-                UserManagement.requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        Intent intent=new Intent(getApplicationContext(), Login_choose.class);
-                        startActivity(intent);
-                        finish();
-
-                        KAKAO_LOGINCHECK="0";
-
-                        //ka api 저장값 초기화
-                        SharedPreferences pref2 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-                        SharedPreferences.Editor editor2 = pref2.edit();
-                        editor2.clear();
-                        editor2.commit();
-
-
-                    }
-                });
-            }
-
-            else if(FB_LOGINCHECK!=null) {
-                //페이스북 로그아웃
-                LoginManager.getInstance().logOut();
-                Intent intent1 = new Intent(getApplicationContext(), Login_choose.class);
-                startActivity(intent1);
-                finish();
-
-                //fb api 저장값 초기화
-                SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-                SharedPreferences.Editor editor1 = pref.edit();
-                editor1.clear();
-                editor1.commit();
-                FB_LOGINCHECK = "0";
-            }
-
-            else {
-                Intent intent2=new Intent(getApplicationContext(), Login_choose.class);
-                startActivity(intent2);
-                finish();
-            }
-        }
-
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-        // Drawer들 아이템 한개 클릭하고 나면 Drawer창이 닫힘.
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -278,6 +192,7 @@ public class Home_chef extends AppCompatActivity
 
                     // 데이터 뷰에 입력시키기
                     tv_ChefName.setText(Name);
+                    Toast.makeText(getApplicationContext(), Name+"쉐프님 환영합니다 !!", Toast.LENGTH_LONG).show();
 
 
                 } catch (JSONException e) {
@@ -323,6 +238,96 @@ public class Home_chef extends AppCompatActivity
 
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
+    }
+
+    private void displaySelectedScreen(int itemId) {
+        Fragment fragment=null;
+
+        switch (itemId) {
+            case R.id.nav_orderlist: // 주문 내역
+                fragment = new Fragment_Order();
+                break;
+
+            case R.id.nav_menu: // 메뉴 관리
+                fragment = new Fragment1_Menu();
+                break;
+
+            case R.id.nav_chat: // 1:1 문의
+                fragment = new Fragment2_Chat();
+                break;
+
+            case R.id.nav_account: // 프로필 설정
+                fragment = new Fragment3_Profile();
+                break;
+
+            case R.id.nav_call: // 고객센터
+                fragment = new Fragment4_Call();
+                break;
+
+            case R.id.nav_settings: // 환경 설정
+                fragment = new Fragment5_Setting();
+                break;
+
+            case R.id.nav_logout: // 로그아웃
+                SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor=autologin.edit();
+                editor.clear();
+                editor.commit();
+                finish();
+
+                if(!KAKAO_LOGINCHECK.equals("0")) {
+                    //카카오톡 로그아웃
+                    UserManagement.requestLogout(new LogoutResponseCallback() {
+                        @Override
+                        public void onCompleteLogout() {
+                            Intent intent=new Intent(getApplicationContext(), Login_choose.class);
+                            startActivity(intent);
+                            finish();
+
+                            KAKAO_LOGINCHECK="0";
+
+                            //ka api 저장값 초기화
+                            SharedPreferences pref2 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+                            SharedPreferences.Editor editor2 = pref2.edit();
+                            editor2.clear();
+                            editor2.commit();
+
+
+                        }
+                    });
+                }
+
+                else if(!FB_LOGINCHECK.equals("0")) {
+                    //페이스북 로그아웃
+                    LoginManager.getInstance().logOut();
+                    Intent intent1 = new Intent(getApplicationContext(), Login_choose.class);
+                    startActivity(intent1);
+                    finish();
+
+                    //fb api 저장값 초기화
+                    SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = pref.edit();
+                    editor1.clear();
+                    editor1.commit();
+                    FB_LOGINCHECK = "0";
+                }
+
+                else {
+                    Intent intent2=new Intent(getApplicationContext(), Login_choose.class);
+                    startActivity(intent2);
+                    finish();
+                }
+        }
+
+        if(fragment!=null) {
+            FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, fragment);
+            transaction.commit();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
     }
 
 }

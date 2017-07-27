@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -34,6 +35,7 @@ import java.util.Map;
 import thread.seopftware.mychef.R;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.graphics.Color.BLACK;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
@@ -46,24 +48,38 @@ import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
-public class Fragment_Menu extends ListFragment {
+public class Fragment1_Menu extends ListFragment {
 
-    private static String TAG="Fragment_Menu";
+    private static String TAG="Fragment1_Menu";
     ListViewAdapter_Menu adapter;
     ListViewItem_Menu listViewItem_menu;
     ArrayList<ListViewItem_Menu> listViewItemList;
     String Id; // 음식 메뉴 고유 id
     String id;
 
+    FloatingActionButton fab;
     // 생성자
-    public Fragment_Menu() {
+    public Fragment1_Menu() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        getActivity().setTitle("MyChef_Menu");
+        getActivity().setTitle("MyChef_나의 메뉴");
+        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.activity_fragment__menu, container, false);
+
+        fab = (FloatingActionButton) rootview.findViewById(R.id.fab);
+        fab.bringToFront();
+        fab.setBackgroundColor(BLACK);
+        fab.hide();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getApplicationContext(), Home_Foodadd.class);
+                startActivity(intent);
+            }
+        });
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -72,7 +88,6 @@ public class Fragment_Menu extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
 
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

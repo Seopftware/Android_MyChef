@@ -214,7 +214,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:background="#00000000"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitXY"
                         app:srcCompat="@drawable/photo3" />
                 </LinearLayout>
 

@@ -56,7 +56,7 @@ public class ListViewAdapter_Menu extends BaseAdapter {
         TextView EnglishName= (TextView) convertView.findViewById(R.id.tv_EnglishName);
         TextView Price= (TextView) convertView.findViewById(R.id.tv_Price);
         TextView Date= (TextView) convertView.findViewById(R.id.tv_Date);
-        ImageView iv_Food= (ImageView) convertView.findViewById(R.id.iv_Food);
+        ImageView iv_Food= (ImageView) convertView.findViewById(R.id.iv_Chef_Profile);
         Glide.with(context).load(listViewItem.getImagePath()).into(iv_Food);
 
         // 아이템 내 각 위젯에 데이터 반영
@@ -81,20 +81,6 @@ public class ListViewAdapter_Menu extends BaseAdapter {
         return null;
     }
 
-    // 아이템 데이터 추가를 위한 함수.
-    public void addItem(String Id, String KoreaName, String EnglishName, String Price, String Date, String ImagePath) {
-//        ListViewItem_Menu item=new ListViewItem_Menu(Id, KoreaName, EnglishName, Price, Date, ImagePath);
-        ListViewItem_Menu item=new ListViewItem_Menu();
-
-        item.setId(Id);
-        item.setKoreaName(KoreaName);
-        item.setEnglishName(EnglishName);
-        item.setPrice(Price);
-        item.setDate(Date);
-        item.setImagePath(ImagePath);
-
-        listViewItemList.add(item);
-    }
 
 
 

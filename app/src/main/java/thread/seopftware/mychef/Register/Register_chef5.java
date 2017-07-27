@@ -297,7 +297,7 @@ public class Register_chef5 extends AppCompatActivity {
                         Log.d(TAG, "Volley Response is : "+response);
                         loading.dismiss();
 
-                        if(FB_LOGINCHECK==null && KAKAO_LOGINCHECK==null) // 일반 회원 가입
+                        if(FB_LOGINCHECK.equals("0") && KAKAO_LOGINCHECK.equals("0")) // 일반 회원 가입
                         {
                             if(Integer.parseInt(response)==0) {
                                 Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
@@ -313,8 +313,6 @@ public class Register_chef5 extends AppCompatActivity {
                             } else if (Integer.parseInt(response)==1) {
                                 Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
                                 return;
-
-
                             }
 
                         } else {
@@ -378,10 +376,7 @@ public class Register_chef5 extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //Disimissing the progress dialog
                         loading.dismiss();
-                        //Showing toast message of the response
-                        Toast.makeText(getApplicationContext(), response , Toast.LENGTH_LONG).show();
 
                         Log.d(TAG, "Volley Response is : "+response);
                         loading.dismiss();
@@ -410,13 +405,10 @@ public class Register_chef5 extends AppCompatActivity {
                             if(Integer.parseInt(response)==0) {
                                 Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다." , Toast.LENGTH_LONG).show();
 
-                                Intent intent=new Intent(Register_chef5.this, Home_chef.class);
+                                Intent intent=new Intent(Register_chef5.this, Login_login.class);
                                 startActivity(intent);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 finish();
-
-                                progressDialog.dismiss();
-
 
                             } else if (Integer.parseInt(response)==1) {
                                 Toast.makeText(Register_chef5.this, "error 발생", Toast.LENGTH_SHORT).show();
