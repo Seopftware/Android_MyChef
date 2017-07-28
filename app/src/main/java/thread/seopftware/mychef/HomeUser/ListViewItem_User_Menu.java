@@ -12,6 +12,8 @@ public class ListViewItem_User_Menu {
     String ChefName;
     String Price;
     String ImagePath;
+    String ReviewTotal;
+    double RatingBar;
 
     public void setId(String id) {
         Id = id;
@@ -37,6 +39,14 @@ public class ListViewItem_User_Menu {
         ChefName = chefName;
     }
 
+    public void setReviewTotal(String reviewTotal) {
+        ReviewTotal = reviewTotal;
+    }
+
+    public void setRatingBar(double ratingNumber) {
+        RatingBar = ratingNumber;
+    }
+
     public String getId() {
         return this.Id;
     }
@@ -59,6 +69,14 @@ public class ListViewItem_User_Menu {
 
     public String getChefName() {
         return this.ChefName;
+    }
+
+    public String getReviewTotal() {
+        return this.ReviewTotal;
+    }
+
+    public double getRatingBar() {
+        return this.RatingBar;
     }
 
 }

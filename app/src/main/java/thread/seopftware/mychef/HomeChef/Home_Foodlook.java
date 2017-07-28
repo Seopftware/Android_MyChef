@@ -120,7 +120,7 @@ public class Home_Foodlook extends AppCompatActivity {
         tv_KoreaName= (TextView) findViewById(R.id.tv_KoreaName);
         tv_EnglishName= (TextView) findViewById(R.id.tv_EnglishName);
         tv_Price= (TextView) findViewById(R.id.tv_Price);
-        tv_Review= (TextView) findViewById(R.id.tv_Review);
+        tv_Review= (TextView) findViewById(R.id.tv_ReviewTotal);
         tv_ChefName= (TextView) findViewById(R.id.tv_ChefName);
         tv_ChefName.setOnClickListener(new View.OnClickListener() {
             @Override

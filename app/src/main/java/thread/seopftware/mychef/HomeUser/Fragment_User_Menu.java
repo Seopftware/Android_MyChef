@@ -92,6 +92,9 @@ public class Fragment_User_Menu extends ListFragment {
                         String ChefName=jo.getString("ChefName");
                         String Price=jo.getString("Price");
                         String imagePath=jo.getString("imagePath");
+                        String reviewTotal=jo.getString("Count");
+                        String reviewAvg=jo.getString("Avg");
+                        double Avg=Math.round(Float.parseFloat(reviewAvg));
 
                         listViewItem_menu=new ListViewItem_User_Menu();
                         listViewItem_menu.setId(Id);
@@ -100,6 +103,8 @@ public class Fragment_User_Menu extends ListFragment {
                         listViewItem_menu.setChefName(ChefName+" 쉐프");
                         listViewItem_menu.setPrice(Price+"원");
                         listViewItem_menu.setImagePath("http://115.71.239.151/"+imagePath);
+                        listViewItem_menu.setReviewTotal(" 작성된 리뷰 : "+reviewTotal);
+                        listViewItem_menu.setRatingBar(Avg*2);
                         listViewItemList.add(listViewItem_menu);
                     }
                     adapter= new ListViewAdapter_User_Menu(listViewItemList);

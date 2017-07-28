@@ -78,7 +78,8 @@
         <activity android:name=".HomeUser.User_Payment_CardRegister" />
         <activity android:name=".HomeUser.User_Payment" />
         <activity android:name=".HomeUser.User_Payment_Address" />
-        <activity android:name=".User_Reply"></activity>
+        <activity android:name=".User_Reply" />
+        <activity android:name=".Chat_Client"></activity>
     </application>
 
 </manifest>

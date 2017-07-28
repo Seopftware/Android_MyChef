@@ -1,12 +1,12 @@
 package thread.seopftware.mychef.HomeUser;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+import thread.seopftware.mychef.Chat_Client;
 import thread.seopftware.mychef.HomeChef.Home_Foodlook;
 import thread.seopftware.mychef.R;
 import thread.seopftware.mychef.User_Reply;
@@ -140,6 +141,9 @@ public class OrderList_viewpager extends ListFragment {
                         }
 
                         if(items[which]=="쉐프에게 1:1 문의하기") {
+
+                            Intent intent = new Intent(getContext(), Chat_Client.class);
+                            startActivity(intent);
                             // 채팅창으로 이동
                         }
 

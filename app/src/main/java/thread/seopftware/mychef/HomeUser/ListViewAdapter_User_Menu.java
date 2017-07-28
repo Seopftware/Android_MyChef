@@ -1,11 +1,15 @@
 package thread.seopftware.mychef.HomeUser;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -56,8 +60,13 @@ public class ListViewAdapter_User_Menu extends BaseAdapter {
         TextView EnglishName= (TextView) convertView.findViewById(R.id.tv_EnglishName);
         TextView ChefName= (TextView) convertView.findViewById(R.id.tv_ChefName);
         TextView Price= (TextView) convertView.findViewById(R.id.tv_Price);
+        TextView tv_ReviewTotal= (TextView) convertView.findViewById(R.id.tv_ReviewTotal);
+        RatingBar ratingBar= (RatingBar) convertView.findViewById(R.id.ratingBar);
         ImageView iv_FoodImage= (ImageView) convertView.findViewById(R.id.iv_Chef_Profile);
         Glide.with(context).load(listViewItem.getImagePath()).into(iv_FoodImage);
+
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
 
         // 아이템 내 각 위젯에 데이터 반영
         Id.setText(listViewItem.getId());
@@ -65,6 +74,9 @@ public class ListViewAdapter_User_Menu extends BaseAdapter {
         EnglishName.setText(listViewItem.getEnglishName());
         ChefName.setText(listViewItem.getChefName());
         Price.setText(listViewItem.getPrice());
+        tv_ReviewTotal.setText(listViewItem.getReviewTotal());
+        ratingBar.setProgress((int) listViewItem.getRatingBar());
+
 
         return convertView;
     }
