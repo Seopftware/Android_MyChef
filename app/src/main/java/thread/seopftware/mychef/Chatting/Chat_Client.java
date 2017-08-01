@@ -106,6 +106,7 @@ public class Chat_Client extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setTitle("채팅방");
 
+        adapter=new ListViewAdapter_Chat();
         listView= (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
@@ -172,29 +173,27 @@ public class Chat_Client extends AppCompatActivity {
                     } else if(Message_ViewType == MESSAGE) {
 
                         String Message_Status = split[1]; // 1. 나 or 상대방
-                        Log.d(TAG, "Message_Status(분해후) : "+Message_Status);
+                        String Message_Email = split[2]; // 2. 이메일
+                        Log.d(TAG, "Message_Email(분해후) : "+Message_Email);
 
-                        if(Message_Status.equals("true")) {
-                            Log.d(TAG, "내가 보낸 메세지. 메세지 안받음");
-                            // 메세지를 보낸 아이디 = 로그인 아이디, 서버로 부터 받은 메세지 표시 안함
+                        if(Message_Email.equals(Login_Email)) { // 보낸 사람의 이메일과 받는 사람의 이메일이 똑같을 경우 view로 뿌려주지 않는다.
+                            Log.d(TAG, "내가 보낸 view 값이라 패스!");
                         } else {
-
-                            String Message_Email = split[2]; // 2. 이메일
                             String Message_Name = split[3]; // 3. 이름
                             String Message_Time = split[4]; // 4. 시간
                             String Message_Subject = split[5]; // 5. 메세지
                             String Message_ProfilePath = split[6]; // 6. 프로필 사진 주소
 
                             Log.d(TAG, "Message_Status(분해후) : "+Message_Status);
-                            Log.d(TAG, "Message_Email(분해후) : "+Message_Email);
                             Log.d(TAG, "Message_Name(분해후) : "+Message_Name);
                             Log.d(TAG, "Message_Time(분해후) : "+Message_Time);
                             Log.d(TAG, "Message_Subject(분해후) : "+Message_Subject);
                             Log.d(TAG, "Message_ProfilePath(분해후) : "+Message_ProfilePath);
 
-                            adapter.addItem(false, Message_Email, Message_Name, Message_Time, Message_Subject, Message_ProfilePath);
+                            adapter.addItem(Message_Email, Message_Name, Message_Time, Message_Subject, Message_ProfilePath);
                             adapter.notifyDataSetChanged();
                         }
+
                     }
                 }
             }
@@ -227,7 +226,7 @@ public class Chat_Client extends AppCompatActivity {
                     Current_Time = simpleDateFormat.format(new Date());
 
                     Log.d(TAG, "send버튼 클릭시 보내는 값 : "+"MESSAGE"+ MESSAGE +"Me: true"+ Login_Email+"_@#@_"+Login_Name+"_@#@_"+Current_Time+"_@#@_"+Current_Subject+"_@#@_"+Login_Profile);
-                    adapter.addItem(true, Login_Email, Login_Name, Current_Time, Current_Subject, "http://115.71.239.151/"+Login_Profile);
+                    adapter.addItem(Login_Email, Login_Name, Current_Time, Current_Subject, "http://115.71.239.151/"+Login_Profile);
                     adapter.notifyDataSetChanged();
                     et_ChatInput.setText("");
 
@@ -322,7 +321,6 @@ public class Chat_Client extends AppCompatActivity {
     class SendThread extends Thread {
         private Socket socket = null;
 
-        String sendmsg = et_ChatInput.getText().toString();
         DataOutputStream output;
 
         public SendThread(Socket Socket) {
@@ -341,8 +339,8 @@ public class Chat_Client extends AppCompatActivity {
 
             try {
                 if(output !=null) {
-                    if(sendmsg !=null) {
-                        output.writeUTF(MESSAGE+"_@#@_"+true+"_@#@_"+Login_Email+ "_@#@_" +Login_Name+ "_@#@_" + Current_Time+ "_@#@_" + sendmsg + "_@#@_" + "http://115.71.239.151/"+Login_Profile);
+                    if(Current_Subject !=null) {
+                        output.writeUTF(MESSAGE+"_@#@_"+true+"_@#@_"+Login_Email+ "_@#@_" +Login_Name+ "_@#@_" + Current_Time+ "_@#@_" + Current_Subject + "_@#@_" + "http://115.71.239.151/"+Login_Profile);
 //                        adapter.addItem(true, Login_Email, Login_Name, Current_Time, sendmsg, "http://115.71.239.151/"+Login_Profile);
                     }
                 } else {

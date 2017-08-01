@@ -1,6 +1,7 @@
 package thread.seopftware.mychef.Chatting;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,19 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import thread.seopftware.mychef.R;
+
+import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
+import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
+import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
 
 public class ListViewAdapter_Chat extends BaseAdapter {
@@ -32,13 +46,11 @@ public class ListViewAdapter_Chat extends BaseAdapter {
 
     Context context;
     int layout;
-    LayoutInflater inf;
+    LayoutInflater mInflater;
+    String Login_Email;
 
+    public ListViewAdapter_Chat() {
 
-
-    public ListViewAdapter_Chat(Context context, ArrayList<ListViewItem_Chat> listViewItemList) {
-        this.context=context;
-        inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public int getCount() {
@@ -61,23 +73,58 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         int viewType = 0;
         Log.d("adapter view type", String.valueOf(viewType));
 
+        // 세션 유지를 위한 이메일 값 불러들이기
+        SharedPreferences pref1 = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
 
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ListViewItem_Chat listViewItem_chat = listViewItemList.get(position);
+        SharedPreferences pref2 = context.getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+        FB_LOGINCHECK=pref2.getString(FBAPI, "0");
 
+        if(!FB_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = context.getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+            Login_Email=pref.getString(FBEMAIL, "");
+            Log.d(TAG, "FB chefemail: "+Login_Email);
+        } else if(!KAKAO_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+            Login_Email=pref.getString(KAEMAIL, "");
+            Log.d(TAG, "KA chefemail: "+Login_Email);
+        } else { // 일반
+            SharedPreferences pref = context.getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+            Login_Email=pref.getString(CHEFNORMALLEMAIL, "");
+            Log.d(TAG, "Normal chefemail: "+Login_Email);
+        }
+
+        Log.d(TAG, "접속된 Email : "+Login_Email);
+
+        if(convertView==null) {
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             viewType = getItemViewType(position);
 
             switch (viewType) {
                 case ENTRANCE:
-                    convertView = inflater.inflate(R.layout.listview_chatting_entrance, parent, false);
+                    viewType = R.layout.listview_chatting_entrance;
+                    break;
+
+                case MESSAGE:
+                    viewType = R.layout.listview_chatting_room;
+                    break;
+            }
+            convertView = mInflater.inflate(viewType, parent, false);
+        }
+
+
+        viewType = getItemViewType(position);
+        ListViewItem_Chat listViewItem_chat = listViewItemList.get(position);
+            switch (viewType) {
+                case ENTRANCE:
+                    convertView = mInflater.inflate(R.layout.listview_chatting_entrance, parent, false);
 
                     TextView tv_Entrance = (TextView) convertView.findViewById(R.id.tv_Entrance);
                     tv_Entrance.setText(listViewItem_chat.getName());
                     break;
 
                 case MESSAGE:
-                    convertView = inflater.inflate(R.layout.listview_chatting_room, parent, false);
+                    convertView = mInflater.inflate(R.layout.listview_chatting_room, parent, false);
 
                     // 나의 정보 레이아웃 객체 선언
                     LinearMe = (LinearLayout) convertView.findViewById(R.id.LinearMe);
@@ -101,12 +148,36 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     tv_YouMessage.setText(listViewItem_chat.getMessage()); // 메세지 내용
                     Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
 
-                    LinearMe.setVisibility(listViewItem_chat.getStatus() ? View.VISIBLE : View.GONE); // right면 내가 보낸 것. LinearMe만 보이게끔
-                    LinearYou.setVisibility(listViewItem_chat.getStatus() ? View.GONE : View.VISIBLE); // right면 LinearYou 가림.
-                    break;
+                    Log.d("ADAPTER", "listViewItemList.get(position).getEmail()"+listViewItemList.get(position).getEmail());
+                    Log.d("ADAPTER", "listViewItemList.get(position).getEmail()"+listViewItemList.get(position-1).getEmail());
 
+
+                    if(listViewItemList.get(position).getEmail().equals(Login_Email)) {
+                        LinearMe.setVisibility(View.VISIBLE);
+                        LinearYou.setVisibility(View.GONE);
+
+                        if(position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position-1).getEmail())) {
+                            listViewItemList.get(position-1).setTime("");
+                        }
+
+                    } else {
+                        LinearMe.setVisibility(View.GONE);
+                        LinearYou.setVisibility(View.VISIBLE);
+
+                        if(position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position-1).getEmail())) {
+                            listViewItemList.get(position-1).setTime("");
+                            tv_YouName.setVisibility(View.GONE);
+                            iv_YouProfile.setVisibility(View.INVISIBLE);
+                        } else {
+                            tv_YouName.setVisibility(View.VISIBLE);
+                            iv_YouProfile.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+
+
+                    break;
             }
-        }
         return convertView;
     }
 
@@ -131,11 +202,10 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         listViewItemList.add(item);
     }
 
-    public void addItem(Boolean status, String email, String name, String time, String message, String profile) { // 최초 입장시
+    public void addItem(String email, String name, String time, String message, String profile) { // 최초 입장시
         ListViewItem_Chat item = new ListViewItem_Chat();
 
         item.setType(MESSAGE);
-        item.setStatus(status);
         item.setEmail(email);
         item.setName(name);
         item.setTime(time);
