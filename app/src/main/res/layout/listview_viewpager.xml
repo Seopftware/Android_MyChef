@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAlignment="textEnd"
-                android:textColor="#E27C3E"
+                android:textColor="@color/ef_grey"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>

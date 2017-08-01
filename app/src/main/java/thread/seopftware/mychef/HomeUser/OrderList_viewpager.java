@@ -32,10 +32,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.Chat_Client;
+import thread.seopftware.mychef.Chatting.Chat_Client;
 import thread.seopftware.mychef.HomeChef.Home_Foodlook;
 import thread.seopftware.mychef.R;
-import thread.seopftware.mychef.User_Reply;
+import thread.seopftware.mychef.Chatting.User_Reply;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Intent.ACTION_DIAL;

@@ -139,10 +139,11 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar"
-                    style="@android:style/Widget.Holo.Light.RatingBar.Small"
+                    style="@android:style/Widget.Holo.Light.RatingBar.Indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:max="5"
                     android:layout_alignStart="@+id/tv_ReviewTotal"
                     android:layout_marginTop="4dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -296,7 +297,7 @@
                 android:layout_marginBottom="80dp"
                 android:layout_marginTop="30dp"
                 android:background="#E06736"
-                android:onClick="onClickedConfirm"
+                android:onClick="onClickedReview"
                 android:text="리뷰 보러 가기"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"

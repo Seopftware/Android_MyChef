@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
@@ -35,6 +37,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import thread.seopftware.mychef.HomeUser.User_Payment;
+import thread.seopftware.mychef.Home_Foodlook_Review;
 import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
@@ -56,7 +59,7 @@ public class Home_Foodlook extends AppCompatActivity {
     TextView tv_KoreaName, tv_EnglishName;
     ImageView iv_FoodImage;
 
-    TextView tv_Price, tv_Review;
+    TextView tv_Price, tv_ReviewTotal;
     RatingBar ratingBar;
     Button btn_Cart;
 
@@ -120,7 +123,7 @@ public class Home_Foodlook extends AppCompatActivity {
         tv_KoreaName= (TextView) findViewById(R.id.tv_KoreaName);
         tv_EnglishName= (TextView) findViewById(R.id.tv_EnglishName);
         tv_Price= (TextView) findViewById(R.id.tv_Price);
-        tv_Review= (TextView) findViewById(R.id.tv_ReviewTotal);
+        tv_ReviewTotal= (TextView) findViewById(R.id.tv_ReviewTotal);
         tv_ChefName= (TextView) findViewById(R.id.tv_ChefName);
         tv_ChefName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +141,7 @@ public class Home_Foodlook extends AppCompatActivity {
         tv_Description= (TextView) findViewById(R.id.tv_Description);
         tv_Ingredients= (TextView) findViewById(R.id.tv_Ingredients);
         tv_Area= (TextView) findViewById(R.id.tv_Area);
+        ratingBar= (RatingBar) findViewById(R.id.ratingBar);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -157,7 +161,6 @@ public class Home_Foodlook extends AppCompatActivity {
 
         Log.d("TAG", "Food look status :" + status);
         if (status==2) {
-
             // 만약 Chef로 화면 클릭 시 결제버튼 막기
             ConstraintLayout ll = (ConstraintLayout) findViewById(R.id.PaymentLayout);
             ll.removeAllViews();
@@ -166,7 +169,7 @@ public class Home_Foodlook extends AppCompatActivity {
             btn.setVisibility(View.GONE);
         } else {
             getDataFromDB();
-            CartTotal();
+
         }
 
     }
@@ -192,6 +195,15 @@ public class Home_Foodlook extends AppCompatActivity {
         CartPayment();
     }
 
+    // 리뷰 더 보기 화면
+    public void onClickedReview(View v) {
+
+        Intent intent=new Intent(getApplicationContext(), Home_Foodlook_Review.class);
+        intent.putExtra("Food_Id", Id);
+        Log.d(TAG, "댓글 더 보기로 넘기는 Food_Id 값 : "+Id);
+        startActivity(intent);
+    }
+
     private void getDataFromDB() {
 
 
@@ -200,7 +212,7 @@ public class Home_Foodlook extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                Log.d("parsing", response);
+                Log.d("Foodlook parsing", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -219,7 +231,11 @@ public class Home_Foodlook extends AppCompatActivity {
                     name=jo.getString("name"); // 9
                     appeal2=jo.getString("appeal2"); // 11
                     photostring=jo.getString("photostring"); // 12
+                    String reviewTotal=jo.getString("Count");
+                    String reviewAvg=jo.getString("Avg");
+                    double Avg=Math.round(Float.parseFloat(reviewAvg));
 
+                    Log.d(TAG, "Avg"+Avg);
                     // 1. 한글이름, 영어이름, 음식 사진
                     tv_KoreaName.setText(KoreaName);
                     tv_EnglishName.setText(EnglishName);
@@ -227,6 +243,11 @@ public class Home_Foodlook extends AppCompatActivity {
 
                     // 2. 레이팅바, 리뷰 갯수, 가격
                     tv_Price.setText(Price+"원");
+                    tv_ReviewTotal.setText("작성된 리뷰 : "+reviewTotal);
+
+                    ratingBar.setProgress((int) Avg*2);
+                    LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+                    stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
 
                     // 3. 쉐프 사진, 쉐프 이름
                     Glide.with(getApplicationContext()).load("http://115.71.239.151/"+photostring).into(iv_ChefProfile);
@@ -237,7 +258,7 @@ public class Home_Foodlook extends AppCompatActivity {
                     tv_Ingredients.setText(Ingredients);
                     tv_Area.setText(Area);
 
-
+                    CartTotal();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -271,15 +292,17 @@ public class Home_Foodlook extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                Log.d("parsing", response);
+                Log.d("AddCartDB parsing", response);
 
                 Button button= (Button) findViewById(R.id.btn_CartTotal);
                 Button button1= (Button) findViewById(R.id.btn_AddCart);
                 button1.setBackgroundColor(Color.rgb(189, 189, 189));
                 button1.setEnabled(false);
+                button.setVisibility(View.VISIBLE);
                 button.setText(response);
 
                 Toast.makeText(getApplicationContext(), KoreaName+"이 장바구니에 추가되었습니다.", Toast.LENGTH_LONG).show();
+
 
                 if(response.equals("4")) {
                     Toast.makeText(getApplicationContext(), "장바구니는 최대 4개까지만 추가 가능합니다.", Toast.LENGTH_LONG).show();
@@ -321,7 +344,7 @@ public class Home_Foodlook extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                Log.d("parsing", response);
+                Log.d("CartTotal parsing", response);
 
                 String[] split = response.split("_@#@_"); // Key값에 들어있는 벨류를 꺼내 split() 함수로 분해한다.
 
@@ -345,13 +368,17 @@ public class Home_Foodlook extends AppCompatActivity {
                     button.setText(TotalNum); // 토탈 장바구니 갯수
                     button1.setBackgroundColor(Color.rgb(255, 0, 0));
                     button1.setEnabled(true);
-
                 }
 
                 if(TotalNum.equals("4")) {
                     button1.setBackgroundColor(Color.rgb(189, 189, 189));
                     button1.setEnabled(false);
+                    button.setVisibility(View.VISIBLE);
                     button.setText(TotalNum); // 토탈 장바구니 갯수
+                } else if(TotalNum.equals("0")) {
+                    button.setVisibility(View.INVISIBLE);
+                } else {
+                    button.setVisibility(View.VISIBLE);
                 }
             }
         }, new Response.ErrorListener() {
@@ -364,6 +391,7 @@ public class Home_Foodlook extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String,String> map = new Hashtable<>();
+                Log.d("KoreaName", KoreaName);
                 map.put("KoreaName", KoreaName); // 2
                 return map;
             }
@@ -414,4 +442,6 @@ public class Home_Foodlook extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
+
+
 }

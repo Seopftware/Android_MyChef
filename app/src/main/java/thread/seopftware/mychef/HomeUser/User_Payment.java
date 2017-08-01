@@ -300,7 +300,7 @@ public class User_Payment extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                Log.d("parsing", response);
+                Log.d("TotalPrice parsing", response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");

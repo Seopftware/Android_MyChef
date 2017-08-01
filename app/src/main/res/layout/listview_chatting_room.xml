@@ -19,13 +19,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:text="13:00 pm"
-            android:textAlignment="textEnd" />
+            />
 
         <TextView
             android:id="@+id/tv_MeMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bubble_me"
+            android:background="@drawable/bubble_a"
             android:text="내용" />
     </LinearLayout>
 
@@ -40,7 +40,7 @@
             android:id="@+id/iv_YouProfile"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
+            android:layout_gravity="top"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/account" />
 
@@ -53,15 +53,14 @@
                 android:id="@+id/tv_YouName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:text="상대방"
-                android:textAlignment="textStart" />
+                android:layout_gravity="top"
+                android:text="상대방" />
 
             <TextView
                 android:id="@+id/tv_YouMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bubble_you"
+                android:background="@drawable/bubble_b"
                 android:text="내용" />
         </LinearLayout>
 

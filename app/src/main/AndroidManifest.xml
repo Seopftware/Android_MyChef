@@ -78,8 +78,9 @@
         <activity android:name=".HomeUser.User_Payment_CardRegister" />
         <activity android:name=".HomeUser.User_Payment" />
         <activity android:name=".HomeUser.User_Payment_Address" />
-        <activity android:name=".User_Reply" />
-        <activity android:name=".Chat_Client"></activity>
+        <activity android:name=".Chatting.User_Reply" />
+        <activity android:name=".Chatting.Chat_Client" />
+        <activity android:name=".Home_Foodlook_Review"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.Chatting;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,8 +23,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Map;
+
+import thread.seopftware.mychef.R;
 
 public class User_Reply extends AppCompatActivity {
 
@@ -33,6 +37,9 @@ public class User_Reply extends AppCompatActivity {
     RatingBar ratingBar;
     TextView tv_Explain, tv_RatingBar, tv_TextByte;
     EditText et_Reply;
+
+    GregorianCalendar calendar;
+    int year, month, day, hour, minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +148,7 @@ public class User_Reply extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                Log.d("comment parsing", response);
+                Log.d("Comment_Insert parsing", response);
             }
         }, new Response.ErrorListener() {
 
@@ -158,11 +165,20 @@ public class User_Reply extends AppCompatActivity {
 
                 Map<String,String> map = new Hashtable<>();
 
+                calendar = new GregorianCalendar();
+
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day= calendar.get(Calendar.DAY_OF_MONTH);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+
+
                 map.put("Food_Id", Food_Id);
                 map.put("Rating", Rating_Number);
                 map.put("Comment", Comment);
                 map.put("User_Email", User_Email);
-
+                map.put("Date", year+"년 "+month+1+"월 "+day+"일");
                 return map;
             }
         };
