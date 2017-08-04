@@ -33,9 +33,9 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import thread.seopftware.mychef.Chatting.Chat_Client;
+import thread.seopftware.mychef.Chatting.User_Reply;
 import thread.seopftware.mychef.HomeChef.Home_Foodlook;
 import thread.seopftware.mychef.R;
-import thread.seopftware.mychef.Chatting.User_Reply;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Intent.ACTION_DIAL;
@@ -80,6 +80,11 @@ public class OrderList_viewpager extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
 
         SharedPreferences pref1 = getContext().getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
         KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
@@ -103,12 +108,7 @@ public class OrderList_viewpager extends ListFragment {
         Log.d(TAG, "UserEmail : "+UserEmail);
 
         ParseDB();
-        return super.onCreateView(inflater, container, savedInstanceState);
 
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -117,7 +117,6 @@ public class OrderList_viewpager extends ListFragment {
 
                 pos=position;
                 longid=id;
-
 
                 Chef_Number = (TextView) view.findViewById(R.id.tv_Chef_Number);
                 tv_Food_Name = (TextView) view.findViewById(R.id.tv_Food_Name);
@@ -130,7 +129,6 @@ public class OrderList_viewpager extends ListFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(items[which]=="쉐프에게 전화걸기") {
-
 
                             String Number=Chef_Number.getText().toString();
 

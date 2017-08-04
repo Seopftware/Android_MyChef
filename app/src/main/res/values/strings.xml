@@ -12,6 +12,7 @@
     //fb login api
     <string name="facebook_app_id">1294099240688266</string>
     <string name="kakao_app_key">54bfa137c740f8dabb8f928ec4c141fe</string>
+    <string name="googlemap_api_key">AIzaSyCrVFTZW6gs9IXHU0AUEfk22bDkFd8Qnqo</string>
 
 
 </resources>

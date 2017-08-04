@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+import thread.seopftware.mychef.GoogleMap.GoogleMapExample;
+import thread.seopftware.mychef.GoogleMap_Module.Navigate_CustomerLocation;
 import thread.seopftware.mychef.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -56,8 +58,9 @@ public class OrderList_chef_viewpager extends ListFragment {
 
     String UserEmail;
 
-    TextView Food_Id, Chef_Number, tv_Food_Name;
+    TextView Food_Id, Chef_Number, tv_Food_Name, tv_FoodPlace, tv_UserName;
     String Food_Name;
+
 
     int pos;
     long longid;
@@ -74,6 +77,14 @@ public class OrderList_chef_viewpager extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
 
         SharedPreferences pref1 = getContext().getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
         KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
@@ -97,13 +108,6 @@ public class OrderList_chef_viewpager extends ListFragment {
         Log.d(TAG, "UserEmail : "+UserEmail);
 
         ParseDB();
-        return super.onCreateView(inflater, container, savedInstanceState);
-
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -112,10 +116,10 @@ public class OrderList_chef_viewpager extends ListFragment {
                 pos=position;
                 longid=id;
 
-                Chef_Number = (TextView) view.findViewById(R.id.tv_Chef_Number);
-                tv_Food_Name = (TextView) view.findViewById(R.id.tv_Food_Name);
+                tv_FoodPlace = (TextView) view.findViewById(R.id.tv_Food_Place);
+                tv_UserName= (TextView) view.findViewById(R.id.tv_Customer_Name);
 
-                final CharSequence[] items=new CharSequence[] {"고객에게 1:1 문의하기"};
+                final CharSequence[] items=new CharSequence[] {"고객에게 1:1 문의하기", "출장지역 찾아가기"};
                 AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
                 dialog.setTitle("MENU");
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
@@ -124,6 +128,20 @@ public class OrderList_chef_viewpager extends ListFragment {
 
                         if(items[which]=="고객에게 1:1 문의하기") {
                             // 채팅창으로 이동
+
+                            String Customer_Name = tv_UserName.getText().toString();
+                            String Customer_Location = tv_FoodPlace.getText().toString();
+                            Log.d("인텐트 보내는 값", Customer_Name+Customer_Location);
+
+                            Intent intent = new Intent(getContext(), GoogleMapExample.class);
+                            intent.putExtra("Customer_Name", Customer_Name);
+                            intent.putExtra("Customer_Location", Customer_Location);
+                            startActivity(intent);
+                        }
+
+                        if(items[which]=="출장지역 찾아가기") {
+                            Intent intent = new Intent(getContext(), Navigate_CustomerLocation.class);
+                            startActivity(intent);
                         }
                     }
                 });
@@ -183,7 +201,6 @@ public class OrderList_chef_viewpager extends ListFragment {
                             String Food_Date = jo.getString("Food_Date");
                             String Food_Time = jo.getString("Food_Time");
                             String Food_Place = jo.getString("Food_Place");
-
                             String User_Name = jo.getString("User_Name");
 
                             listViewItem_menu = new ListViewItem_Chef_ViewPager();

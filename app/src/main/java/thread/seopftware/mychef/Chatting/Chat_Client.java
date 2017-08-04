@@ -89,6 +89,7 @@ public class Chat_Client extends AppCompatActivity {
     String Login_Email, Login_Name, Current_Time, Login_Profile;
     String Current_Subject;
     SimpleDateFormat simpleDateFormat;
+    DataOutputStream output = null; // 서버로 데이터 전송?
 
 
     @Override
@@ -155,16 +156,15 @@ public class Chat_Client extends AppCompatActivity {
                     String[] split = Message.split("_@#@_");
                     Log.d(TAG, "Message(분해전) : "+Message);
 
-                    int Message_ViewType= Integer.parseInt(split[0]); // 최초 접속인지 아닌지 분별 (VIEW TYPE)
+                    int Message_ViewType= Integer.parseInt(split[0]); // 최초 접속인지 아닌지 분별 (VIEW TYPE) ENTRANCE / MESSAGE
 
                     Log.d(TAG, "핸들러 Message_ViewType" +Message_ViewType);
 
                     if(Message_ViewType == ENTRANCE) { // 채팅방 최초 접속시
 
-                        String Message_Name = split[1]; // ""님이 접속하셨습니다.
+                        String Message_Name = split[1]+"님이 접속하셨습니다."; // ""님이 접속하셨습니다.
 
                         Log.d(TAG, "Message_Name(분해후) : "+Message_Name);
-
 
                         // 서버로 부터 받은 메세지값을 ListView에 뿌려주는 역할
                         adapter.addItem(Message_Name); // 이름 값만 필요함.
@@ -223,7 +223,9 @@ public class Chat_Client extends AppCompatActivity {
                 if( Current_Subject != null ) { // 만약 data가 비어있지 않다면 서버로 data 전송
 
                     simpleDateFormat = new SimpleDateFormat("hh:dd a");
+                    Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
                     Current_Time = simpleDateFormat.format(new Date());
+                    Log.d("시간이 이상함", Current_Time);
 
                     Log.d(TAG, "send버튼 클릭시 보내는 값 : "+"MESSAGE"+ MESSAGE +"Me: true"+ Login_Email+"_@#@_"+Login_Name+"_@#@_"+Current_Time+"_@#@_"+Current_Subject+"_@#@_"+Login_Profile);
                     adapter.addItem(Login_Email, Login_Name, Current_Time, Current_Subject, "http://115.71.239.151/"+Login_Profile);
@@ -243,6 +245,13 @@ public class Chat_Client extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
+
+                try {
+                    output.close();
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 finish();
                 return true;
             }
@@ -254,9 +263,6 @@ public class Chat_Client extends AppCompatActivity {
         boolean threadAlive;
         String ip;
         String port;
-
-        private DataOutputStream output = null; // 서버로 데이터 전송?
-
 
         public SocketClient(String ip, String port) {
             threadAlive = true;
@@ -273,7 +279,7 @@ public class Chat_Client extends AppCompatActivity {
                 receive = new ReceiveThread(socket); // 소켓과 연결 되면 ReceiveThread는 바로 작동 시작
                 receive.start();
 
-                output.writeUTF(ENTRANCE+"_@#@_"+Login_Name);
+                output.writeUTF(Login_Name); // 서버에서는 키 값으로 사용됨 (+방번호도 함께 보내줘야 함)
 
             }
             catch(IOException e){
@@ -341,7 +347,10 @@ public class Chat_Client extends AppCompatActivity {
                 if(output !=null) {
                     if(Current_Subject !=null) {
                         output.writeUTF(MESSAGE+"_@#@_"+true+"_@#@_"+Login_Email+ "_@#@_" +Login_Name+ "_@#@_" + Current_Time+ "_@#@_" + Current_Subject + "_@#@_" + "http://115.71.239.151/"+Login_Profile);
-//                        adapter.addItem(true, Login_Email, Login_Name, Current_Time, sendmsg, "http://115.71.239.151/"+Login_Profile);
+                        {
+                            "status":"message",
+                            " "
+                        }
                     }
                 } else {
 //                    Log.d("소켓 종료 확인", "output 값은? :"+ output);
@@ -404,11 +413,15 @@ public class Chat_Client extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-//    private boolean sendChatMessage(int viewtype, Boolean message_status, String email, String name, String time, String message, String profile) {
-//        chatArrayAdapter.add(new ChatMessage(viewtype, message_status, email, name, time, message, profile));
-//        et_ChatInput.setText("");
-//        return true;
-//    }
+    @Override
+    protected void onStop() { //화면 종료시 소켓 닫기
+        super.onStop();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 /*

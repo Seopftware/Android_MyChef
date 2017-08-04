@@ -65,7 +65,12 @@ public class OrderList_viewpager3 extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
 
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
         SharedPreferences pref1 = getContext().getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
         KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
 
@@ -88,12 +93,6 @@ public class OrderList_viewpager3 extends ListFragment {
         Log.d(TAG, "UserEmail : "+UserEmail);
 
         ParseDB();
-        return super.onCreateView(inflater, container, savedInstanceState);
-
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 
