@@ -17,7 +17,7 @@
         <item
             android:id="@+id/nav_chat"
             android:icon="@drawable/chat"
-            android:title="1:1 문의" />
+            android:title="채팅 문의" />
 
         <item android:title="Settings">
             <menu>

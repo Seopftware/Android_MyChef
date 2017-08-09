@@ -114,7 +114,7 @@ public class OrderList_viewpager3 extends ListFragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
 
                     if(jsonArray.length()==0) {
-                        setListShown(true);
+//                        setListShown(true);
                         return;
 
                     } else {

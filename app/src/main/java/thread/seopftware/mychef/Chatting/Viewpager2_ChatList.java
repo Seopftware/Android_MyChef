@@ -1,4 +1,4 @@
-package thread.seopftware.mychef.HomeChef;
+package thread.seopftware.mychef.Chatting;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -31,8 +31,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.Chatting.Chat_Client;
-import thread.seopftware.mychef.GoogleMap.GoogleMapExample;
+import thread.seopftware.mychef.GoogleMap_Module.Navigate_CustomerLocation;
 import thread.seopftware.mychef.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -48,25 +47,21 @@ import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
-public class OrderList_chef_viewpager extends ListFragment {
+public class Viewpager2_ChatList extends ListFragment {
 
-    private static String TAG = "OrderList_chef_pager";
-    ListViewAdapter_Chef_ViewPager adapter;
-    ListViewItem_Chef_ViewPager listViewItem_menu;
-    ArrayList<ListViewItem_Chef_ViewPager> listViewItemList;
-    String Id; // 음식 메뉴 고유 id
+    private static String TAG = "Viewpager2_ChatList";
+    ListViewAdapter_ViewPager2_ChatList adapter;
+    ListViewItem_ViewPager2_ChatList listViewItem;
+    ArrayList<ListViewItem_ViewPager2_ChatList> listViewItemList;
 
-    String UserEmail;
-
-    TextView Food_Id, Chef_Number, tv_Food_Name, tv_FoodPlace, tv_UserName;
-    String Food_Name;
-
+    String Login_Email;
 
     int pos;
     long longid;
 
+    TextView tv_RoomNumber;
 
-    public OrderList_chef_viewpager() {
+    public Viewpager2_ChatList() {
 
     }
 
@@ -94,20 +89,20 @@ public class OrderList_chef_viewpager extends ListFragment {
 
         if(!FB_LOGINCHECK.equals("0")) {
             SharedPreferences pref = getContext().getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-            UserEmail=pref.getString(FBEMAIL, "");
-            Log.d(TAG, "FB chefemail: "+UserEmail);
+            Login_Email=pref.getString(FBEMAIL, "");
+            Log.d(TAG, "FB chefemail: "+Login_Email);
         } else if(!KAKAO_LOGINCHECK.equals("0")) {
             SharedPreferences pref = getContext().getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-            UserEmail=pref.getString(KAEMAIL, "");
-            Log.d(TAG, "KA chefemail: "+UserEmail);
+            Login_Email=pref.getString(KAEMAIL, "");
+            Log.d(TAG, "KA chefemail: "+Login_Email);
         } else { // 일반
             SharedPreferences pref = getContext().getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
-            UserEmail=pref.getString(CHEFNORMALLEMAIL, "");
-            Log.d(TAG, "Normal chefemail: "+UserEmail);
+            Login_Email=pref.getString(CHEFNORMALLEMAIL, "");
+            Log.d(TAG, "Normal chefemail: "+Login_Email);
         }
-        Log.d(TAG, "UserEmail : "+UserEmail);
+        Log.d(TAG, "Login_Email : "+Login_Email);
 
-        ParseDB();
+        getRoomInfoDB();
 
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -116,39 +111,24 @@ public class OrderList_chef_viewpager extends ListFragment {
                 pos=position;
                 longid=id;
 
-                tv_FoodPlace = (TextView) view.findViewById(R.id.tv_Food_Place);
-                tv_UserName= (TextView) view.findViewById(R.id.tv_Customer_Name);
+                tv_RoomNumber= (TextView) view.findViewById(R.id.tv_RoomNumber);
 
-                final CharSequence[] items=new CharSequence[] {"고객에게 1:1 문의하기", "출장지역 찾아가기"};
+                final CharSequence[] items=new CharSequence[] {"채팅방 나가기"};
                 AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
                 dialog.setTitle("MENU");
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if(items[which]=="고객에게 1:1 문의하기") {
-                            // 채팅창으로 이동
+                        if(items[which]=="채팅방 나가기") {
 
-//                            Intent intent = new Intent(getContext(), Navigate_CustomerLocation.class);
-//                            startActivity(intent);
-
-                            Intent intent = new Intent(getContext(), Chat_Client.class);
-                            intent.putExtra("email_receiver", UserEmail);
-                            startActivity(intent);
-
+                            String room = tv_RoomNumber.getText().toString();
+                            Log.d("롱클릭시 room 번호", room);
                         }
 
                         if(items[which]=="출장지역 찾아가기") {
-
-                            String Customer_Name = tv_UserName.getText().toString();
-                            String Customer_Location = tv_FoodPlace.getText().toString();
-                            Log.d("인텐트 보내는 값", Customer_Name+Customer_Location);
-
-                            Intent intent = new Intent(getContext(), GoogleMapExample.class);
-                            intent.putExtra("Customer_Name", Customer_Name);
-                            intent.putExtra("Customer_Location", Customer_Location);
+                            Intent intent = new Intent(getContext(), Navigate_CustomerLocation.class);
                             startActivity(intent);
-
                         }
                     }
                 });
@@ -162,29 +142,29 @@ public class OrderList_chef_viewpager extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 
-        Food_Id = (TextView) v.findViewById(R.id.tv_Food_Id);
-        String Id=Food_Id.getText().toString();
-        Log.e("listview","food menu id 값 : "+Id);
+        tv_RoomNumber = (TextView) v.findViewById(R.id.tv_RoomNumber);
+        String room=tv_RoomNumber.getText().toString();
+        Log.e(TAG,"클릭시 room 번호 : "+ room);
 
-        Intent intent=new Intent(getContext(), Home_Foodlook.class);
-        intent.putExtra("Id", Id);
+        Intent intent=new Intent(getContext(), Chat_Client.class);
+        intent.putExtra("room_number", room);
         startActivity(intent);
 
         super.onListItemClick(l, v, position, id);
     }
 
     // db 데이터 로드
-    private void ParseDB() {
+    private void getRoomInfoDB() { // 보내는 값 : 이메일 , 받는 값 : 방 참여자 수, (해당 이메일 사용자의) 방 이름, 마지막 메세지 시간, 내용, 누적된 메세지 갯수
 
-        String url = "http://115.71.239.151/Orderlist_Chef_Parsing1.php";
+        String url = "http://115.71.239.151/Chatting_getRoomInfo.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-                Log.d("parsing1", response);
+                Log.d("Chat_getRoomInfo res:", response);
 
                 try {
-                    listViewItemList = new ArrayList<ListViewItem_Chef_ViewPager>();
+                    listViewItemList = new ArrayList<ListViewItem_ViewPager2_ChatList>();
 
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -199,31 +179,36 @@ public class OrderList_chef_viewpager extends ListFragment {
 
                             JSONObject jo = jsonArray.getJSONObject(i);
 
+                            String Room_Number = jo.getString("Room_Number"); // 1 방 번호
 
 
-                            String Food_Id=jo.getString("Food_Id");
-                            String Food_Image = jo.getString("Food_Image");
-                            String Food_Name = jo.getString("Food_Name");
-                            String Food_Count= jo.getString("Food_Count");
-                            String Food_Date = jo.getString("Food_Date");
-                            String Food_Time = jo.getString("Food_Time");
-                            String Food_Place = jo.getString("Food_Place");
-                            String User_Name = jo.getString("User_Name");
+                            String Room_NumPeople=jo.getString("Room_NumPeople"); // 2 총 사람 수
+                            String Room_NumMessage = jo.getString("Room_NumMessage"); // 3 안 읽은 메세지 수
+                            String Room_Name= jo.getString("Room_Name"); // 4 방 이름
+                            String Room_Profile = jo.getString("Room_Profile"); // 5 방의 프로필 사진
 
-                            listViewItem_menu = new ListViewItem_Chef_ViewPager();
-                            listViewItem_menu.setChef_Name(User_Name+" 고객님");
+                            String Content_Message= jo.getString("Content_Message"); // 7 방의 마지막 메세지
+                            String Content_Date = jo.getString("Content_Date"); // 6 방의 마지막 메세지 날짜
 
-                            listViewItem_menu.setFood_Id(Food_Id);
-                            listViewItem_menu.setFood_Name(Food_Name);
-                            listViewItem_menu.setFood_Count(Food_Count+" (인분)");
-                            listViewItem_menu.setFood_Date(Food_Date);
-                            listViewItem_menu.setFood_Time(Food_Time);
-                            listViewItem_menu.setFood_Place(Food_Place);
-                            listViewItem_menu.setChef_Profile("http://115.71.239.151/" + Food_Image);
-                            listViewItemList.add(listViewItem_menu);
+
+
+                            listViewItem = new ListViewItem_ViewPager2_ChatList();
+
+                            listViewItem.setNumPeople(Room_NumPeople); // 1
+                            listViewItem.setNumMessage(Room_NumMessage); // 2
+
+
+                            listViewItem.setName(Room_Name); // 3
+                            listViewItem.setMessage(Content_Message); // 4
+                            listViewItem.setDate(Content_Date); // 5
+                            listViewItem.setProfile("http://115.71.239.151/" + Room_Profile); // 6
+
+                            listViewItem.setRoomNumber(Room_Number); // 7
+
+                            listViewItemList.add(listViewItem);
 
                         }
-                        adapter = new ListViewAdapter_Chef_ViewPager(listViewItemList);
+                        adapter = new ListViewAdapter_ViewPager2_ChatList(listViewItemList);
                         setListAdapter(adapter);
                     }
 
@@ -242,7 +227,7 @@ public class OrderList_chef_viewpager extends ListFragment {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String,String> map = new Hashtable<>();
-                map.put("User_Email", UserEmail);
+                map.put("Login_Email", Login_Email);
 
                 return map;
             }
@@ -256,6 +241,6 @@ public class OrderList_chef_viewpager extends ListFragment {
         Log.d(this.getClass().getSimpleName(), "onResume()");
         super.onResume();
 
-        ParseDB(); // db 데이터 삽입
+//        ParseDB(); // db 데이터 삽입
     }
 }

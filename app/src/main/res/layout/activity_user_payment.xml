@@ -350,8 +350,7 @@
                         android:background="@drawable/btn_selector"
                         android:checked="true"
                         android:text="즉시결제"
-                        android:textColor="@drawable/btn_text"
-                        android:visibility="gone" />
+                        android:textColor="@drawable/btn_text" />
 
                     <RadioButton
                         android:id="@+id/rb_Card"

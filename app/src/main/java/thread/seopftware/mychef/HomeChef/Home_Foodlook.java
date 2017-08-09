@@ -37,7 +37,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import thread.seopftware.mychef.HomeUser.User_Payment;
-import thread.seopftware.mychef.Home_Foodlook_Review;
+import thread.seopftware.mychef.HomeUser.Home_Foodlook_Review;
 import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
@@ -118,7 +118,7 @@ public class Home_Foodlook extends AppCompatActivity {
         Log.d(TAG, "UserEmail : "+UserEmail);
         Log.d(TAG, "id : "+foodmenu_id);
 
-        iv_FoodImage= (ImageView) findViewById(R.id.iv_Chef_Profile);
+        iv_FoodImage= (ImageView) findViewById(R.id.iv_Profile);
         iv_ChefProfile= (ImageView) findViewById(R.id.iv_ChefProfile);
         tv_KoreaName= (TextView) findViewById(R.id.tv_KoreaName);
         tv_EnglishName= (TextView) findViewById(R.id.tv_EnglishName);

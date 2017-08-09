@@ -8,7 +8,7 @@
     android:descendantFocusability="blocksDescendants">
 
     <ImageView
-        android:id="@+id/iv_Chef_Profile"
+        android:id="@+id/iv_Profile"
         android:layout_width="0dp"
         android:layout_height="230dp"
         android:scaleType="fitXY"
@@ -29,7 +29,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_Chef_Profile">
+        app:layout_constraintTop_toBottomOf="@+id/iv_Profile">
 
         <TextView
             android:id="@+id/tv_KoreaName"

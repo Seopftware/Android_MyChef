@@ -53,7 +53,7 @@ public class ListViewAdapter_Order extends BaseAdapter {
         TextView KoreaName= (TextView) convertView.findViewById(R.id.tv_KoreaName);
         TextView EnglishName= (TextView) convertView.findViewById(R.id.tv_EnglishName);
         TextView Price= (TextView) convertView.findViewById(R.id.tv_Price);
-        ImageView iv_Food= (ImageView) convertView.findViewById(R.id.iv_Chef_Profile);
+        ImageView iv_Food= (ImageView) convertView.findViewById(R.id.iv_Profile);
         Glide.with(context).load(listViewItem.getImagePath()).into(iv_Food);
 
         // 아이템 내 각 위젯에 데이터 반영

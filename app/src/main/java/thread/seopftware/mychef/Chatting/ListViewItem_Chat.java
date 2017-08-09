@@ -14,6 +14,9 @@ public class ListViewItem_Chat {
     private String message;
     private String profile;
 
+//    private String othername;
+//    private String other
+
     public void setType(int type) {
         this.type = type;
     }

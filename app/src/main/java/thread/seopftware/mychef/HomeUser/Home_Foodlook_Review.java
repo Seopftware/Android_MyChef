@@ -1,4 +1,4 @@
-package thread.seopftware.mychef;
+package thread.seopftware.mychef.HomeUser;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.HomeUser.ListViewAdapter_Comment;
-import thread.seopftware.mychef.HomeUser.ListViewItem_Comment;
+import thread.seopftware.mychef.R;
 
 public class Home_Foodlook_Review extends AppCompatActivity {
 

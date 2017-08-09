@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_chat"
             android:icon="@drawable/chat"
-            android:title="1:1 문의현황" />
+            android:title="채팅 문의" />
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/account"

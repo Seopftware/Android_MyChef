@@ -12,24 +12,22 @@
         android:layout_height="match_parent"
         android:gravity="right"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:background="#1596c3"
-        >
+        android:padding="10dp">
 
         <TextView
-            android:id="@+id/tv_Entrance"
+            android:id="@+id/tv_ShowDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="입장"
-            android:textSize="20sp" />
+            android:text="날짜"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="1dp"
         android:background="#00000000"/>
 
 </LinearLayout>

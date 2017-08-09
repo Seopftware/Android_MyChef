@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.888" />
 
     <ImageView
-        android:id="@+id/iv_Chef_Profile"
+        android:id="@+id/iv_Profile"
         android:layout_width="100dp"
         android:layout_height="110dp"
         android:layout_marginLeft="8dp"
@@ -38,7 +38,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
-        app:layout_constraintLeft_toRightOf="@+id/iv_Chef_Profile"
+        app:layout_constraintLeft_toRightOf="@+id/iv_Profile"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="8dp"
         android:layout_marginRight="8dp"

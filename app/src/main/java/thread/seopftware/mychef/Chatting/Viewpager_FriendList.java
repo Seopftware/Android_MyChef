@@ -1,8 +1,7 @@
-package thread.seopftware.mychef.HomeChef;
+package thread.seopftware.mychef.Chatting;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -31,10 +28,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.Chatting.Chat_Client;
-import thread.seopftware.mychef.GoogleMap.GoogleMapExample;
-import thread.seopftware.mychef.R;
-
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
@@ -48,25 +41,19 @@ import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
-public class OrderList_chef_viewpager extends ListFragment {
+public class Viewpager_FriendList extends ListFragment {
 
-    private static String TAG = "OrderList_chef_pager";
-    ListViewAdapter_Chef_ViewPager adapter;
-    ListViewItem_Chef_ViewPager listViewItem_menu;
-    ArrayList<ListViewItem_Chef_ViewPager> listViewItemList;
-    String Id; // 음식 메뉴 고유 id
+    private static String TAG = "Viewpager_FriendList";
+    ListViewAdapter_ViewPager_FriendList adapter;
+    ListViewItem_ViewPager_FriendList listViewItem_list;
+    ArrayList<ListViewItem_ViewPager_FriendList> listViewItemList;
+
 
     String UserEmail;
 
-    TextView Food_Id, Chef_Number, tv_Food_Name, tv_FoodPlace, tv_UserName;
-    String Food_Name;
 
 
-    int pos;
-    long longid;
-
-
-    public OrderList_chef_viewpager() {
+    public Viewpager_FriendList() {
 
     }
 
@@ -107,48 +94,48 @@ public class OrderList_chef_viewpager extends ListFragment {
         }
         Log.d(TAG, "UserEmail : "+UserEmail);
 
-        ParseDB();
+//        ParseDB();
 
+        for(int i=0; i<10; i++) {
+            adapter = new ListViewAdapter_ViewPager_FriendList(listViewItemList);
+//            adapter.addItem("인섭", "굿잡", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuKlcnEMILJXiRkK2I2J5Ohiw7SfY4pbYkOP9qqcmq7yvL041");
+//            adapter.addItem("인섭", "굿잡", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuKlcnEMILJXiRkK2I2J5Ohiw7SfY4pbYkOP9qqcmq7yvL041");
+//            adapter.addItem("인섭", "굿잡", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuKlcnEMILJXiRkK2I2J5Ohiw7SfY4pbYkOP9qqcmq7yvL041");
+//            adapter.addItem("인섭", "굿잡", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuKlcnEMILJXiRkK2I2J5Ohiw7SfY4pbYkOP9qqcmq7yvL041");
+//            adapter.addItem("인섭", "굿잡", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuKlcnEMILJXiRkK2I2J5Ohiw7SfY4pbYkOP9qqcmq7yvL041");
+//            adapter.addItem("인섭", "굿잡", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuKlcnEMILJXiRkK2I2J5Ohiw7SfY4pbYkOP9qqcmq7yvL041");
+
+        }
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                pos=position;
-                longid=id;
+                int pos=position;
+                long longid=id;
 
-                tv_FoodPlace = (TextView) view.findViewById(R.id.tv_Food_Place);
-                tv_UserName= (TextView) view.findViewById(R.id.tv_Customer_Name);
-
-                final CharSequence[] items=new CharSequence[] {"고객에게 1:1 문의하기", "출장지역 찾아가기"};
+                final CharSequence[] items=new CharSequence[] {"즐겨찾기 추가", "친구 삭제"};
                 AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
                 dialog.setTitle("MENU");
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if(items[which]=="고객에게 1:1 문의하기") {
+                        if(items[which]=="즐겨찾기 추가") {
                             // 채팅창으로 이동
-
-//                            Intent intent = new Intent(getContext(), Navigate_CustomerLocation.class);
+//                            String Customer_Name = tv_UserName.getText().toString();
+//                            String Customer_Location = tv_FoodPlace.getText().toString();
+//                            Log.d("인텐트 보내는 값", Customer_Name+Customer_Location);
+//
+//                            Intent intent = new Intent(getContext(), GoogleMapExample.class);
+//                            intent.putExtra("Customer_Name", Customer_Name);
+//                            intent.putExtra("Customer_Location", Customer_Location);
 //                            startActivity(intent);
-
-                            Intent intent = new Intent(getContext(), Chat_Client.class);
-                            intent.putExtra("email_receiver", UserEmail);
-                            startActivity(intent);
-
                         }
 
-                        if(items[which]=="출장지역 찾아가기") {
-
-                            String Customer_Name = tv_UserName.getText().toString();
-                            String Customer_Location = tv_FoodPlace.getText().toString();
-                            Log.d("인텐트 보내는 값", Customer_Name+Customer_Location);
-
-                            Intent intent = new Intent(getContext(), GoogleMapExample.class);
-                            intent.putExtra("Customer_Name", Customer_Name);
-                            intent.putExtra("Customer_Location", Customer_Location);
-                            startActivity(intent);
-
+                        if(items[which]=="친구 삭제") {
+//                            Intent intent = new Intent(getContext(), Navigate_CustomerLocation.class);
+//                            startActivity(intent);
+//                            DeleteFriend();
                         }
                     }
                 });
@@ -158,17 +145,17 @@ public class OrderList_chef_viewpager extends ListFragment {
         });
     }
 
-    // 한번 클릭 시 해당 메뉴 상세 보기 화면 으로
+
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) { // 한번 클릭시 채팅방 띄우기
 
-        Food_Id = (TextView) v.findViewById(R.id.tv_Food_Id);
-        String Id=Food_Id.getText().toString();
-        Log.e("listview","food menu id 값 : "+Id);
-
-        Intent intent=new Intent(getContext(), Home_Foodlook.class);
-        intent.putExtra("Id", Id);
-        startActivity(intent);
+//        Food_Id = (TextView) v.findViewById(R.id.tv_Food_Id);
+//        String Id=Food_Id.getText().toString();
+//        Log.e("listview","food menu id 값 : "+Id);
+//
+//        Intent intent=new Intent(getContext(), Home_Foodlook.class);
+//        intent.putExtra("Id", Id);
+//        startActivity(intent);
 
         super.onListItemClick(l, v, position, id);
     }
@@ -176,7 +163,7 @@ public class OrderList_chef_viewpager extends ListFragment {
     // db 데이터 로드
     private void ParseDB() {
 
-        String url = "http://115.71.239.151/Orderlist_Chef_Parsing1.php";
+        String url = "http://115.71.239.151/.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -184,46 +171,37 @@ public class OrderList_chef_viewpager extends ListFragment {
                 Log.d("parsing1", response);
 
                 try {
-                    listViewItemList = new ArrayList<ListViewItem_Chef_ViewPager>();
+                    listViewItemList = new ArrayList<ListViewItem_ViewPager_FriendList>();
 
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
 
                     if(jsonArray.length()==0) {
-                        Toast.makeText(getContext(), "예약 중이신 출장 계획이 없습니다.\n예약을 먼저 진행해 주세요.", Toast.LENGTH_SHORT).show();
                         setListShown(true);
                         return;
 
                     } else {
                         for (int i = 0; i < jsonArray.length(); i++) {
 
-                            JSONObject jo = jsonArray.getJSONObject(i);
-
-
-
-                            String Food_Id=jo.getString("Food_Id");
-                            String Food_Image = jo.getString("Food_Image");
-                            String Food_Name = jo.getString("Food_Name");
-                            String Food_Count= jo.getString("Food_Count");
-                            String Food_Date = jo.getString("Food_Date");
-                            String Food_Time = jo.getString("Food_Time");
-                            String Food_Place = jo.getString("Food_Place");
-                            String User_Name = jo.getString("User_Name");
-
-                            listViewItem_menu = new ListViewItem_Chef_ViewPager();
-                            listViewItem_menu.setChef_Name(User_Name+" 고객님");
-
-                            listViewItem_menu.setFood_Id(Food_Id);
-                            listViewItem_menu.setFood_Name(Food_Name);
-                            listViewItem_menu.setFood_Count(Food_Count+" (인분)");
-                            listViewItem_menu.setFood_Date(Food_Date);
-                            listViewItem_menu.setFood_Time(Food_Time);
-                            listViewItem_menu.setFood_Place(Food_Place);
-                            listViewItem_menu.setChef_Profile("http://115.71.239.151/" + Food_Image);
-                            listViewItemList.add(listViewItem_menu);
+//                            JSONObject jo = jsonArray.getJSONObject(i);
+//
+//                            String Food_Id=jo.getString("Food_Id");
+//                            String Food_Image = jo.getString("Food_Image");
+//                            String Food_Name = jo.getString("Food_Name");
+//                            String Food_Count= jo.getString("Food_Count");
+//                            String Food_Date = jo.getString("Food_Date");
+//                            String Food_Time = jo.getString("Food_Time");
+//                            String Food_Place = jo.getString("Food_Place");
+//                            String User_Name = jo.getString("User_Name");
+//
+//                            listViewItem_list = new ListViewItem_ViewPager_FriendList();
+//                            listViewItem_list.setChef_Name(User_Name+" 고객님");
+//                            listViewItem_list.setFood_Id(Food_Id);
+//                            listViewItem_menu.setChef_Profile("http://115.71.239.151/" + Food_Image);
+//                            listViewItemList.add(listViewItem_menu);
 
                         }
-                        adapter = new ListViewAdapter_Chef_ViewPager(listViewItemList);
+                        adapter = new ListViewAdapter_ViewPager_FriendList(listViewItemList);
                         setListAdapter(adapter);
                     }
 

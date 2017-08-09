@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 import thread.seopftware.mychef.R;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
@@ -33,10 +32,13 @@ import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
 public class ListViewAdapter_Chat extends BaseAdapter {
 
+    private static final String TAG = "ListViewAdapter_Chat";
     private static final int ENTRANCE = 0 ;
     private static final int MESSAGE = 1 ;
-    private static final int ITEM_VIEW_TYPE_MAX = 2;
+    private static final int DATE = 2 ;
+    private static final int ITEM_VIEW_TYPE_MAX = 3;
 
+    private TextView tv_MeEmail, tv_YouEmail;
     private TextView tv_MeMessage, tv_YouMessage; // 메세지
     private TextView tv_MeTime, tv_YouTime;
     private TextView tv_YouName;
@@ -71,7 +73,6 @@ public class ListViewAdapter_Chat extends BaseAdapter {
 
         final Context context=parent.getContext();
         int viewType = 0;
-        Log.d("adapter view type", String.valueOf(viewType));
 
         // 세션 유지를 위한 이메일 값 불러들이기
         SharedPreferences pref1 = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
@@ -83,18 +84,17 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         if(!FB_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(FBEMAIL, "");
-            Log.d(TAG, "FB chefemail: "+Login_Email);
+            Log.d(TAG, "FB email: "+Login_Email);
         } else if(!KAKAO_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(KAEMAIL, "");
-            Log.d(TAG, "KA chefemail: "+Login_Email);
+            Log.d(TAG, "KA email: "+Login_Email);
         } else { // 일반
             SharedPreferences pref = context.getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(CHEFNORMALLEMAIL, "");
-            Log.d(TAG, "Normal chefemail: "+Login_Email);
+            Log.d(TAG, "Normal email: "+Login_Email);
         }
 
-        Log.d(TAG, "접속된 Email : "+Login_Email);
 
         if(convertView==null) {
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -108,10 +108,13 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                 case MESSAGE:
                     viewType = R.layout.listview_chatting_room;
                     break;
+
+                case DATE:
+                    viewType = R.layout.listview_chatting_entrance;
+                    break;
             }
             convertView = mInflater.inflate(viewType, parent, false);
         }
-
 
         viewType = getItemViewType(position);
         ListViewItem_Chat listViewItem_chat = listViewItemList.get(position);
@@ -130,6 +133,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     LinearMe = (LinearLayout) convertView.findViewById(R.id.LinearMe);
                     tv_MeMessage = (TextView) convertView.findViewById(R.id.tv_MeMessage);
                     tv_MeTime= (TextView) convertView.findViewById(R.id.tv_MeTime);
+                    tv_MeEmail= (TextView) convertView.findViewById(R.id.tv_MeEmail);
 
                     // 상대방 정보 레이아웃 객체 선언
                     LinearYou= (LinearLayout) convertView.findViewById(R.id.LinearYou);
@@ -137,20 +141,19 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     tv_YouName= (TextView) convertView.findViewById(R.id.tv_YouName);
                     tv_YouTime= (TextView) convertView.findViewById(R.id.tv_YouTime);
                     iv_YouProfile= (ImageView) convertView.findViewById(R.id.iv_YouProfile);
+                    tv_YouEmail= (TextView) convertView.findViewById(R.id.tv_YouEmail);
 
                     // 나의 정보 레이아웃 값 입력
                     tv_MeMessage.setText(listViewItem_chat.getMessage()); // 메세지 내용
                     tv_MeTime.setText(listViewItem_chat.getTime()); // 보내는 시간
+                    tv_MeEmail.setText(listViewItem_chat.getEmail());
 
                     // 상대방 정보 레이아웃 값 입력
                     tv_YouName.setText(listViewItem_chat.getName()); // 이름
                     tv_YouTime.setText(listViewItem_chat.getTime()); // 보내는 시간
                     tv_YouMessage.setText(listViewItem_chat.getMessage()); // 메세지 내용
+                    tv_YouEmail.setText(listViewItem_chat.getEmail());
                     Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
-
-                    Log.d("ADAPTER", "listViewItemList.get(position).getEmail()"+listViewItemList.get(position).getEmail());
-                    Log.d("ADAPTER", "listViewItemList.get(position).getEmail()"+listViewItemList.get(position-1).getEmail());
-
 
                     if(listViewItemList.get(position).getEmail().equals(Login_Email)) {
                         LinearMe.setVisibility(View.VISIBLE);
@@ -173,9 +176,13 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                             iv_YouProfile.setVisibility(View.VISIBLE);
                         }
                     }
+                    break;
 
+                case DATE:
+                    convertView = mInflater.inflate(R.layout.listview_chatting_date, parent, false);
 
-
+                    TextView tv_ShowDate = (TextView) convertView.findViewById(R.id.tv_ShowDate);
+                    tv_ShowDate.setText(listViewItem_chat.getTime());
                     break;
             }
         return convertView;
@@ -202,7 +209,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         listViewItemList.add(item);
     }
 
-    public void addItem(String email, String name, String time, String message, String profile) { // 최초 입장시
+    public void addItem(String email, String name, String time, String message, String profile) {
         ListViewItem_Chat item = new ListViewItem_Chat();
 
         item.setType(MESSAGE);
@@ -211,6 +218,15 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         item.setTime(time);
         item.setMessage(message);
         item.setProfile(profile);
+
+        listViewItemList.add(item);
+    }
+
+    public void addItemTime(String Date) { // 최초 입장시
+        ListViewItem_Chat item = new ListViewItem_Chat();
+
+        item.setType(DATE);
+        item.setTime(Date);
 
         listViewItemList.add(item);
     }

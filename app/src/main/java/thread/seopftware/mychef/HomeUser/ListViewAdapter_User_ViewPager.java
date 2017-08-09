@@ -52,7 +52,7 @@ public class ListViewAdapter_User_ViewPager extends BaseAdapter {
 
         // 화면에 표시될 View(Layout이 inflate된)으로 부터 위젯에 대한 참조 획득
         TextView tv_Chef_Name= (TextView) convertView.findViewById(R.id.tv_Chef_Name);
-        ImageView iv_Chef_Profile= (ImageView) convertView.findViewById(R.id.iv_Chef_Profile);
+        ImageView iv_Chef_Profile= (ImageView) convertView.findViewById(R.id.iv_Profile);
         Glide.with(context).load(listViewItem.getChef_Profile()).into(iv_Chef_Profile);
 
         TextView tv_Food_Name= (TextView) convertView.findViewById(R.id.tv_Food_Name);

@@ -60,7 +60,7 @@ public class OrderList_viewpager extends ListFragment {
     String Id; // 음식 메뉴 고유 id
 
     String SearchWord;
-    String UserEmail;
+    String UserEmail, Chef_Email;
 
     TextView Food_Id, Chef_Number, tv_Food_Name;
     String Food_Name, foodid;
@@ -141,6 +141,7 @@ public class OrderList_viewpager extends ListFragment {
                         if(items[which]=="쉐프에게 1:1 문의하기") {
 
                             Intent intent = new Intent(getContext(), Chat_Client.class);
+                            intent.putExtra("email_receiver", Chef_Email);
                             startActivity(intent);
                             // 채팅창으로 이동
                         }
@@ -233,6 +234,7 @@ public class OrderList_viewpager extends ListFragment {
                             String Chef_Name = jo.getString("Chef_Name");
                             String Chef_Profile = jo.getString("Food_Image");
                             String Chef_Phone=jo.getString("Chef_Phone");
+                            Chef_Email=jo.getString("Chef_Email");
 
                             String Food_Id=jo.getString("Food_Id");
                             String Food_Name = jo.getString("Food_Name");
@@ -338,6 +340,7 @@ public class OrderList_viewpager extends ListFragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
+
 
     @Override
     public void onResume() {

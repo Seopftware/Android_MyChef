@@ -1,15 +1,29 @@
 package thread.seopftware.mychef.HomeChef;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-public class Fragment2_Chat extends ListFragment {
+import com.astuetz.PagerSlidingTabStrip;
 
-    ListViewAdapter_Menu adapter;
+import thread.seopftware.mychef.Chatting.Viewpager2_ChatList;
+import thread.seopftware.mychef.Chatting.Viewpager_FriendList;
+import thread.seopftware.mychef.R;
+
+/**
+ * Created by MSI on 2017-07-11.
+ */
+
+public class Fragment2_Chat extends Fragment {
+
+    ViewPager viewPager;
+    PagerSlidingTabStrip tabs;
 
     // 생성자
     public Fragment2_Chat() {
@@ -19,34 +33,59 @@ public class Fragment2_Chat extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("MyChef_Chat");
+        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.activity_fragment1_user_order, container, false);
 
-//        adapter=new ListViewAdapter_Menu();
-//        setListAdapter(adapter);
+        viewPager= (ViewPager) rootview.findViewById(R.id.viewPager);
+        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager()));
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setCurrentItem(0);
 
-//        adapter.addItem("korea", "english", "price");
-//        adapter.addItem("korea1", "english2", "price3");
-//        adapter.addItem("korea1", "english2", "price3");
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        tabs= (PagerSlidingTabStrip) rootview.findViewById(R.id.tabs);
+        tabs.setShouldExpand(true);
+        tabs.setViewPager(viewPager);
 
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.activity_fragment__menu, container, false);
+        return rootview;
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        ListViewItem_Menu item =(ListViewItem_Menu) l.getItemAtPosition(position);
-
-        String KoreaName=item.getKoreaName();
-        String EnglishName=item.getEnglishName();
-        String Price=item.getPrice();
-
-        super.onListItemClick(l, v, position, id);
     }
 
-//    public void addItem(String KoreaName, String EnglishName, String Price) {
-//        adapter.addItem(KoreaName, EnglishName, Price);
-//    }
-}
+    // 페이지마다 보여줄 타이틀을 정해준다.
+    private String[] pageTitle = {"친구 목록", "채팅 목록"};
+    private class PagerAdapter extends FragmentPagerAdapter {
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return pageTitle[position];
+        }
+
+        /**
+         * View Pager의 Fragment 들은 각각 Index를 가진다. * Android OS로 부터 요청된 Pager의 Index를 보내주면, * 해당되는 Fragment를 리턴시킨다. * @param position * @return
+         */
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                Log.d("pos", String.valueOf(position));
+                return new Viewpager_FriendList();
+            } else if(position == 1) {
+                return new Viewpager2_ChatList();
+            }
+            return null;
+        }
+
+        /**
+         * View Pager에 몇개의 Fragment가 들어가는지 설정 * @return
+         */
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }
+}

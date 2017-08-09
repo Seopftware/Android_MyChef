@@ -99,7 +99,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/iv_Chef_Profile"
+                    android:id="@+id/iv_Profile"
                     android:layout_width="match_parent"
                     android:layout_height="315dp"
                     android:layout_weight="1"

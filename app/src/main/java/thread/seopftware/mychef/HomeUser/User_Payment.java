@@ -41,6 +41,7 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Map;
 
+import thread.seopftware.mychef.Payment.KakaoPayment;
 import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
@@ -165,6 +166,9 @@ public class User_Payment extends AppCompatActivity {
                         case R.id.rb_Pay:
                             payment.setVisibility(View.VISIBLE);
                             Payment_method="즉시 결제";
+
+                            Intent intent= new Intent(getApplicationContext(), KakaoPayment.class);
+                            startActivity(intent);
                             break;
                         case R.id.rb_Money:
                             payment.setVisibility(View.INVISIBLE);
