@@ -32,7 +32,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/googlemap_api_key" />
 
-        <activity android:name=".Login.IntroActivity"/>
+        <activity android:name=".Login.IntroActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Login.Login_choose" />
         <activity android:name=".Login.Login_login" />
         <activity android:name=".Login.Login_register" />
@@ -87,17 +93,26 @@
         <activity android:name=".GoogleMap.GoogleMapExample" />
         <activity android:name=".Payment.payment" />
         <activity android:name=".Payment.KakaoPayment" />
-        <activity android:name=".Service.ServiceExample" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-
-        </activity>
+        <activity android:name=".Service.ServiceExample" />
 
         <service
             android:name=".Service.MyService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Chatting.Chat_Service"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Chatting.KeepAliveService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Chatting.Connectwith_Activity"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Chatting.MainService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

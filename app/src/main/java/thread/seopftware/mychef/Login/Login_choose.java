@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -38,6 +39,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import thread.seopftware.mychef.Chatting.Chat_Service;
 import thread.seopftware.mychef.HomeChef.Home_chef;
 import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.R;
@@ -54,6 +56,8 @@ import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 import static thread.seopftware.mychef.Login.Login_login.KANAME;
 
 public class Login_choose extends AppCompatActivity {
+
+
 
     //FB LOGIN API
     private LoginButton loginButton;
@@ -291,14 +295,24 @@ public class Login_choose extends AppCompatActivity {
                 finish();
 
             } else if (Integer.parseInt(result)==2) { // 유저 DB 테이블에서 일치하는 FB API ID 값이 있을 때.
-                Intent intent=new Intent(getApplicationContext(), Home_user.class);
-                startActivity(intent);
-                finish();
+
 
                 SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor=autologin.edit();
                 editor.putInt("Status", 1);
                 editor.commit();
+
+                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
+                intent1.putExtra("command", "0");
+                Log.d("페북 로그인", "여기 지나감");
+                startService(intent1);
+
+
+                Intent intent=new Intent(getApplicationContext(), Home_user.class);
+                startActivity(intent);
+                finish();
+
 
             } else if(Integer.parseInt(result)==3) { // 쉐프 DB 테이블에서 일치하는 FB API ID 값이 있을 때.
                 Intent intent=new Intent(getApplicationContext(), Home_chef.class);
@@ -385,12 +399,18 @@ public class Login_choose extends AppCompatActivity {
 //            progressDialog.dismiss();
             Log.d(TAG, "POST kakao login response :" +result);
 
-            if(Integer.parseInt(result)==1) {
+            if(Integer.parseInt(result)==1) { // 해당하는 API 없을 때 회원가입 화면으로
                 Intent intent=new Intent(Login_choose.this, Login_register.class);
                 startActivity(intent);
                 finish();
 
             } else if (Integer.parseInt(result)==2) {
+
+                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
+                intent1.putExtra("command", "0");
+                startService(intent1);
+
                 Intent intent=new Intent(Login_choose.this, Home_user.class);
                 startActivity(intent);
                 finish();

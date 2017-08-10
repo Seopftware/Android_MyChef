@@ -54,6 +54,7 @@ import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 public class OrderList_viewpager extends ListFragment {
 
     private static String TAG="OrderList_viewpager";
+    public static final String EMAIL_SENDER = "Email_SenderKey";
     ListViewAdapter_User_ViewPager adapter;
     ListViewItem_User_ViewPager listViewItem_menu;
     ArrayList<ListViewItem_User_ViewPager> listViewItemList;
@@ -140,8 +141,12 @@ public class OrderList_viewpager extends ListFragment {
 
                         if(items[which]=="쉐프에게 1:1 문의하기") {
 
+                            SharedPreferences pref = getContext().getSharedPreferences(EMAIL_SENDER, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("EMAIL", Chef_Email);
+                            editor.commit();
+
                             Intent intent = new Intent(getContext(), Chat_Client.class);
-                            intent.putExtra("email_receiver", Chef_Email);
                             startActivity(intent);
                             // 채팅창으로 이동
                         }

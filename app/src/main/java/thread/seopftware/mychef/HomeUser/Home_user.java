@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
+import thread.seopftware.mychef.Chatting.Chat_Service;
 import thread.seopftware.mychef.HomeChef.Fragment4_Call;
 import thread.seopftware.mychef.Login.Login_choose;
 import thread.seopftware.mychef.R;
@@ -63,7 +64,6 @@ public class Home_user extends AppCompatActivity
 
     String UserEmail;
     String Name;
-
     TextView tv_UserName;
 
     @Override
@@ -237,6 +237,11 @@ public class Home_user extends AppCompatActivity
                 break;
 
             case R.id.nav_logout: // 로그아웃
+
+                Toast.makeText(getApplicationContext(), "소켓 서비스 종료", Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent(Home_user.this, Chat_Service.class);
+                stopService(intent1);
+
                 SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor=autologin.edit();
                 editor.clear();
@@ -251,6 +256,10 @@ public class Home_user extends AppCompatActivity
                             Intent intent=new Intent(getApplicationContext(), Login_choose.class);
                             startActivity(intent);
                             finish();
+
+                            Toast.makeText(getApplicationContext(), "소켓 서비스 종료", Toast.LENGTH_SHORT).show();
+                            Intent intent1=new Intent(Home_user.this, Chat_Service.class);
+                            stopService(intent1);
 
                             KAKAO_LOGINCHECK="0";
 
@@ -268,9 +277,13 @@ public class Home_user extends AppCompatActivity
                 else if(!FB_LOGINCHECK.equals("0")) {
                     //페이스북 로그아웃
                     LoginManager.getInstance().logOut();
-                    Intent intent1 = new Intent(getApplicationContext(), Login_choose.class);
-                    startActivity(intent1);
+                    Intent intent = new Intent(getApplicationContext(), Login_choose.class);
+                    startActivity(intent);
                     finish();
+
+                    Toast.makeText(getApplicationContext(), "소켓 서비스 종료", Toast.LENGTH_SHORT).show();
+                    Intent intent3=new Intent(Home_user.this, Chat_Service.class);
+                    stopService(intent3);
 
                     //fb api 저장값 초기화
                     SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);

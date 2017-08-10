@@ -15,8 +15,9 @@ import thread.seopftware.mychef.R;
 public class MyService extends Service {
 
     NotificationManager Notifi_Manager;
-    ServiceThread thread;
     Notification Notifi_Message;
+    ServiceThread thread;
+
 
     @Override
     public IBinder onBind(Intent intent) {

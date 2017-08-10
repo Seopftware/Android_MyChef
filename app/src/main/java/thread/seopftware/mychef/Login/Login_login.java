@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import thread.seopftware.mychef.Chatting.Chat_Service;
 import thread.seopftware.mychef.HomeChef.Home_chef;
 import thread.seopftware.mychef.HomeUser.Home_user;
 import thread.seopftware.mychef.R;
@@ -143,6 +144,11 @@ public class Login_login extends AppCompatActivity {
                 editor.putInt("Status", 1);
                 editor.commit();
 
+                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent(Login_login.this, Chat_Service.class);
+                intent1.putExtra("command", "0");
+                Log.d("페북 로그인", "여기 지나감");
+                startService(intent1);
 
                 Intent intent=new Intent(Login_login.this, Home_user.class);
                 startActivity(intent);
