@@ -29,11 +29,11 @@ public class Chat_Service extends Service {
 
     Handler msghandler;
     SocketClient client;
-    static Socket socket;
+    Socket socket;
 
 
     Message hdmsg;
-    static DataOutputStream output = null;
+    DataOutputStream output = null;
     DataInputStream input = null;
     ReceiveThread receive;
     SendThread send;
@@ -53,15 +53,17 @@ public class Chat_Service extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Log.d(TAG, "여기서 소켓이 연결됨");
+        Log.d(TAG, "**************************************************");
+        Log.d(TAG, "on Create() : 서버와 소켓 연결");
+        Log.d(TAG, "**************************************************");
+
         client = new SocketClient(IP, PORT);
         client.start();
-
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         Log.d(TAG, "onStartCommand 실행됨");
         Notifi_Manager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -79,18 +81,30 @@ public class Chat_Service extends Service {
         Log.d(TAG, "processCommand 실행됨");
         Log.d(TAG, "intent.getStringExtra(command) : " + intent.getStringExtra("command"));
 
-
         if(intent.getStringExtra("command").equals("0")) {
-            Log.d(TAG, "command : " + intent.getStringExtra("command"));
+            Log.d(TAG, "로그인 시 서비스 값 : " + intent.getStringExtra("command"));
+
         }
 
         else if(intent.getStringExtra("command")!=null) {
             command = intent.getStringExtra("command"); // 액티비티 ㅡ> 서비스로 보낸 내용 (전송 버튼 클릭 시 받아오는 데이터)
-            Log.d(TAG, "command : " + intent.getStringExtra("command"));
+            Log.d(TAG, "전송 버튼 클릭 시  : " + intent.getStringExtra("command"));
+
+
             send = new SendThread(socket);
             send.start();
+
+
         }
 
+        else if(intent.getStringExtra("list")!=null) {
+            command = intent.getStringExtra("list");
+            Log.d(TAG, "저장된 채팅방 입장 시  : " + intent.getStringExtra("command"));
+
+        }
+
+
+        // 서비스 ㅡ> 액티비티로 메세지를 보내는 곳
         msghandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -98,38 +112,48 @@ public class Chat_Service extends Service {
 
                 Log.d("서비스 Handler hdmsg", String.valueOf(hdmsg));
 
-                String Message = hdmsg.obj.toString();
-                Log.d(TAG, "서비스 Message(분해전) : "+Message);
+                if( hdmsg.what == 1111 ) {
+                    String Message = hdmsg.obj.toString();
+                    Log.d(TAG, "서비스 Message(분해전) : "+Message);
+                    // 메세지 분해한 후에 내용 띄워주기
+                    // 여기서 디비에 저장. 내가 속해 있는 방이 아닌 다른 방에서 온 메세지는 여기서 디비에 저장하고 노티 날린다.
+                    // intent 보내고 방 번호 같으면 add로 보여주고 아니면 말구!
+
+                /*
+                *
+                *
+                * 노티파이
+                *
+                * */
+
+                    Intent intent = new Intent(Chat_Service.this, Chat_Client.class);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(Chat_Service.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    Notifi_Message=new Notification.Builder(getApplicationContext())
+                            .setContentTitle("Content Title")
+                            .setContentText("Content Text")
+                            .setSmallIcon(R.drawable.kakaoaccount_icon)
+                            .setTicker("알람!!!")
+                            .setContentIntent(pendingIntent)
+                            .build();
+
+                    Notifi_Message.defaults = Notification.DEFAULT_SOUND; // 소리추가
+                    Notifi_Message.flags = Notification.FLAG_ONLY_ALERT_ONCE; // 알림 소리를 한번만 내도록
+                    Notifi_Message.flags = Notification.FLAG_AUTO_CANCEL; // 확인하면 자동으로 알림이 제거 되도록
+
+                    Notifi_Manager.notify(777, Notifi_Message);
+                    Toast.makeText(getApplicationContext(), "노티 옵니까아아", Toast.LENGTH_LONG).show();
 
 
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "4. Message Handler 서버에서 받은 메세지를  액티비티로 보넀습니다.");
+                    Log.d(TAG, "**************************************************");
 
-                Intent intent = new Intent(Chat_Service.this, Chat_Client.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(Chat_Service.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                Notifi_Message=new Notification.Builder(getApplicationContext())
-                        .setContentTitle("Content Title")
-                        .setContentText("Content Text")
-                        .setSmallIcon(R.drawable.kakaoaccount_icon)
-                        .setTicker("알람!!!")
-                        .setContentIntent(pendingIntent)
-                        .build();
-
-                Notifi_Message.defaults = Notification.DEFAULT_SOUND; // 소리추가
-                Notifi_Message.flags = Notification.FLAG_ONLY_ALERT_ONCE; // 알림 소리를 한번만 내도록
-                Notifi_Message.flags = Notification.FLAG_AUTO_CANCEL; // 확인하면 자동으로 알림이 제거 되도록
-
-                Notifi_Manager.notify(777, Notifi_Message);
-
-                Toast.makeText(getApplicationContext(), "노티 옵니까아아", Toast.LENGTH_LONG).show();
-
-
-                Intent showIntent = new Intent(getApplicationContext(), Chat_Client.class);
-                showIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                showIntent.putExtra("command", Message);
-                startActivity(showIntent);
-
-
-
+                    Intent sendIntent = new Intent("com.dwfox.myapplication.SEND_BROAD_CAST");
+                    sendIntent.putExtra("MessageFromService", Message);
+                    Log.d("broadcast", "작동합니까!?");
+                    sendBroadcast(sendIntent);
+                }
             }
         };
 
@@ -159,12 +183,12 @@ public class Chat_Service extends Service {
         @Override
         public void run() { // 맨 처음 서버에 데이터를 보내는 곳
             try {
+                Log.d(TAG, "소켓 연결!! SocketClient 쓰레드");
 
                 socket = new Socket(ip, parseInt(port));
                 output = new DataOutputStream(socket.getOutputStream());
                 receive = new ReceiveThread(socket); // 소켓과 연결 되면 ReceiveThread는 바로 작동 시작
                 receive.start();
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -180,8 +204,8 @@ public class Chat_Service extends Service {
                 this.socket = Socket;
 
                 try {
-                    input = new DataInputStream(socket.getInputStream());
 
+                    input = new DataInputStream(socket.getInputStream());
 
                 } catch (IOException e) {
 
@@ -195,6 +219,10 @@ public class Chat_Service extends Service {
                         String msg = input.readUTF(); // 받은 메세지
 
                         if (msg != null) {
+
+                            Log.d(TAG, "**************************************************");
+                            Log.d(TAG, "3. ReceiveThread : 서버에서 날아온 메세지를 서비스에서 받았습니다.");
+                            Log.d(TAG, "**************************************************");
 
                             hdmsg = msghandler.obtainMessage();
                             hdmsg.what = 1111;
@@ -230,6 +258,12 @@ public class Chat_Service extends Service {
             try {
                 if(output !=null) {
                     if(command !=null) {
+
+                        Log.d(TAG, "**************************************************");
+                        Log.d(TAG, "2. SendThread에서 서버로 메세지를 보넀습니다.");
+                        Log.d(TAG, "**************************************************");
+
+                        Log.d("SEND THREAD", "SendThread 값 : " + command);
                         output.writeUTF(command);
                     }
                 } else {

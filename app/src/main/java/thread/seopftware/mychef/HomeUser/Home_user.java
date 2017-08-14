@@ -71,6 +71,62 @@ public class Home_user extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_user);
 
+
+  /*      SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
+
+        SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+        FB_LOGINCHECK=pref2.getString(FBAPI, "0");
+
+        if(!FB_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(FBEMAIL, "");
+            Log.d(TAG, "FB chefemail: "+UserEmail);
+        } else if(!KAKAO_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(KAEMAIL, "");
+            Log.d(TAG, "KA chefemail: "+UserEmail);
+        } else { // 일반
+            SharedPreferences pref = getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(CHEFNORMALLEMAIL, "");
+            Log.d(TAG, "Normal chefemail: "+UserEmail);
+        }
+        Log.d(TAG, "UserEmail : "+UserEmail);
+
+        try{
+
+
+            Log.d(TAG, "**************************************************");
+            Log.d(TAG, "일반 채팅 문의 프레그먼트 : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
+            Log.d(TAG, "**************************************************");
+
+
+            // 메세지를 서비스로 보내는 곳
+
+            JSONObject object = new JSONObject();
+            object.put("email_sender", UserEmail);
+            String Object_Data = object.toString();
+
+            Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+            Intent intent1=new Intent(Home_user.this, Chat_Service.class);
+            intent1.putExtra("command", Object_Data);
+            Log.d("일반 유저 채팅문의 Fragment", "여기 지나감");
+            startService(intent1);
+
+
+        } catch (JSONException e){
+
+            e.printStackTrace();
+
+        }*/
+
+
+
+
+
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

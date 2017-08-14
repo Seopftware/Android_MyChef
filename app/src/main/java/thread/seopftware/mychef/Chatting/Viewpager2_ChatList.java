@@ -1,19 +1,13 @@
 package thread.seopftware.mychef.Chatting;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -31,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.GoogleMap_Module.Navigate_CustomerLocation;
 import thread.seopftware.mychef.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -47,34 +40,33 @@ import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
-public class Viewpager2_ChatList extends ListFragment {
+public class Viewpager2_ChatList extends Fragment {
 
     private static String TAG = "Viewpager2_ChatList";
-    ListViewAdapter_ViewPager2_ChatList adapter;
     ListViewItem_ViewPager2_ChatList listViewItem;
+    ListViewAdapter_ViewPager2_ChatList adapter;
     ArrayList<ListViewItem_ViewPager2_ChatList> listViewItemList;
+    ListView listView;
 
     String Login_Email;
 
     int pos;
     long longid;
 
-    TextView tv_RoomNumber;
-
     public Viewpager2_ChatList() {
 
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.activity_viewpager2_chatlist, container, false);
+        getActivity().setTitle("MyChef_Chat");
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        listView= (ListView) rootview.findViewById(R.id.listView);
+
+        return rootview;
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -104,7 +96,7 @@ public class Viewpager2_ChatList extends ListFragment {
 
         getRoomInfoDB();
 
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+/*        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -125,32 +117,12 @@ public class Viewpager2_ChatList extends ListFragment {
                             String room = tv_RoomNumber.getText().toString();
                             Log.d("롱클릭시 room 번호", room);
                         }
-
-                        if(items[which]=="출장지역 찾아가기") {
-                            Intent intent = new Intent(getContext(), Navigate_CustomerLocation.class);
-                            startActivity(intent);
-                        }
                     }
                 });
                 dialog.show();
                 return true;
             }
-        });
-    }
-
-    // 한번 클릭 시 해당 메뉴 상세 보기 화면 으로
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-
-        tv_RoomNumber = (TextView) v.findViewById(R.id.tv_RoomNumber);
-        String room=tv_RoomNumber.getText().toString();
-        Log.e(TAG,"클릭시 room 번호 : "+ room);
-
-        Intent intent=new Intent(getContext(), Chat_Client.class);
-        intent.putExtra("room_number", room);
-        startActivity(intent);
-
-        super.onListItemClick(l, v, position, id);
+        });*/
     }
 
     // db 데이터 로드
@@ -169,18 +141,12 @@ public class Viewpager2_ChatList extends ListFragment {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
 
-                    if(jsonArray.length()==0) {
-                        Toast.makeText(getContext(), "예약 중이신 출장 계획이 없습니다.\n예약을 먼저 진행해 주세요.", Toast.LENGTH_SHORT).show();
-                        setListShown(true);
-                        return;
 
-                    } else {
                         for (int i = 0; i < jsonArray.length(); i++) {
 
                             JSONObject jo = jsonArray.getJSONObject(i);
 
                             String Room_Number = jo.getString("Room_Number"); // 1 방 번호
-
 
                             String Room_NumPeople=jo.getString("Room_NumPeople"); // 2 총 사람 수
                             String Room_NumMessage = jo.getString("Room_NumMessage"); // 3 안 읽은 메세지 수
@@ -208,9 +174,9 @@ public class Viewpager2_ChatList extends ListFragment {
                             listViewItemList.add(listViewItem);
 
                         }
-                        adapter = new ListViewAdapter_ViewPager2_ChatList(listViewItemList);
-                        setListAdapter(adapter);
-                    }
+                    adapter = new ListViewAdapter_ViewPager2_ChatList(getContext(), R.layout.listview_chat_friendlist, listViewItemList);
+                    listView.setAdapter(adapter);
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();

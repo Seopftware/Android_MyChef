@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.Chatting.Chat_Client;
 import thread.seopftware.mychef.GoogleMap.GoogleMapExample;
 import thread.seopftware.mychef.R;
 
@@ -51,8 +50,8 @@ import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 public class OrderList_chef_viewpager extends ListFragment {
 
     private static String TAG = "OrderList_chef_pager";
-    ListViewAdapter_Chef_ViewPager adapter;
     ListViewItem_Chef_ViewPager listViewItem_menu;
+    ListViewAdapter_Chef_ViewPager adapter;
     ArrayList<ListViewItem_Chef_ViewPager> listViewItemList;
     String Id; // 음식 메뉴 고유 id
 
@@ -119,14 +118,14 @@ public class OrderList_chef_viewpager extends ListFragment {
                 tv_FoodPlace = (TextView) view.findViewById(R.id.tv_Food_Place);
                 tv_UserName= (TextView) view.findViewById(R.id.tv_Customer_Name);
 
-                final CharSequence[] items=new CharSequence[] {"고객에게 1:1 문의하기", "출장지역 찾아가기"};
+                final CharSequence[] items=new CharSequence[] {/*"고객에게 1:1 문의하기",*/ "출장지역 찾아가기"};
                 AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
                 dialog.setTitle("MENU");
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if(items[which]=="고객에게 1:1 문의하기") {
+/*                        if(items[which]=="고객에게 1:1 문의하기") {
                             // 채팅창으로 이동
 
 //                            Intent intent = new Intent(getContext(), Navigate_CustomerLocation.class);
@@ -134,9 +133,10 @@ public class OrderList_chef_viewpager extends ListFragment {
 
                             Intent intent = new Intent(getContext(), Chat_Client.class);
                             intent.putExtra("email_receiver", UserEmail);
+                            intent.putExtra("email_receiver", Customer);
                             startActivity(intent);
 
-                        }
+                        }*/
 
                         if(items[which]=="출장지역 찾아가기") {
 

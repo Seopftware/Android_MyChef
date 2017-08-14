@@ -42,14 +42,22 @@ public class ListViewAdapter_Chat extends BaseAdapter {
     private TextView tv_MeMessage, tv_YouMessage; // 메세지
     private TextView tv_MeTime, tv_YouTime;
     private TextView tv_YouName;
+    private TextView tv_Status;
     private ImageView iv_YouProfile;
-    private LinearLayout LinearMe, LinearYou;
+    private LinearLayout LinearMe, LinearYou, LinearEntrance;
     ArrayList<ListViewItem_Chat> listViewItemList = new ArrayList<ListViewItem_Chat>(); // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
 
     Context context;
     int layout;
     LayoutInflater mInflater;
     String Login_Email;
+
+/*    public ListViewAdapter_Chat(Context context, int layout, ArrayList<ListViewItem_Chat> listViewItemList) {
+
+        this.context = context;
+        this.layout = layout;
+        this.listViewItemList = listViewItemList;
+    }*/
 
     public ListViewAdapter_Chat() {
 
@@ -121,9 +129,17 @@ public class ListViewAdapter_Chat extends BaseAdapter {
             switch (viewType) {
                 case ENTRANCE:
                     convertView = mInflater.inflate(R.layout.listview_chatting_entrance, parent, false);
-
                     TextView tv_Entrance = (TextView) convertView.findViewById(R.id.tv_Entrance);
                     tv_Entrance.setText(listViewItem_chat.getName());
+
+
+/*                    if(position > 1 && listViewItemList.get(position).getName().equals(listViewItemList.get(position-2).getName())) {
+                        LinearEntrance = (LinearLayout) convertView.findViewById(R.id.LinearEntrance);
+                        LinearEntrance.setVisibility(View.GONE);
+                    } else {
+                    }*/
+
+
                     break;
 
                 case MESSAGE:
@@ -134,6 +150,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     tv_MeMessage = (TextView) convertView.findViewById(R.id.tv_MeMessage);
                     tv_MeTime= (TextView) convertView.findViewById(R.id.tv_MeTime);
                     tv_MeEmail= (TextView) convertView.findViewById(R.id.tv_MeEmail);
+                    tv_Status= (TextView) convertView.findViewById(R.id.tv_Status);
 
                     // 상대방 정보 레이아웃 객체 선언
                     LinearYou= (LinearLayout) convertView.findViewById(R.id.LinearYou);

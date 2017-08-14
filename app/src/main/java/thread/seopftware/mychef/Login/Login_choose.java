@@ -73,9 +73,18 @@ public class Login_choose extends AppCompatActivity {
     Button btnRegister;
     Button btnLogin;
 
+    String FB_EMAIL, KA_EMAIL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+/*        Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+        Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
+        intent1.putExtra("command", "0");
+        Log.d("소켓!!", "여기 지나감");
+        startService(intent1);*/
 
         //==========================================================FB LOGIN API START=============================================================
         FacebookSdk.sdkInitialize(getApplicationContext()); // SDK 초기화 (setContentView 보다 먼저 실행되어야함)
@@ -127,6 +136,8 @@ public class Login_choose extends AppCompatActivity {
                                     String name = object.getString("name");         // 이름
                                     String gender = object.getString("gender");     // 성별
 
+                                    FB_EMAIL = Email;
+
                                     Log.d("TAG","페이스북 이메일 -> " + Email);
                                     Log.d("TAG","페이스북 이름 -> " + name);
                                     Log.d("TAG","페이스북 성별 -> " + gender);
@@ -139,6 +150,10 @@ public class Login_choose extends AppCompatActivity {
                                     editor.putString(FBAPI, UserId);
                                     editor.commit();
 
+                                    // 만약에 db에 id값이 존재 한다면 쉐프 or 유저 화면으로, db에 id값이 존재하지 않는다면 회원가입 선택화면으로.
+                                    CheckFB_Id check=new CheckFB_Id();
+                                    check.execute(FB_LOGINCHECK);
+
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -149,10 +164,6 @@ public class Login_choose extends AppCompatActivity {
                 parameters.putString("fields", "id,name,email,gender,birthday");
                 request.setParameters(parameters);
                 request.executeAsync();
-
-                // 만약에 db에 id값이 존재 한다면 쉐프 or 유저 화면으로, db에 id값이 존재하지 않는다면 회원가입 선택화면으로.
-                CheckFB_Id check=new CheckFB_Id();
-                check.execute(FB_LOGINCHECK);
 
             }
 
@@ -214,6 +225,7 @@ public class Login_choose extends AppCompatActivity {
                     String Email= userProfile.getEmail();
 
                     KAKAO_LOGINCHECK=userId;
+                    KA_EMAIL=Email;
 
                     Log.e("UserProfile", profileUrl);
                     Log.e("UserId", userId);
@@ -296,17 +308,35 @@ public class Login_choose extends AppCompatActivity {
 
             } else if (Integer.parseInt(result)==2) { // 유저 DB 테이블에서 일치하는 FB API ID 값이 있을 때.
 
+                Log.d(TAG, "서비스 시작 전 fb email : " + FB_EMAIL);
+
+//                try{
+
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "페이스북 로그인 : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
+                    Log.d(TAG, "**************************************************");
+
+//                    // 메세지를 서비스로 보내는 곳
+//                    JSONObject object = new JSONObject();
+//                    object.put("email_sender", FB_EMAIL);
+//                    String Object_Data = object.toString();
+
+                    Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                    Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
+                    intent1.putExtra("command", "0");
+                    Log.d("페북 로그인", "여기 지나감");
+                    startService(intent1);
+
+//                } catch (JSONException e){
+//                    e.printStackTrace();
+//                }
+
+
 
                 SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor=autologin.edit();
                 editor.putInt("Status", 1);
                 editor.commit();
-
-                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
-                Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
-                intent1.putExtra("command", "0");
-                Log.d("페북 로그인", "여기 지나감");
-                startService(intent1);
 
 
                 Intent intent=new Intent(getApplicationContext(), Home_user.class);
@@ -382,7 +412,6 @@ public class Login_choose extends AppCompatActivity {
 
     class CheckKA_Id extends AsyncTask<String, Void, String> {
 
-//        ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
@@ -396,20 +425,15 @@ public class Login_choose extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-//            progressDialog.dismiss();
-            Log.d(TAG, "POST kakao login response :" +result);
+            Log.d(TAG, "서비스 시작 전 kakao email : " + KA_EMAIL);
+
 
             if(Integer.parseInt(result)==1) { // 해당하는 API 없을 때 회원가입 화면으로
                 Intent intent=new Intent(Login_choose.this, Login_register.class);
                 startActivity(intent);
                 finish();
 
-            } else if (Integer.parseInt(result)==2) {
-
-                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
-                Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
-                intent1.putExtra("command", "0");
-                startService(intent1);
+            } else if (Integer.parseInt(result)==2) { // 카카오 로그인
 
                 Intent intent=new Intent(Login_choose.this, Home_user.class);
                 startActivity(intent);
@@ -421,6 +445,28 @@ public class Login_choose extends AppCompatActivity {
                 editor.commit();
 
             } else if(Integer.parseInt(result)==3) {
+
+                //                try{
+
+                Log.d(TAG, "**************************************************");
+                Log.d(TAG, "카카오 로그인 : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
+                Log.d(TAG, "**************************************************");
+
+/*                    // 메세지를 서비스로 보내는 곳
+                    JSONObject object = new JSONObject();
+                    object.put("email_sender", KA_EMAIL);
+                    String Object_Data = object.toString();*/
+
+                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
+                intent1.putExtra("command", "0");
+                Log.d("카카오 로그인", "여기 지나감");
+                startService(intent1);
+
+//                } catch (JSONException e){
+//                    e.printStackTrace();
+//                }
+
                 Intent intent=new Intent(getApplicationContext(), Home_chef.class);
                 startActivity(intent);
                 finish();

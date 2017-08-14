@@ -8,7 +8,7 @@
     tools:context="thread.seopftware.mychef.Login.IntroActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/iv_Background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,7 +29,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:textColor="#FFFFFF"
         android:textSize="25dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_Background"
         android:layout_marginBottom="24dp" />
 
     <TextView

@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
+import thread.seopftware.mychef.Chatting.Chat_Service;
 import thread.seopftware.mychef.Login.Login_choose;
 import thread.seopftware.mychef.R;
 import thread.seopftware.mychef.etc.BackPressCloseHandler;
@@ -71,12 +72,19 @@ public class Home_chef extends AppCompatActivity
     TextView tv_ChefName;
 
     Fragment fragment;
+    String UserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_chef);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+        Log.d(TAG, "**************************************************");
+        Log.d(TAG, "모든 부모 프레그먼트 (쉐프) 작동");
+        Log.d(TAG, "**************************************************");
+
         setSupportActionBar(toolbar);
 
         displaySelectedScreen(R.id.nav_orderlist);
@@ -85,6 +93,62 @@ public class Home_chef extends AppCompatActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
+
+
+/*        SharedPreferences pref1 = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
+
+        SharedPreferences pref2 = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+        FB_LOGINCHECK=pref2.getString(FBAPI, "0");
+
+        if(!FB_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(FBEMAIL, "");
+            Log.d(TAG, "FB chefemail: "+UserEmail);
+        } else if(!KAKAO_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(KAEMAIL, "");
+            Log.d(TAG, "KA chefemail: "+UserEmail);
+        } else { // 일반
+            SharedPreferences pref = getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(CHEFNORMALLEMAIL, "");
+            Log.d(TAG, "Normal chefemail: "+UserEmail);
+        }
+        Log.d(TAG, "UserEmail : "+UserEmail);
+
+        try{
+
+            Log.d(TAG, "**************************************************");
+            Log.d(TAG, "쉐프 채팅 문의 프레그먼트 : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
+            Log.d(TAG, "**************************************************");
+
+
+            // 메세지를 서비스로 보내는 곳
+
+            JSONObject object = new JSONObject();
+            object.put("email_sender", UserEmail);
+            String Object_Data = object.toString();
+
+            Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+            Intent intent1=new Intent(Home_chef.this, Chat_Service.class);
+            intent1.putExtra("command", Object_Data);
+            Log.d("일반 유저 채팅문의 Fragment", "여기 지나감");
+            startService(intent1);
+
+
+        } catch (JSONException e){
+
+            e.printStackTrace();
+
+        }*/
+
+
+
+
+
+
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -280,9 +344,20 @@ public class Home_chef extends AppCompatActivity
                     UserManagement.requestLogout(new LogoutResponseCallback() {
                         @Override
                         public void onCompleteLogout() {
+
+
+
                             Intent intent=new Intent(getApplicationContext(), Login_choose.class);
                             startActivity(intent);
                             finish();
+
+
+                            Log.d(TAG, "**************************************************");
+                            Log.d(TAG, "카카오톡 로그아웃 : 서버와 소켓 끊김");
+                            Log.d(TAG, "**************************************************");
+
+                            Intent intent1=new Intent(Home_chef.this, Chat_Service.class);
+                            stopService(intent1);
 
                             KAKAO_LOGINCHECK="0";
 

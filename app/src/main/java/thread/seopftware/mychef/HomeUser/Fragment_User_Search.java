@@ -106,9 +106,6 @@ public class Fragment_User_Search extends Fragment {
         });
 
 
-        view1 = inflater.inflate(R.layout.listview_search, container, false);
-//        btn_Ranking= (Button) view1.findViewById(R.id.btn_Ranking);
-
         return rootview;
     }
 

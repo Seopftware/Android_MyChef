@@ -61,9 +61,9 @@ public class OrderList_viewpager extends ListFragment {
     String Id; // 음식 메뉴 고유 id
 
     String SearchWord;
-    String UserEmail, Chef_Email;
+    String UserEmail, Chef_Email, Chef_Name;
 
-    TextView Food_Id, Chef_Number, tv_Food_Name;
+    TextView Food_Id, Chef_Number, tv_Food_Name, tv_Chef_Name, tv_Chef_Email;
     String Food_Name, foodid;
 
     int pos;
@@ -122,6 +122,9 @@ public class OrderList_viewpager extends ListFragment {
                 Chef_Number = (TextView) view.findViewById(R.id.tv_Chef_Number);
                 tv_Food_Name = (TextView) view.findViewById(R.id.tv_Food_Name);
                 Food_Id= (TextView) view.findViewById(R.id.tv_Food_Id);
+                tv_Chef_Name= (TextView) view.findViewById(R.id.tv_Chef_Name);
+                tv_Chef_Email= (TextView) view.findViewById(R.id.tv_Chef_Email);
+
 
                 final CharSequence[] items=new CharSequence[] {"쉐프에게 전화걸기", "쉐프에게 1:1 문의하기", "출장 완료","예약 취소하기"};
                 AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
@@ -141,12 +144,22 @@ public class OrderList_viewpager extends ListFragment {
 
                         if(items[which]=="쉐프에게 1:1 문의하기") {
 
-                            SharedPreferences pref = getContext().getSharedPreferences(EMAIL_SENDER, MODE_PRIVATE);
+/*                            SharedPreferences pref = getContext().getSharedPreferences(EMAIL_SENDER, MODE_PRIVATE);
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("EMAIL", Chef_Email);
-                            editor.commit();
 
+                            Log.d("1ㅣ1문의 값", "Chef_Email : "+Chef_Email+ "Chef_Name : "+ Chef_Name);
+                            editor.putString("EMAIL", Chef_Email);
+                            editor.putString("NAME", Chef_Name);
+                            editor.commit();*/
+
+
+                            String Name = tv_Chef_Name.getText().toString();
+                            String Email = tv_Chef_Email.getText().toString();
+
+                            Log.d (TAG, "Name : "+Name+" Email : "+Email);
                             Intent intent = new Intent(getContext(), Chat_Client.class);
+                            intent.putExtra("email", Email);
+                            intent.putExtra("name", Name);
                             startActivity(intent);
                             // 채팅창으로 이동
                         }
@@ -239,7 +252,9 @@ public class OrderList_viewpager extends ListFragment {
                             String Chef_Name = jo.getString("Chef_Name");
                             String Chef_Profile = jo.getString("Food_Image");
                             String Chef_Phone=jo.getString("Chef_Phone");
-                            Chef_Email=jo.getString("Chef_Email");
+                            String Chef_Email=jo.getString("Chef_Email");
+
+                            Log.d(TAG, "Chef_Email"+Chef_Email);
 
                             String Food_Id=jo.getString("Food_Id");
                             String Food_Name = jo.getString("Food_Name");
@@ -252,6 +267,7 @@ public class OrderList_viewpager extends ListFragment {
                             listViewItem_menu.setChef_Name(Chef_Name+" 쉐프님");
                             listViewItem_menu.setChef_Number(Chef_Phone+" 쉐프님");
 
+                            listViewItem_menu.setChef_Email(Chef_Email);
                             listViewItem_menu.setFood_Id(Food_Id);
                             listViewItem_menu.setFood_Name(Food_Name);
                             listViewItem_menu.setFood_Count(Food_Count+" (인분)");

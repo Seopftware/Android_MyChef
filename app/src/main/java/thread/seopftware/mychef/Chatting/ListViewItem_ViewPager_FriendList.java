@@ -6,16 +6,7 @@ package thread.seopftware.mychef.Chatting;
 
 public class ListViewItem_ViewPager_FriendList {
 
-    String UpperTitle, BottomTitle;
-    String Profile, Name, Message;
-
-    public String getUpperTitle() {
-        return this.UpperTitle;
-    }
-
-    public String getBottomTitle() {
-        return BottomTitle;
-    }
+    String Profile, Name, Message, Email;
 
     public String getProfile() {
         return Profile;
@@ -29,12 +20,8 @@ public class ListViewItem_ViewPager_FriendList {
         return Message;
     }
 
-    public void setUpperTitle(String upperTitle) {
-        UpperTitle = upperTitle;
-    }
-
-    public void setBottomTitle(String bottomTitle) {
-        BottomTitle = bottomTitle;
+    public String getEmail() {
+        return Email;
     }
 
     public void setProfile(String profile) {
@@ -47,5 +34,9 @@ public class ListViewItem_ViewPager_FriendList {
 
     public void setMessage(String message) {
         Message = message;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 }

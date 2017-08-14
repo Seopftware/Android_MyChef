@@ -65,7 +65,7 @@
             android:paddingRight="16dp">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/iv_Background"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"

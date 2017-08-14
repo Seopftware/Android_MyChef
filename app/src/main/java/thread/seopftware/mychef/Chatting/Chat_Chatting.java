@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -48,9 +49,10 @@ import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
-public class Chat_Client extends AppCompatActivity {
+public class Chat_Chatting extends AppCompatActivity {
 
-    private static String TAG="Chat_Client";
+
+    private static String TAG="Chat_Chatting";
     BroadcastReceiver mReceiver;
 
     // 뷰
@@ -59,6 +61,8 @@ public class Chat_Client extends AppCompatActivity {
 
     ListView listView;
     ListViewAdapter_Chat adapter;
+    ListViewItem_Chat listViewItem_chat;
+    ArrayList<ListViewItem_Chat> listViewItemList;
 
     String Login_Email;
     String room_number;
@@ -69,18 +73,14 @@ public class Chat_Client extends AppCompatActivity {
     String Receiver_name;
     SimpleDateFormat simpleDateFormat;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_client);
-
+        setContentView(R.layout.activity_chat_chatting);
 
         Intent intent1 = getIntent();
-        email_receiver = intent1.getStringExtra("email");
-        Receiver_name = intent1.getStringExtra("name");
+        room_number = intent1.getStringExtra("room_number");
 
-        Log.d(TAG, "email_receiver : "+email_receiver+"Receiver_name : "+Receiver_name);
 
         IntentFilter intentfilter = new IntentFilter();
         intentfilter.addAction("com.dwfox.myapplication.SEND_BROAD_CAST");
@@ -174,7 +174,7 @@ public class Chat_Client extends AppCompatActivity {
                         object.put("content_time", Show_Time);
                         String Object_Data = object.toString();
 
-                        Intent intent = new Intent(Chat_Client.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
+                        Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
                         intent.putExtra("command", Object_Data);
                         startService(intent);
 
@@ -214,12 +214,12 @@ public class Chat_Client extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(getMessage);
 
                     String room_status = jsonObject.getString("room_status");
-                    String room_number = jsonObject.getString("room_number");
+                    String room_number2 = jsonObject.getString("room_number");
                     String email_sender = jsonObject.getString("email_sender");
                     String content_message = jsonObject.getString("content_message");
 
                     Log.d("room_status", room_status);
-                    Log.d("room_number", room_number);
+                    Log.d("room_number2", room_number2);
                     Log.d("email_sender", email_sender);
                     Log.d("content_message", content_message);
 
@@ -229,44 +229,51 @@ public class Chat_Client extends AppCompatActivity {
                     Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
                     String entrance_time = simpleDateFormat.format(new Date(now));
 
-                    if(email_sender.equals(Login_Email)) {
 
-                        Log.d("여긴 오나여", "email_sender.equals(Login_Email) 안");
+                    if(room_number.equals(room_number2)) {
 
-                        if(room_status.equals("0")) {
+                        if(email_sender.equals(Login_Email)) {
 
-                            Log.d("여긴 오나여222222", "email_sender.equals(Login_Email) 안");
+                            Log.d("여긴 오나여", "email_sender.equals(Login_Email) 안");
 
-                            adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
-                            adapter.addItem(content_message); // ""님이 입장하셨습니다.
-                            adapter.notifyDataSetChanged();
+                            if(room_status.equals("0")) {
 
+                                Log.d("여긴 오나여222222", "email_sender.equals(Login_Email) 안");
+
+                                adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
+                                adapter.addItem(content_message); // ""님이 입장하셨습니다.
+                                adapter.notifyDataSetChanged();
+
+                            }
+
+
+                        } else {
+                            if(room_status.equals("0")) { // 채팅방 최초 접속
+
+
+                                adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
+                                adapter.addItem(content_message); // ""님이 입장하셨습니다.
+                                adapter.notifyDataSetChanged();
+
+                            } else if(room_status.equals("1")) { // 채팅 메세지
+
+                                String content_time = jsonObject.getString("content_time");
+                                Log.d("content_time", content_time);
+
+                                senderInfoDB(room_status, room_number, email_sender, content_message, content_time); // 보내는 사람의 이메일 값을 DB로 보낸 다음 닉네임/프로필 사진 받아옴
+
+
+
+                            } else if(room_status.equals("2")) {
+
+                                adapter.addItem(content_message); // ""님이 나가셨습니다.
+                                adapter.notifyDataSetChanged();
+                            }
                         }
 
-
-                    } else {
-                        if(room_status.equals("0")) { // 채팅방 최초 접속
-
-
-                            adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
-                            adapter.addItem(content_message); // ""님이 입장하셨습니다.
-                            adapter.notifyDataSetChanged();
-
-                        } else if(room_status.equals("1")) { // 채팅 메세지
-
-                            String content_time = jsonObject.getString("content_time");
-                            Log.d("content_time", content_time);
-
-                            senderInfoDB(room_status, room_number, email_sender, content_message, content_time); // 보내는 사람의 이메일 값을 DB로 보낸 다음 닉네임/프로필 사진 받아옴
-
-
-
-                        } else if(room_status.equals("2")) {
-
-                            adapter.addItem(content_message); // ""님이 나가셨습니다.
-                            adapter.notifyDataSetChanged();
-                        }
                     }
+
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -278,10 +285,6 @@ public class Chat_Client extends AppCompatActivity {
 
         registerReceiver(mReceiver, intentfilter);
     }
-
-
-
-
 
 
     //액션바 백키 버튼 구현
@@ -296,6 +299,7 @@ public class Chat_Client extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
 
@@ -321,7 +325,8 @@ public class Chat_Client extends AppCompatActivity {
 
                     Log.d(TAG, "Login_Name : "+Login_Name+"Login_Image : "+Login_Image);
 
-                    chat_getRoom();
+                    chat_getRoomMember(); // 룸 멤버 불러오기
+                    chat_getMessage(); // 메세지 불러오기
 
 
                 } catch (JSONException e) {
@@ -400,42 +405,158 @@ public class Chat_Client extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void chat_getRoom() {
 
-        String url = "http://115.71.239.151/chat_CreateRoom.php";
+    private void chat_getMessage() { // 나의 방 번호 보내고 방 메세지 받아오기
+
+        String url = "http://115.71.239.151/Chatting_GetMessage.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("chat_CreateRoom (룸 번호)", response); // column 갯수로 현재 룸 갯수를 구할 수 있음. 이 값을 채팅화면으로 넘긴다.
-                room_number = response;
+                Log.d("서버에서 온 JSON", response);
+                Log.d("parsing", response);
+                try {
+                    listViewItemList = new ArrayList<ListViewItem_Chat>();
 
-                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("result");
+                    for (int i = 0; i < jsonArray.length(); i++) {
 
-                    Log.d(TAG, "**************************************************");
-                    Log.d(TAG, "1. 액티비티에서 서비스로 메세지를 보넀습니다.");
-                    Log.d(TAG, "**************************************************");
+                        JSONObject jo = jsonArray.getJSONObject(i);
+
+                        String room_status=jo.getString("room_status");
+                        String email_sender=jo.getString("email_sender");
+                        String content_message=jo.getString("content_message");
+                        String content_time=jo.getString("content_time");
+                        String name=jo.getString("name");
+                        String photostring=jo.getString("photostring");
+
+
+                        Log.d(TAG, "room_status : " +room_status );
+                        Log.d(TAG, "email_sender : " +email_sender );
+                        Log.d(TAG, "content_message : " +content_message );
+                        Log.d(TAG, "content_time : " +content_time );
+                        Log.d(TAG, "name : " +name );
+
+                        long now=System.currentTimeMillis();
+                        simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
+                        Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
+                        String entrance_time = simpleDateFormat.format(new Date(now));
+
+
+
+                            if(room_status.equals("0")) { // 채팅방 최초 접속
+
+                                Log.d("여긴 오나?11111", "json 반복문");
+                                adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
+                                adapter.addItem(content_message); // ""님이 입장하셨습니다.
+
+                            } else { // 채팅 메세지
+
+                                Log.d("여긴 오나?222222", "json 반복문");
+                                adapter.addItem(email_sender, name, content_time, content_message, "http://115.71.239.151/" + photostring);
+
+                            }
+//                            } else if(room_status.equals("2")) {
+//
+//                                adapter.addItem(content_message); // ""님이 나가셨습니다.
+//                            }
+
+
+
+/*                        listViewItem_chat=new ListViewItem_Chat();
+                        listViewItem_chat.setStatus(room_status);
+                        listViewItem_chat.setMessage(content_message);
+                        listViewItem_chat.setTime(content_time);
+                        listViewItem_chat.setName(name);
+                        listViewItem_chat.setProfile("http://115.71.239.151/"+photostring);
+                        listViewItemList.add(listViewItem_chat);*/
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Log.d("Room_Number", room_number);
+                Map<String,String> map = new Hashtable<>();
+                map.put("room_number", room_number);
+                return map;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+
+
+
+
+    private void chat_getRoomMember() { // 나의 방 번호 보내고 채팅방 참여자 이메일 가져오기 ( 받은 이메일을 서버에 보낸 다음 Array 에 담기 )
+
+        String url = "http://115.71.239.151/Chatting_getRoomMember.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("서버에서 온 JSON", "Chatting_getRoomMember : " + response);
+
+                String[] split=response.split("_#@#_");
+
+                String people = split[0];
+                String json = split[1];
+                String room_member = null;
+
+                Log.d(TAG, "people : " + people + "json : " + json);
+
+                try {
+
+                    ArrayList<String> list = new ArrayList<String>();
+
+                    JSONObject jsonObject = new JSONObject(json);
+                    JSONArray jsonArray = jsonObject.getJSONArray("result");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+
+                        JSONObject jo = jsonArray.getJSONObject(i);
+
+                        room_member=jo.getString("Room_Member");
+                        Log.d(TAG, "room_member : " +room_member );
+                        list.add(room_member);
+
+                    }
+
+
 
                     // 메세지를 서비스로 보내는 곳
                     JSONObject object = new JSONObject();
-                    object.put("room_status", "0");
+                    object.put("room_status", "5"); // array에 사람 추가
+                    object.put("people", String.valueOf(list.size()));
                     object.put("room_number", room_number);
-                    object.put("email_receiver", email_receiver);
-                    object.put("email_sender", Login_Email);
-                    object.put("content_message", Receiver_name+"이 입장했습니다.");
+
+                    for(int i=0; i<list.size(); i++) {
+
+                        Log.d(TAG, "room_member"+i +list.get(i));
+                        object.put("room_member"+i, list.get(i));
+
+                    }
+
                     String Object_Data = object.toString();
 
-                    Intent intent = new Intent(Chat_Client.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
+                    Intent intent = new Intent(getApplicationContext(), Chat_Service.class);
                     intent.putExtra("command", Object_Data);
                     startService(intent);
 
 
-                } catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
-
-//                getChattingContent();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -445,10 +566,9 @@ public class Chat_Client extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-                Log.d("chat_getRoom", "Login_Email :" +Login_Email + "email_receiver : " +email_receiver);
+                Log.d("Room_Number", room_number);
                 Map<String,String> map = new Hashtable<>();
-                map.put("email_sender", Login_Email);
-                map.put("email_receiver", email_receiver);
+                map.put("room_number", room_number);
                 return map;
             }
         };
@@ -456,32 +576,15 @@ public class Chat_Client extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void getChattingContent() {
 
-        String url = "http://115.71.239.151/chat_CreateRoom.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("chat_CreateRoom (룸 번호)", response); // column 갯수로 현재 룸 갯수를 구할 수 있음. 이 값을 채팅화면으로 넘긴다.
-                room_number = response;
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
 
-                Map<String,String> map = new Hashtable<>();
-                map.put("email_sender", Login_Email);
-                map.put("email_receiver", email_receiver);
-                return map;
-            }
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(stringRequest);
-    }
+
+
+
+
+
+
+
 
     private void chat_SaveMessage(final String room_status, final String room_number, final String email_sender, final String content_message, final String content_time) {
 
@@ -515,6 +618,8 @@ public class Chat_Client extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
+
+
 
     private void TimeCheckDB(final String room_number, final String content_time) { // 방 번호를 보낸 다음 현재 시간과 마지막 메세지 시간을 비교. 날짜가 다르면 addTimeItem() 해주기.
 
@@ -574,120 +679,4 @@ public class Chat_Client extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
-
 }
-
-
-
-
-
-/*
- 메인
-
-try {
-            Socket c_socket = new Socket("115.71.239.151", 8888);
-
-            Log.d(TAG, "서버와 연결되었습니다.");
-
-            ReceiveThread rec_thread = new ReceiveThread();
-            rec_thread.setSocket(c_socket);
-
-            SendThread send_thread = new SendThread();
-            send_thread.setSocket(c_socket);
-
-            rec_thread.start();
-            send_thread.start();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-
-
-
-/*
-    // 서버로 부터 데이터를 받는 쓰레드
-    public class ReceiveThread extends Thread {
-        private Socket m_Socket;
-
-        @Override
-        public void run() {
-            super.run();
-
-            try {
-
-                networkReader = new BufferedReader(new InputStreamReader(m_Socket.getInputStream()));
-
-                String receiveString;
-                String[] split;
-
-                while (true) {
-                    receiveString = networkReader.readLine();
-
-                    split = receiveString.split(">");
-
-                    if(split.length >= 2 && split[0].equals(Chat_Client.UserID)) {
-                        continue;
-                    }
-
-                    Log.d(TAG, "Receive Thread (receiveString) : "+receiveString);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void setSocket(Socket _socket) {
-            m_Socket = _socket;
-        }
-    }
-
-    // 서버로 데이터를 전송하는 쓰레드
-    public class SendThread extends Thread {
-        private Socket m_Socket;
-
-        @Override
-        public void run() {
-            super.run();
-
-            try{
-
-                networkReader = new BufferedReader(new InputStreamReader(System.in));
-
-                networkWriter = new PrintWriter(m_Socket.getOutputStream());
-
-                String sendString;
-
-                Log.d(TAG, "사용할 아이디 입력");
-                Chat_Client.UserID = networkReader.readLine();
-
-                networkWriter.println("IDhighkrs12345" + Chat_Client.UserID);
-                networkWriter.flush();
-
-                while (true) {
-                    sendString = networkReader.readLine();
-
-                    if(sendString.equals("exit")) {
-                        break;
-                    }
-
-                    networkWriter.println(sendString);
-                    networkWriter.flush();
-                }
-
-                networkWriter.close();
-                networkReader.close();
-                m_Socket.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void setSocket(Socket _socket) {
-            m_Socket = _socket;
-        }
-    }
- */

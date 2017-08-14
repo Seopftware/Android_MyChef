@@ -7,7 +7,7 @@ package thread.seopftware.mychef.Chatting;
 public class ListViewItem_Chat {
 
     private int type;
-    private Boolean status;
+    private String status;
     private String email;
     private String name;
     private String time;
@@ -21,7 +21,7 @@ public class ListViewItem_Chat {
         this.type = type;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -49,7 +49,7 @@ public class ListViewItem_Chat {
         return type;
     }
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 

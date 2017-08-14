@@ -62,9 +62,6 @@ public class Fragment_User_Cart extends Fragment {
         getActivity().setTitle("MyChef_장바구니");
         ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.activity_fragment_user_cart, container, false);
 
-        tv_TotalPrice= (TextView) rootview.findViewById(R.id.tv_TotalPrice);
-        tv_MyPhone= (TextView) rootview.findViewById(R.id.tv_MyPhone);
-
         // 결제하기 버튼
         btn_Payment = (Button) rootview.findViewById(R.id.btn_Payment);
         btn_Payment.setOnClickListener(new View.OnClickListener() {

@@ -6,8 +6,9 @@ package thread.seopftware.mychef.HomeUser;
 
 public class ListViewItem_User_ViewPager {
 
-    String Chef_Name, Chef_Profile, Chef_Number;
+    String Chef_Name, Chef_Profile, Chef_Number, Chef_Email;
     String Food_Id, Food_Name, Food_Count, Food_Date, Food_Time, Food_Place;
+
 
 
     public String getChef_Name() {
@@ -46,6 +47,10 @@ public class ListViewItem_User_ViewPager {
         return this.Food_Place;
     }
 
+    public String getChef_Email() {
+        return this.Chef_Email;
+    }
+
     public void setChef_Name(String chef_Name) {
         Chef_Name = chef_Name;
     }
@@ -80,5 +85,9 @@ public class ListViewItem_User_ViewPager {
 
     public void setFood_Place(String food_Place) {
         Food_Place = food_Place;
+    }
+
+    public void setChef_Email(String chef_Email) {
+        Chef_Email = chef_Email;
     }
 }

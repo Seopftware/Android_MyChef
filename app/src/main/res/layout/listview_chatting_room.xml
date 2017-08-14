@@ -37,6 +37,13 @@
             android:text="내용" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_Status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/LinearYou"
         android:layout_width="match_parent"

@@ -114,7 +114,10 @@
         <service
             android:name=".Chatting.MainService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".Chatting.Chat_UserInfo" />
+        <activity android:name=".Chatting.Chat_Chatting"></activity>
     </application>
 
 </manifest>

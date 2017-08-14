@@ -144,13 +144,32 @@ public class Login_login extends AppCompatActivity {
                 editor.putInt("Status", 1);
                 editor.commit();
 
-                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
-                Intent intent1=new Intent(Login_login.this, Chat_Service.class);
-                intent1.putExtra("command", "0");
-                Log.d("페북 로그인", "여기 지나감");
-                startService(intent1);
 
-                Intent intent=new Intent(Login_login.this, Home_user.class);
+//                try{
+
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "일반 유저 로그인 : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
+                    Log.d(TAG, "**************************************************");
+
+//                    // 메세지를 서비스로 보내는 곳
+//                    JSONObject object = new JSONObject();
+//                    object.put("email_sender", et_Email.getText().toString());
+//                    String Object_Data = object.toString();
+
+                    Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                    Intent intent1=new Intent(Login_login.this, Chat_Service.class);
+                    intent1.putExtra("command", "0");
+                    Log.d("일반 유저 로그인", "여기 지나감");
+                    startService(intent1);
+
+//                } catch (JSONException e){
+//                    e.printStackTrace();
+//                }
+
+
+
+
+                Intent intent=new Intent(getApplicationContext(), Home_user.class);
                 startActivity(intent);
                 finish();
 
@@ -240,6 +259,29 @@ public class Login_login extends AppCompatActivity {
 
 
             if(Integer.parseInt(result)==2) {
+
+
+//                try{
+
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "일반 쉐프 로그인 : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
+                    Log.d(TAG, "**************************************************");
+
+//                    // 메세지를 서비스로 보내는 곳
+//                    JSONObject object = new JSONObject();
+//                    object.put("email_sender", et_Email.getText().toString());
+//                    String Object_Data = object.toString();
+
+                    Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                    Intent intent1=new Intent(Login_login.this, Chat_Service.class);
+                    intent1.putExtra("command", "0");
+                    Log.d("일반 쉐프 로그인", "여기 지나감");
+                    startService(intent1);
+
+//                } catch (JSONException e){
+//                    e.printStackTrace();
+//                }
+
 
                 SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor=autologin.edit();

@@ -1,6 +1,8 @@
 package thread.seopftware.mychef.Chatting;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 
 import thread.seopftware.mychef.R;
 
+import static com.facebook.login.widget.ProfilePictureView.TAG;
+
 /**
  * Created by MSI on 2017-07-11.
  */
@@ -23,9 +27,13 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     ArrayList<ListViewItem_ViewPager2_ChatList> listViewItemList ;
+    Context context;
+    int layout;
 
     // ListViewAdapter의 생성자
-    public ListViewAdapter_ViewPager2_ChatList(ArrayList<ListViewItem_ViewPager2_ChatList> listViewItemList) {
+    public ListViewAdapter_ViewPager2_ChatList(Context context, int layout, ArrayList<ListViewItem_ViewPager2_ChatList> listViewItemList) {
+        this.context=context;
+        this.layout=layout;
         this.listViewItemList=listViewItemList;
     }
 
@@ -52,7 +60,7 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
         ListViewItem_ViewPager2_ChatList listViewItem=listViewItemList.get(position);
 
         // 화면에 표시될 View(Layout이 inflate된)으로 부터 위젯에 대한 참조 획득
-        TextView tv_Name= (TextView) convertView.findViewById(R.id.tv_Name);
+        final TextView tv_Name= (TextView) convertView.findViewById(R.id.tv_Name);
         TextView tv_Date= (TextView) convertView.findViewById(R.id.tv_Date);
         TextView tv_Message= (TextView) convertView.findViewById(R.id.tv_Message);
         TextView tv_RoomNumber= (TextView) convertView.findViewById(R.id.tv_RoomNumber);
@@ -71,6 +79,26 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
 
         btn_NumMessage.setText(listViewItem.getNumMessage());
         btn_NumPeople.setText(listViewItem.getNumPeople());
+
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String room = listViewItemList.get(position).getRoomNumber();
+                Log.e(TAG, "클릭시 room 번호 : " + room);
+
+                Intent intent = new Intent(context, Chat_Chatting.class);
+                intent.putExtra("room_number", room);
+                context.startActivity(intent);
+
+
+            }
+        });
+
+
+
+
         return convertView;
     }
 
