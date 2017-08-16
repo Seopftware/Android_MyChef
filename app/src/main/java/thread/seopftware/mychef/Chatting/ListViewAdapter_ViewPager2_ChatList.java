@@ -92,7 +92,6 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
                 intent.putExtra("room_number", room);
                 context.startActivity(intent);
 
-
             }
         });
 

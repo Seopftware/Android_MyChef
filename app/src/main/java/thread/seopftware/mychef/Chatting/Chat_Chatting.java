@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -288,6 +290,8 @@ public class Chat_Chatting extends AppCompatActivity {
 
 
     //액션바 백키 버튼 구현
+    // 메뉴에 해당하는 아이템들 클릭 시 호출되는 함수
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
@@ -296,9 +300,27 @@ public class Chat_Chatting extends AppCompatActivity {
                 finish();
                 return true;
             }
+
+
+            case R.id.navidrawer: {
+                Toast.makeText(getApplicationContext(), "navidrawer", Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    // 뷰로 inflate 시켜주기
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_chat, menu);
+        return true;
+    }
+
+
+
+
 
 
 

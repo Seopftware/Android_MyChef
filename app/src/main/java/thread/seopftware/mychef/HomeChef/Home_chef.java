@@ -142,14 +142,6 @@ public class Home_chef extends AppCompatActivity
 
         }*/
 
-
-
-
-
-
-
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerview = navigationView.getHeaderView(0);

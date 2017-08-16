@@ -44,8 +44,7 @@ public class Chat_Service extends Service {
     Notification Notifi_Message;
 
     @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
+    public IBinder onBind(Intent intent) { // onBind의 역할은 무엇인가?
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

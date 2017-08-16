@@ -78,7 +78,7 @@ public class Fragment1_Menu extends ListFragment {
             public void onClick(View view) {
                 Intent intent=new Intent(getApplicationContext(), Home_Foodadd.class);
                 startActivity(intent);
-            }
+                            }
         });
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -147,6 +147,9 @@ public class Fragment1_Menu extends ListFragment {
         Intent intent=new Intent(getContext(), Home_Foodlook.class);
         intent.putExtra("Id",Id);
         startActivity(intent);
+
+/*        Intent intent = new Intent(getContext(), chat_navi_example.class);
+        startActivity(intent);*/
 
         super.onListItemClick(l, v, position, id);
     }

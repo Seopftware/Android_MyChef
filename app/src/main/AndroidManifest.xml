@@ -33,11 +33,14 @@
             android:value="@string/googlemap_api_key" />
 
         <activity android:name=".Login.IntroActivity">
-            <intent-filter>
+
+            <!--
+                <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
         <activity android:name=".Login.Login_choose" />
         <activity android:name=".Login.Login_login" />
@@ -117,7 +120,17 @@
             android:exported="true" />
 
         <activity android:name=".Chatting.Chat_UserInfo" />
-        <activity android:name=".Chatting.Chat_Chatting"></activity>
+        <activity android:name=".Chatting.Chat_Chatting" />
+        <activity android:name=".Chatting.chat_navi_example" />
+        <activity android:name=".etc.SlideMenuActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Chatting.Chat_PinchZoom" />
+        <activity android:name=".Chatting.Chat_Invite_Friendlist"></activity>
     </application>
 
 </manifest>

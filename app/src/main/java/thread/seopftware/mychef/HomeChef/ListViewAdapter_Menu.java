@@ -14,10 +14,6 @@ import java.util.ArrayList;
 
 import thread.seopftware.mychef.R;
 
-/**
- * Created by MSI on 2017-07-11.
- */
-
 public class ListViewAdapter_Menu extends BaseAdapter {
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList

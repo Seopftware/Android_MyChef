@@ -36,6 +36,7 @@ public class Chat_UserInfo extends AppCompatActivity {
     TextView tv_Message, tv_Name;
     LinearLayout LinearChat;
     ImageButton ibtn_Exit;
+    String send_profile; // 이미지 확대를 위한 이미지 파일 넘기기 (Chat_PinzhZoom.class 로)
 
     String email;
     @Override
@@ -86,6 +87,21 @@ public class Chat_UserInfo extends AppCompatActivity {
             }
         });
 
+        iv_Profile.setOnClickListener(new View.OnClickListener() { // 이미지 사진 클릭 시 이미지 확대 화면으로 넘어간다.
+            @Override
+            public void onClick(View v) {
+
+                Log.d(TAG1, "**************************************************");
+                Log.d(TAG1, "이미지 확대 보기 ( Pinch Zoom )");
+                Log.d(TAG1, "보내는 이미지 url 값 send_profile : "+ send_profile);
+                Log.d(TAG1, "**************************************************");
+
+                Intent intent = new Intent(getApplicationContext(), Chat_PinchZoom.class);
+                intent.putExtra("profile", send_profile); // url 주소 인텐트로 넘겨주기
+                startActivity(intent);
+            }
+        });
+
 
         ParseDB();
     }
@@ -111,10 +127,13 @@ public class Chat_UserInfo extends AppCompatActivity {
                     String profile = jo.getString("profile");
                     String message = jo.getString("message");
 
+
+
                     tv_Name.setText(name);
                     tv_Message.setText(message);
                     Glide.with(getApplicationContext()).load("http://115.71.239.151/"+profile).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_Profile); // 프사
 
+                    send_profile = "http://115.71.239.151/"+profile;
 
                 } catch (JSONException e) {
                     e.printStackTrace();
