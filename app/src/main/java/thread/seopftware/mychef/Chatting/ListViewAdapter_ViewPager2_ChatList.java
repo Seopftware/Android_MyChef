@@ -95,9 +95,6 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
             }
         });
 
-
-
-
         return convertView;
     }
 

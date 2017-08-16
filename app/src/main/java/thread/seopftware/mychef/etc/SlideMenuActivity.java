@@ -119,6 +119,7 @@ public class SlideMenuActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "초대하기!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), Chat_Invite_Friendlist.class);
                 intent.putExtra("email", UserEmail);
+                intent.putExtra("room_number", room_number);
                 startActivity(intent);
 
             }

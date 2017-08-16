@@ -65,21 +65,9 @@ public class ListViewAdapter_Invite extends BaseAdapter{
         tv_Name.setText(listViewItem.getName());
         tv_Email.setText(listViewItem.getEmail());
         Glide.with(context).load(listViewItem.getImage()).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_Profile);
+
         return convertView;
     }
-
-    public void addItem(String email, String name, String image) {
-        ListViewItem_Invite item = new ListViewItem_Invite();
-
-        item.setImage(email);
-        item.setName(name);
-        item.setImage(image);
-
-        listViewItemList.add(item);
-    }
-
-
-
 
 
 
