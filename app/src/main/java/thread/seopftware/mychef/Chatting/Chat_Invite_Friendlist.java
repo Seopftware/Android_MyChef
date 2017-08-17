@@ -256,7 +256,7 @@ public class Chat_Invite_Friendlist extends AppCompatActivity {
                     JSONObject object = new JSONObject();
                     object.put("room_status", "6");
                     object.put("room_number", room_number);
-                    object.put("invite_email", invite_email);
+                    object.put("email_sender", invite_email);
                     object.put("content_message", invite_name + "님이 초대 되셨습니다.");
                     String Object_Data = object.toString();
 

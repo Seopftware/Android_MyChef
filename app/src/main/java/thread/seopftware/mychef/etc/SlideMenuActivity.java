@@ -3,6 +3,7 @@ package thread.seopftware.mychef.etc;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -56,12 +56,12 @@ import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
 public class SlideMenuActivity extends AppCompatActivity {
 
-    private RelativeLayout flContainer;
+    private ConstraintLayout flContainer;
     private DrawerLayout dlDrawer;
     private ListView lvNavList;
-    private Chat_NaviListItem listViewItem;
-    private Chat_NaviListAdapter adapter;
-    private ArrayList<Chat_NaviListItem> listViewItemList;
+    private Chat_NaviListItem listViewItem_drawer;
+    private Chat_NaviListAdapter adapter_drawer;
+    private ArrayList<Chat_NaviListItem> listViewItemList_drawer;
     LinearLayout linearLayout;
     Button btn_Invite;
 
@@ -109,7 +109,7 @@ public class SlideMenuActivity extends AppCompatActivity {
         actionBar.setTitle("채팅방");
 
         lvNavList = (ListView)findViewById(R.id.lv_activity_main_nav_list);
-        flContainer = (RelativeLayout)findViewById(R.id.fl_activity_main_container);
+        flContainer = (ConstraintLayout)findViewById(R.id.fl_activity_main_container);
         dlDrawer = (DrawerLayout)findViewById(R.id.dl_activity_main_drawer);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
         btn_Invite = (Button) findViewById(R.id.btn_Invite);
@@ -139,7 +139,7 @@ public class SlideMenuActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                listViewItemList = new ArrayList<Chat_NaviListItem>();
+                listViewItemList_drawer = new ArrayList<Chat_NaviListItem>();
 
                 Log.d("parsing", response);
                 try {
@@ -158,18 +158,18 @@ public class SlideMenuActivity extends AppCompatActivity {
                         Log.d(TAG, "friend : " + friend);
 
                         // 데이터 뷰에 입력시키기
-                        listViewItem=new Chat_NaviListItem();
-                        listViewItem.setName(name);
-                        listViewItem.setEmail(email);
-                        listViewItem.setImage("http://115.71.239.151/"+profile);
-                        listViewItem.setFriend(friend); // 친구 여부를 확인하기 위해서 만약 친구면 1, 친구가 아니면 0 값이 입력됨.
-                        listViewItem.setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.addfriend));
+                        listViewItem_drawer=new Chat_NaviListItem();
+                        listViewItem_drawer.setName(name);
+                        listViewItem_drawer.setEmail(email);
+                        listViewItem_drawer.setImage("http://115.71.239.151/"+profile);
+                        listViewItem_drawer.setFriend(friend); // 친구 여부를 확인하기 위해서 만약 친구면 1, 친구가 아니면 0 값이 입력됨.
+                        listViewItem_drawer.setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.addfriend));
 
-                        listViewItemList.add(listViewItem);
+                        listViewItemList_drawer.add(listViewItem_drawer);
                     }
 
-                    adapter= new Chat_NaviListAdapter(getApplicationContext(), R.layout.custom_drawer_item, listViewItemList);
-                    lvNavList.setAdapter(adapter);
+                    adapter_drawer= new Chat_NaviListAdapter(getApplicationContext(), R.layout.custom_drawer_item, listViewItemList_drawer);
+                    lvNavList.setAdapter(adapter_drawer);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
