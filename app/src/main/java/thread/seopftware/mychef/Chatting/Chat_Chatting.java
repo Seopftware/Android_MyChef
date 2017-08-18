@@ -204,13 +204,16 @@ public class Chat_Chatting extends AppCompatActivity {
                 if (content_message != null) { // 만약 data가 비어있지 않다면 서버로 data 전송
 
                     long now = System.currentTimeMillis();
-                    simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a");
+                    simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a", Locale.KOREA);
                     Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
                     String Show_Time = simpleDateFormat.format(new Date(now));
                     String[] time_split = Show_Time.split("_");
                     String Date = time_split[0];
                     String Time = time_split[1];
                     Log.d("시간 확인", "Date : " + Date + " Time : " + Time);
+
+                    addNumMessage();
+
 
                     TimeCheckDB(room_number, Show_Time); // 그 방에서 가장 마지막으로 보낸 메세지의 날짜와 오늘의 날짜가 다르면 addTimeItem() 해주기
 
@@ -234,6 +237,7 @@ public class Chat_Chatting extends AppCompatActivity {
                         object.put("content_message", et_ChatInput.getText().toString());
                         object.put("content_time", Show_Time);
                         String Object_Data = object.toString();
+
 
                         Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
                         intent.putExtra("command", Object_Data);
@@ -290,9 +294,6 @@ public class Chat_Chatting extends AppCompatActivity {
                     simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
                     Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
                     String entrance_time = simpleDateFormat.format(new Date(now));
-                    addNumMessage();
-
-
 
 
                     if (room_number.equals(room_number2)) {
@@ -301,24 +302,26 @@ public class Chat_Chatting extends AppCompatActivity {
 
 
                             if (room_status.equals("0")) {
+                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
 
                                 adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
                                 adapter.addItem(content_message); // ""님이 입장하셨습니다.
                                 adapter.notifyDataSetChanged();
 
-                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
+
 
                             }
 
                         } else {
                             if (room_status.equals("0")) { // 채팅방 최초 접속
 
+                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
 
                                 adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
                                 adapter.addItem(content_message); // ""님이 입장하셨습니다.
                                 adapter.notifyDataSetChanged();
 
-                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
+
 
 
                             } else if (room_status.equals("1")) { // 채팅 메세지
@@ -326,9 +329,10 @@ public class Chat_Chatting extends AppCompatActivity {
                                 String content_time = jsonObject.getString("content_time");
                                 Log.d("content_time", content_time);
 
+
+
                                 Log.d(TAG, "메세지 핸들러 부분 room_status 체크 : " + room_status);
                                 senderInfoDB(room_status, room_number, email_sender, content_message, content_time); // 보내는 사람의 이메일 값을 DB로 보낸 다음 닉네임/프로필 사진 받아옴
-
 
                             } else if (room_status.equals("2")) { // ""님이 나가셨습니다.
 
@@ -336,19 +340,13 @@ public class Chat_Chatting extends AppCompatActivity {
                                 adapter.notifyDataSetChanged();
 
                             } else if (room_status.equals("6")) {  // 사람을 채팅방에 초대했을 때
+                                chat_SaveMessage("6", room_number2, email_sender, content_message, content_time);
 
                                 String content_time = jsonObject.getString("content_time");
                                 Log.d("content_time", content_time);
                                 adapter.addItem(content_message);
 
-                                chat_SaveMessage("6", room_number2, email_sender, content_message, content_time);
-
-
                             }
-
-                            Intent sendIntent = new Intent("com.dwfox.myapplication.SEND_BROAD_CAST");
-                            sendIntent.putExtra("MessageFromService", "Chat_Chatting 에서 보낸 메세지!!");
-                            sendBroadcast(sendIntent);
                         }
 
                     }
@@ -433,10 +431,15 @@ public class Chat_Chatting extends AppCompatActivity {
                     Sender_Image = jo.getString("profile"); // 1
                     Log.d(TAG, "senderInfoDB Sender_Name : " + Sender_Name + "senderInfoDB Sender_Image : " + Sender_Image);
 
+                    String[] time_split=content_time1.split("_");
+                    String Date = time_split[0];
+                    String Time = time_split[1];
+                    Log.d("sender Info 시간 확인", "Date : "+Date+" Time : "+Time);
 
                     Log.d(TAG, "리스트뷰 추가전 Sender_Name :" + Sender_Name + "리스트뷰 추가전 Sender_Image : " + Sender_Image);
-                    adapter.addItem(email_sender1, Sender_Name, content_time1, content_message1, "http://115.71.239.151/" + Sender_Image);
+                    adapter.addItem(email_sender1, Sender_Name, Time, content_message1, "http://115.71.239.151/" + Sender_Image);
                     adapter.notifyDataSetChanged();
+
                     chat_SaveMessage(room_status1, room_number1, email_sender1, content_message1, content_time1);
                     // 여기서 Login_Name은 자기 이름임. 보내는 사람의 이메일을 웹서버로 보낸 다음 그 값을 기반으로 닉네임/이미지를 불러와야함.
 
@@ -496,6 +499,7 @@ public class Chat_Chatting extends AppCompatActivity {
                         Log.d(TAG, "content_time : " + content_time);
                         Log.d(TAG, "name : " + name);
 
+
                         long now = System.currentTimeMillis();
                         simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
                         Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
@@ -511,13 +515,19 @@ public class Chat_Chatting extends AppCompatActivity {
                         } else if (room_status.equals("1")) { // 채팅 메세지
                             Log.d(TAG, "room_status 가 1일 때 : 메세지를 주고 받을 때");
 
-                            adapter.addItem(email_sender, name, content_time, content_message, "http://115.71.239.151/" + photostring);
+                            String[] time_split=content_time.split("_");
+                            String Date = time_split[0];
+                            String Time = time_split[1];
+                            Log.d("시간 확인", "Date : "+Date+" Time : "+Time);
+
+                            adapter.addItem(email_sender, name, Time, content_message, "http://115.71.239.151/" + photostring);
 
                         } else if (room_status.equals("2")) {
                             Log.d(TAG, "room_status 가 2일 때 : 채팅방을 나갔을 때 (~님이 나가셨습니다.)");
 
                             adapter.addItem(content_message); // ""님이 나가셨습니다.
-                        } else if (room_status.equals("6")) {
+
+                        } else if (room_status.equals("6")) { // 이미 만들어진 방에 사람을 초대할 때
                             Log.d(TAG, "room_status 가 6일 때");
 
 
@@ -636,8 +646,6 @@ public class Chat_Chatting extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d("chat_SaveMessage", response);
-
-                addNumMessage();
 
             }
         }, new Response.ErrorListener() {

@@ -151,7 +151,21 @@ public class Viewpager2_ChatList extends Fragment {
                 if(getMessage!=null) {
 
                     Log.d(TAG, "채팅방 대기화면에서 getRoomInfoDB() 함수 실행");
-                    getRoomInfoDB();
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(300);
+                                getRoomInfoDB();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
+
                 }
             }
         };

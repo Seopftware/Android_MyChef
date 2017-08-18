@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 import thread.seopftware.mychef.R;
@@ -295,7 +296,7 @@ public class Chat_Invite_Friendlist extends AppCompatActivity {
                     // todo 디비에도 insert 시켜줘야 한다. ( POST: EMAIL, ROOM_NUMBER )
 
                     long now = System.currentTimeMillis();
-                    simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a");
+                    simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a", Locale.KOREA);
                     Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
                     String content_time = simpleDateFormat.format(new Date(now));
                     Log.d(TAG, "check 버튼 클릭 시 보내는 시간 값 : " + content_time);

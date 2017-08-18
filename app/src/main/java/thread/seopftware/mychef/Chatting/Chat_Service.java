@@ -183,7 +183,7 @@ public class Chat_Service extends Service {
                         String content = jo.getString("content_message");
 
 
-                        if(email.equals("")) {
+                        if(email.equals(Login_Email)) {
 
                             Log.d(TAG, "내가 보낸 메세지는 노티피케이션 작동 안함");
 
@@ -197,7 +197,6 @@ public class Chat_Service extends Service {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
 
                     Log.d(TAG, "**************************************************");
                     Log.d(TAG, "4. Message Handler 서버에서 받은 메세지를  액티비티로 보넀습니다.");
@@ -250,7 +249,6 @@ public class Chat_Service extends Service {
         }
     }
 
-
         class ReceiveThread extends Thread {
             private Socket socket = null;
 
@@ -282,6 +280,7 @@ public class Chat_Service extends Service {
                             hdmsg.what = 1111;
                             hdmsg.obj = msg;
                             msghandler.sendMessage(hdmsg);
+
                         }
                     }
                 } catch (IOException e) {

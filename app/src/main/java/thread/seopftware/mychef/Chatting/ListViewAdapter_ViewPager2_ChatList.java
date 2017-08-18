@@ -80,6 +80,10 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
         btn_NumMessage.setText(listViewItem.getNumMessage());
         btn_NumPeople.setText(listViewItem.getNumPeople());
 
+        if(listViewItemList.get(position).getNumMessage().equals("0")) {
+            btn_NumMessage.setVisibility(View.INVISIBLE);
+        }
+
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
