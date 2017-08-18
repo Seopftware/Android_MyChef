@@ -1,5 +1,9 @@
 package thread.seopftware.mychef.Chatting;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,8 +54,9 @@ public class Viewpager2_ChatList extends Fragment {
 
     String Login_Email;
 
-    int pos;
-    long longid;
+
+    BroadcastReceiver mReceiver;
+
 
     public Viewpager2_ChatList() {
 
@@ -123,10 +128,39 @@ public class Viewpager2_ChatList extends Fragment {
                 return true;
             }
         });*/
+
+
+        IntentFilter intentfilter = new IntentFilter();
+        intentfilter.addAction("com.dwfox.myapplication.SEND_BROAD_CAST");
+
+
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String getMessage = intent.getStringExtra("MessageFromService");
+
+                Log.d(TAG, "getMessage : " + getMessage);
+
+
+                Log.d(TAG, "*******************************************************************");
+                Log.d(TAG, "5. BroadcastReceive (채팅 대기방 화면) - 메세지를 받는 순간 리스트뷰 지웠다가 다시 뿌려준다.");
+                Log.d(TAG, "db를 업데이트 해주되 num message 값을 받아온 다음 +1 해준다");
+                Log.d(TAG, "*******************************************************************");
+
+
+                if(getMessage!=null) {
+
+                    Log.d(TAG, "채팅방 대기화면에서 getRoomInfoDB() 함수 실행");
+                    getRoomInfoDB();
+                }
+            }
+        };
+        getContext().registerReceiver(mReceiver, intentfilter);
     }
 
     // db 데이터 로드
     private void getRoomInfoDB() { // 보내는 값 : 이메일 , 받는 값 : 방 참여자 수, (해당 이메일 사용자의) 방 이름, 마지막 메세지 시간, 내용, 누적된 메세지 갯수
+        Log.d(TAG, "getRoomInfoDB()가 실행");
 
         String url = "http://115.71.239.151/Chatting_getRoomInfo.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -156,19 +190,15 @@ public class Viewpager2_ChatList extends Fragment {
                             String Content_Message= jo.getString("Content_Message"); // 7 방의 마지막 메세지
                             String Content_Date = jo.getString("Content_Date"); // 6 방의 마지막 메세지 날짜
 
-
-
                             listViewItem = new ListViewItem_ViewPager2_ChatList();
 
                             listViewItem.setNumPeople(Room_NumPeople); // 1
                             listViewItem.setNumMessage(Room_NumMessage); // 2
 
-
                             listViewItem.setName(Room_Name); // 3
                             listViewItem.setMessage(Content_Message); // 4
                             listViewItem.setDate(Content_Date); // 5
                             listViewItem.setProfile("http://115.71.239.151/" + Room_Profile); // 6
-
                             listViewItem.setRoomNumber(Room_Number); // 7
 
                             listViewItemList.add(listViewItem);
@@ -205,6 +235,7 @@ public class Viewpager2_ChatList extends Fragment {
     @Override
     public void onResume() {
         Log.d(this.getClass().getSimpleName(), "onResume()");
+        getRoomInfoDB();
         super.onResume();
 
 //        ParseDB(); // db 데이터 삽입

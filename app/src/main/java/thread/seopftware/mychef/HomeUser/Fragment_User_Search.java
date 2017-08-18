@@ -188,6 +188,7 @@ public class Fragment_User_Search extends Fragment {
     }
 
     // EditText에서 검색어를 입력하면 DB에 해당 검색어를 저장하고, 검색어를 메뉴 프레그먼트로 보낸다.
+    // 랭킹 검색어
     private void SearchWord() {
         //Showing the progress dialog
 

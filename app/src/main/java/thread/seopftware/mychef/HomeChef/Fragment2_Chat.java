@@ -108,6 +108,7 @@ public class Fragment2_Chat extends Fragment {
 
             // 메세지를 서비스로 보내는 곳
             JSONObject object = new JSONObject();
+            object.put("room_status", "10");
             object.put("email_sender", ChefEmail);
             String Object_Data = object.toString();
 

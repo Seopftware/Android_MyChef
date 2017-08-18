@@ -2,7 +2,6 @@ package thread.seopftware.mychef.Chatting;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,16 +91,14 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         if(!FB_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(FBEMAIL, "");
-            Log.d(TAG, "FB email: "+Login_Email);
         } else if(!KAKAO_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(KAEMAIL, "");
-            Log.d(TAG, "KA email: "+Login_Email);
         } else { // 일반
             SharedPreferences pref = context.getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(CHEFNORMALLEMAIL, "");
-            Log.d(TAG, "Normal email: "+Login_Email);
         }
+
 
 
         if(convertView==null) {
@@ -131,15 +128,6 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     convertView = mInflater.inflate(R.layout.listview_chatting_entrance, parent, false);
                     TextView tv_Entrance = (TextView) convertView.findViewById(R.id.tv_Entrance);
                     tv_Entrance.setText(listViewItem_chat.getName());
-
-
-/*                    if(position > 1 && listViewItemList.get(position).getName().equals(listViewItemList.get(position-2).getName())) {
-                        LinearEntrance = (LinearLayout) convertView.findViewById(R.id.LinearEntrance);
-                        LinearEntrance.setVisibility(View.GONE);
-                    } else {
-                    }*/
-
-
                     break;
 
                 case MESSAGE:
@@ -202,6 +190,14 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     tv_ShowDate.setText(listViewItem_chat.getTime());
                     break;
             }
+
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         return convertView;
     }
 
@@ -217,7 +213,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         return position;
     }
 
-    public void addItem(String name) { // 최초 입장시
+    public void addItem(String name) { // 최초 입장시 ~님이 입장하셨습니다.
         ListViewItem_Chat item = new ListViewItem_Chat();
 
         item.setType(ENTRANCE);
@@ -239,7 +235,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         listViewItemList.add(item);
     }
 
-    public void addItemTime(String Date) { // 최초 입장시
+    public void addItemTime(String Date) { // 최초 입장시 최상단에 시간 표시
         ListViewItem_Chat item = new ListViewItem_Chat();
 
         item.setType(DATE);

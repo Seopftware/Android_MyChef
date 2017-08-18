@@ -4,15 +4,82 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="thread.seopftware.mychef.HomeChef.Fragment5_Setting">
+    tools:context="thread.seopftware.mychef.HomeChef.Fragment5_Setting"
+    android:background="#FFFFFF">
 
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="setting"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/textView37"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="알람 설정" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="15dp"
+            android:background="#BDBDBD" />
+
+        <LinearLayout
+            android:id="@+id/LinearCall"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/textView39"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="메세지 알람 설정"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            </View>
+
+            <Switch
+                android:id="@+id/switch2"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:track="@drawable/switch_track_selector"
+                android:thumb="@drawable/switch_thumb_selector"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#BDBDBD" />
+
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

@@ -242,7 +242,7 @@ public class Register_chef5 extends AppCompatActivity {
                 Glide.with(this).load(album_uri).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_capture);
                 try {
                     //Getting the Bitmap from Gallery
-                    album_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), album_uri);
+                        album_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), album_uri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

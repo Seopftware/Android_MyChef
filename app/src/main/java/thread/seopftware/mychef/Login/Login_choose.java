@@ -96,13 +96,27 @@ public class Login_choose extends AppCompatActivity {
 
         Log.d(TAG, "status: "+status);
 
-            if(status==1) {
+            if(status==1) { // 일반 유저 일 때
+
+                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
+                intent1.putExtra("command", "0");
+                Log.d("저장된 유저 로그인", "여기 지나감");
+                startService(intent1);
+
                 Intent intent=new Intent(getApplicationContext(), Home_user.class);
                 startActivity(intent);
                 finish();
             }
 
-            else if(status==2) {
+            else if(status==2) { // 쉐프 일 때
+
+                Toast.makeText(getApplicationContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+                Intent intent1=new Intent(Login_choose.this, Chat_Service.class);
+                intent1.putExtra("command", "0");
+                Log.d("저장된 쉐프 로그인", "여기 지나감");
+                startService(intent1);
+
                 Intent intent=new Intent(getApplicationContext(), Home_chef.class);
                 startActivity(intent);
                 finish();
