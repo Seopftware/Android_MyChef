@@ -379,7 +379,11 @@ public class Home_chef extends AppCompatActivity
                     FB_LOGINCHECK = "0";
                 }
 
-                else {
+                else { // 일반 쉐프로 로그인 했을 때 서비스 중단
+
+                    Intent intent1=new Intent(Home_chef.this, Chat_Service.class);
+                    stopService(intent1);
+
                     Intent intent2=new Intent(getApplicationContext(), Login_choose.class);
                     startActivity(intent2);
                     finish();

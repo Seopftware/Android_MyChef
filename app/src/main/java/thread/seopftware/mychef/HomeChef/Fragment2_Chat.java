@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -112,7 +111,7 @@ public class Fragment2_Chat extends Fragment {
             object.put("email_sender", ChefEmail);
             String Object_Data = object.toString();
 
-            Toast.makeText(getContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();
+/*            Toast.makeText(getContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();*/
             Intent intent1=new Intent(getContext(), Chat_Service.class);
             intent1.putExtra("command", Object_Data);
             Log.d(TAG, "이메일을 서버에 보낸다.");

@@ -440,6 +440,7 @@ public class Login_choose extends AppCompatActivity {
             super.onPostExecute(result);
 
             Log.d(TAG, "서비스 시작 전 kakao email : " + KA_EMAIL);
+            Log.d(TAG, "CheckKA_Id result : " + result);
 
 
             if(Integer.parseInt(result)==1) { // 해당하는 API 없을 때 회원가입 화면으로

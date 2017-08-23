@@ -1,18 +1,24 @@
 package thread.seopftware.mychef.Chatting;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -37,6 +44,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,7 +67,6 @@ import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
 public class Chat_Chatting extends AppCompatActivity {
-
 
     private static String TAG = "Chat_Chatting";
     BroadcastReceiver mReceiver;
@@ -82,7 +90,6 @@ public class Chat_Chatting extends AppCompatActivity {
     String Receiver_name;
     SimpleDateFormat simpleDateFormat;
 
-
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
 
@@ -95,7 +102,15 @@ public class Chat_Chatting extends AppCompatActivity {
     private ArrayList<Chat_NaviListItem> listViewItemList_drawer;
     LinearLayout linearLayout;
     Button btn_Invite;
+    ImageButton ibtn_Transfer;
     String UserEmail;
+
+    // 이미지 호출 변수들
+    private static final int REQUEST_ALBUM = 2002;
+    Bitmap album_bitmap;
+    Uri album_uri;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +140,7 @@ public class Chat_Chatting extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
+
         // drawer
         lvNavList = (ListView) findViewById(R.id.lv_activity_main_nav_list);
         flContainer = (ConstraintLayout) findViewById(R.id.fl_activity_main_container);
@@ -132,6 +148,27 @@ public class Chat_Chatting extends AppCompatActivity {
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
         btn_Invite = (Button) findViewById(R.id.btn_Invite);
         btn_Out = (Button) findViewById(R.id.btn_Out);
+        ibtn_Transfer = (ImageButton) findViewById(R.id.ibtn_Transfer);
+        ibtn_Transfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "이미지 버튼 클릭!!");
+                final CharSequence[] items = new CharSequence[]{"사진 보내기"};
+                AlertDialog.Builder dialog = new  AlertDialog.Builder(Chat_Chatting.this);
+                dialog.setTitle("메뉴");
+                dialog.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(items[which]=="사진 보내기") {
+                            showFileChooser();
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+
         btn_Invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // drawerlayout의 초대하기 버튼. 클릭 하면 drawer 닫히게 하기
@@ -184,6 +221,8 @@ public class Chat_Chatting extends AppCompatActivity {
         Log.d(TAG, "접속된 Email : " + Login_Email);
 
         getMyInfo(); // 채팅에 필요한 정보 가져오기
+        getNaviMemberDB(); // drawer 멤버 불러오기
+
 
         // view 객체 선언
         btn_Send = (Button) findViewById(R.id.btn_Send);
@@ -215,37 +254,7 @@ public class Chat_Chatting extends AppCompatActivity {
                     addNumMessage();
 
 
-                    TimeCheckDB(room_number, Show_Time); // 그 방에서 가장 마지막으로 보낸 메세지의 날짜와 오늘의 날짜가 다르면 addTimeItem() 해주기
-
-                    /*
-                    *
-                    * 메세지를 서비스로 보내는 곳
-                    *
-                    * */
-
-                    try {
-
-                        Log.d(TAG, "**************************************************");
-                        Log.d(TAG, "btn_Send : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
-                        Log.d(TAG, "**************************************************");
-
-                        // 메세지를 서비스로 보내는 곳
-                        JSONObject object = new JSONObject();
-                        object.put("room_status", "1");
-                        object.put("room_number", room_number);
-                        object.put("email_sender", Login_Email);
-                        object.put("content_message", et_ChatInput.getText().toString());
-                        object.put("content_time", Show_Time);
-                        String Object_Data = object.toString();
-
-
-                        Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
-                        intent.putExtra("command", Object_Data);
-                        startService(intent);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    TimeCheckDB(room_number, Show_Time, content_message); // 그 방에서 가장 마지막으로 보낸 메세지의 날짜와 오늘의 날짜가 다르면 addTimeItem() 해주기
 
                 }
             }
@@ -298,37 +307,47 @@ public class Chat_Chatting extends AppCompatActivity {
 
                     if (room_number.equals(room_number2)) {
 
+                        // 내가 보낸 메세지가 나에게 보여줄 때
                         if (email_sender.equals(Login_Email)) {
 
 
                             if (room_status.equals("0")) {
-                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
+//                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
 
                                 adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
-                                adapter.addItem(content_message); // ""님이 입장하셨습니다.
                                 adapter.notifyDataSetChanged();
-
-
+                                getNaviMemberDB();
 
                             }
 
+//                            else if(room_status.equals("1")) {
+//                                Log.d(TAG, "내가 보낸 메세지 room_status : " + room_status);
+//                                Log.d(TAG, "내가 보낸 메세지 상태 1일 때 메세지를 저장하는 곳");
+//
+//                                String content_time = jsonObject.getString("content_time");
+//                                Log.d("content_time", content_time);
+//
+//                                senderInfoDB(room_status, room_number, email_sender, content_message, content_time); // 보내는 사람의 이메일 값을 DB로 보낸 다음 닉네임/프로필 사진 받아옴
+//                            }
+
+
+                            // 상대방이 내가 보낸 메세지를 저장하는 곳
                         } else {
                             if (room_status.equals("0")) { // 채팅방 최초 접속
 
-                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
+//                                chat_SaveMessage("0", room_number2, email_sender, content_message, entrance_time);
 
                                 adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
                                 adapter.addItem(content_message); // ""님이 입장하셨습니다.
                                 adapter.notifyDataSetChanged();
 
-
+                                getNaviMemberDB();
 
 
                             } else if (room_status.equals("1")) { // 채팅 메세지
 
                                 String content_time = jsonObject.getString("content_time");
                                 Log.d("content_time", content_time);
-
 
 
                                 Log.d(TAG, "메세지 핸들러 부분 room_status 체크 : " + room_status);
@@ -339,15 +358,35 @@ public class Chat_Chatting extends AppCompatActivity {
                                 adapter.addItem(content_message);
                                 adapter.notifyDataSetChanged();
 
+                                getNaviMemberDB();
+
                             } else if (room_status.equals("6")) {  // 사람을 채팅방에 초대했을 때
-                                chat_SaveMessage("6", room_number2, email_sender, content_message, content_time);
 
                                 String content_time = jsonObject.getString("content_time");
                                 Log.d("content_time", content_time);
-                                adapter.addItem(content_message);
 
+                                adapter.addItem(content_message);
+                                adapter.notifyDataSetChanged();
+
+                                chat_SaveMessage("6", room_number2, email_sender, content_message, content_time);
+                                getNaviMemberDB();
+
+
+                            } else if (room_status.equals("7")) { // 1:1 방이 개설되었을 때
+
+
+
+                            } else if(room_status.equals("999")) {
+                                Log.d(TAG, "Handler room_status 999 일 때 (이미지 전송)");
+
+                                String content_time = jsonObject.getString("content_time");
+                                Log.d("content_time", content_time);
+
+                                senderInfoDB(room_status, room_number, email_sender, content_message, content_time); // 보내는 사람의 이메일 값을 DB로 보낸 다음 닉네임/프로필 사진 받아옴
                             }
                         }
+
+                        adapter.notifyDataSetChanged();
 
                     }
 
@@ -431,17 +470,30 @@ public class Chat_Chatting extends AppCompatActivity {
                     Sender_Image = jo.getString("profile"); // 1
                     Log.d(TAG, "senderInfoDB Sender_Name : " + Sender_Name + "senderInfoDB Sender_Image : " + Sender_Image);
 
-                    String[] time_split=content_time1.split("_");
+                    String[] time_split = content_time1.split("_");
                     String Date = time_split[0];
                     String Time = time_split[1];
-                    Log.d("sender Info 시간 확인", "Date : "+Date+" Time : "+Time);
+                    Log.d("sender Info 시간 확인", "Date : " + Date + " Time : " + Time);
 
                     Log.d(TAG, "리스트뷰 추가전 Sender_Name :" + Sender_Name + "리스트뷰 추가전 Sender_Image : " + Sender_Image);
-                    adapter.addItem(email_sender1, Sender_Name, Time, content_message1, "http://115.71.239.151/" + Sender_Image);
-                    adapter.notifyDataSetChanged();
 
-                    chat_SaveMessage(room_status1, room_number1, email_sender1, content_message1, content_time1);
-                    // 여기서 Login_Name은 자기 이름임. 보내는 사람의 이메일을 웹서버로 보낸 다음 그 값을 기반으로 닉네임/이미지를 불러와야함.
+                    if(room_status1.equals("1")) { // 일반 메세지 띄우기
+                        Log.d(TAG, "senderInfoDB status : 1 일 때");
+                        adapter.addItem(email_sender1, Sender_Name, Time, content_message1, "http://115.71.239.151/" + Sender_Image);
+                        adapter.notifyDataSetChanged();
+
+//                        chat_SaveMessage(room_status1, room_number1, email_sender1, content_message1, content_time1);
+                        // 여기서 Login_Name은 자기 이름임. 보내는 사람의 이메일을 웹서버로 보낸 다음 그 값을 기반으로 닉네임/이미지를 불러와야함.
+                    }
+
+                    else if(room_status1.equals("999")) { // 이미지 보여주기
+                        Log.d(TAG, "senderInfoDB status : 999 일 때");
+                        Log.d(TAG, "senderInfoDB 까지 오는가? (999) : 이미지 경로는?" + content_message1);
+
+                        adapter.addImage(email_sender1, Sender_Name, Time, "http://115.71.239.151/"+ content_message1, "http://115.71.239.151/" + Sender_Image);
+                        adapter.notifyDataSetChanged();
+                    }
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -499,27 +551,23 @@ public class Chat_Chatting extends AppCompatActivity {
                         Log.d(TAG, "content_time : " + content_time);
                         Log.d(TAG, "name : " + name);
 
-
                         long now = System.currentTimeMillis();
                         simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
                         Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
                         String entrance_time = simpleDateFormat.format(new Date(now));
 
+                        String[] time_split = content_time.split("_");
+                        String Date = time_split[0];
+                        String Time = time_split[1];
+                        Log.d("시간 확인", "Date : " + Date + " Time : " + Time);
 
                         if (room_status.equals("0")) { // 채팅방 최초 접속
                             Log.d(TAG, "room_status 가 0일 때 : 채팅방 최초 생성시");
 
                             adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
-                            adapter.addItem(content_message); // ""님이 입장하셨습니다.
 
                         } else if (room_status.equals("1")) { // 채팅 메세지
                             Log.d(TAG, "room_status 가 1일 때 : 메세지를 주고 받을 때");
-
-                            String[] time_split=content_time.split("_");
-                            String Date = time_split[0];
-                            String Time = time_split[1];
-                            Log.d("시간 확인", "Date : "+Date+" Time : "+Time);
-
                             adapter.addItem(email_sender, name, Time, content_message, "http://115.71.239.151/" + photostring);
 
                         } else if (room_status.equals("2")) {
@@ -531,14 +579,16 @@ public class Chat_Chatting extends AppCompatActivity {
                             Log.d(TAG, "room_status 가 6일 때");
 
 
+                        } else if (room_status.equals("999")) { // 이미지 불러들이기
+                            Log.d(TAG, "room_status 가 999일 때");
+                            adapter.addImage(Login_Email, Login_Name, Time, "http://115.71.239.151/"+content_message, "http://115.71.239.151/" + Login_Image); // 서버 보내지 않고도 자체적으로 ListView에 띄우기
+
+
                         }
 
                     }
 
                     adapter.notifyDataSetChanged();
-
-                    getNaviMemberDB(); // drawer 멤버 불러오기
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -614,7 +664,6 @@ public class Chat_Chatting extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), Chat_Service.class);
                     intent.putExtra("command", Object_Data);
                     startService(intent);
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -696,9 +745,10 @@ public class Chat_Chatting extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-                Log.d(TAG, "room_number : "+room_number);
+                Log.d(TAG, "room_number : " + room_number);
                 Map<String, String> map = new Hashtable<>();
                 map.put("room_number", room_number);
+                map.put("Login_Email", Login_Email);
                 return map;
 
 
@@ -717,7 +767,7 @@ public class Chat_Chatting extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG,"addNumMessage() 메세지 숫자가 0으로 초기화 됬나요!?  : " + response);
+                Log.d(TAG, "addNumMessage() 메세지 숫자가 0으로 초기화 됬나요!?  : " + response);
 
             }
         }, new Response.ErrorListener() {
@@ -729,8 +779,8 @@ public class Chat_Chatting extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-                Log.d(TAG, "resetNumMessage() 함수의 room_number : "+room_number);
-                Log.d(TAG, "resetNumMessage() 함수의 Login_Email : "+Login_Email);
+                Log.d(TAG, "resetNumMessage() 함수의 room_number : " + room_number);
+                Log.d(TAG, "resetNumMessage() 함수의 Login_Email : " + Login_Email);
                 Map<String, String> map = new Hashtable<>();
                 map.put("room_number", room_number);
                 map.put("Login_Email", Login_Email);
@@ -745,7 +795,7 @@ public class Chat_Chatting extends AppCompatActivity {
     }
 
 
-    private void TimeCheckDB(final String room_number, final String content_time) { // 방 번호를 보낸 다음 현재 시간과 마지막 메세지 시간을 비교. 날짜가 다르면 addTimeItem() 해주기.
+    private void TimeCheckDB(final String room_number, final String content_time, final String content_message) { // 방 번호를 보낸 다음 현재 시간과 마지막 메세지 시간을 비교. 날짜가 다르면 addTimeItem() 해주기.
 
         String url = "http://115.71.239.151/Chatting_TimeCheck.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -766,7 +816,15 @@ public class Chat_Chatting extends AppCompatActivity {
                 Log.d("시간 확인", "Date : " + Date + " Time : " + Time);
 
                 if (response.equals("0")) { // 마지막으로 메세지를 보낸 날짜와 지금 메세지를 보낸 날짜가 같을 때 + 메세지만 추가
+
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "디버깅 중 여기 오나111111");
+                    Log.d(TAG, "content message : " + content_message);
+                    Log.d(TAG, "**************************************************");
+
+
                     adapter.addItem(Login_Email, Login_Name, Time, content_message, "http://115.71.239.151/" + Login_Image); // 서버 보내지 않고도 자체적으로 ListView에 띄우기
+                    adapter.notifyDataSetChanged();
                     chat_SaveMessage("1", room_number, Login_Email, content_message, content_time);
 
                     Log.d(TAG, "TimeCheckDB 저장값 room_number : " + room_number + " email_sender : " + Login_Email + " content_message : " + content_message + " content_time : " + content_time);
@@ -774,8 +832,14 @@ public class Chat_Chatting extends AppCompatActivity {
 
 
                 } else if (response.equals("1")) { // 마지막으로 메세지를 보낸 날짜와 지금 메세지를 보낸 날짜가 다를 때 + 메세지/날짜 추가
+
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "디버깅 중 여기 오나22222222");
+                    Log.d(TAG, "**************************************************");
+
                     adapter.addItemTime(Date);
                     adapter.addItem(Login_Email, Login_Name, Time, content_message, "http://115.71.239.151/" + Login_Image); // 서버 보내지 않고도 자체적으로 ListView에 띄우기
+                    adapter.notifyDataSetChanged();
                     et_ChatInput.setText("");
 
                     chat_SaveMessage("0", room_number, Login_Email, content_message, content_time);
@@ -783,7 +847,36 @@ public class Chat_Chatting extends AppCompatActivity {
                     Log.d(TAG, "TimeCheckDB 저장값 room_number : " + room_number + " email_sender : " + Login_Email + " content_message : " + content_message + " content_time : " + content_time);
                 }
 
-                adapter.notifyDataSetChanged();
+
+                /*
+                    *
+                    * 메세지를 서비스로 보내는 곳
+                    *
+                    * */
+
+                try {
+
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "btn_Send : 전송 버튼 클릭 시 메세지를 서비스로 날린다.");
+                    Log.d(TAG, "**************************************************");
+
+                    // 메세지를 서비스로 보내는 곳
+                    JSONObject object = new JSONObject();
+                    object.put("room_status", "1");
+                    object.put("room_number", room_number);
+                    object.put("email_sender", Login_Email);
+                    object.put("content_message", content_message);
+                    object.put("content_time", Show_Time);
+                    String Object_Data = object.toString();
+
+
+                    Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
+                    intent.putExtra("command", Object_Data);
+                    startService(intent);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
         }, new Response.ErrorListener() {
@@ -816,7 +909,7 @@ public class Chat_Chatting extends AppCompatActivity {
             public void onResponse(String response) {
                 listViewItemList_drawer = new ArrayList<Chat_NaviListItem>();
 
-                Log.d("parsing", response);
+                Log.d(TAG, "getNaviMemberDB parsing: " + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -830,7 +923,9 @@ public class Chat_Chatting extends AppCompatActivity {
                         String profile = jo.getString("profile");
                         String friend = jo.getString("friend");
 
-                        Log.d(TAG, "friend : " + friend);
+                        Log.d(TAG, "getNaviMemberDB (email) : " + email);
+                        Log.d(TAG, "getNaviMemberDB (friend) : " + friend);
+
 
                         // 데이터 뷰에 입력시키기
                         listViewItem_drawer = new Chat_NaviListItem();
@@ -874,8 +969,6 @@ public class Chat_Chatting extends AppCompatActivity {
     }
 
 
-
-
     // 채팅방 나가기 클릭 시 디비에서 룸멤버 삭제 및 메세지 날리기
     // POST : EMAIL, ROOM_NUMBER  GET: 0 (성공), 1 (실패) => 성공시 메세지 날리기
     private void roomMemberDeleteDB() {
@@ -887,30 +980,29 @@ public class Chat_Chatting extends AppCompatActivity {
 
                 Log.d(TAG, "roomMemberDeleteDB parsing (해당 이메일의 이름값 가져옴) : " + response);
 
-                    try {
+                try {
 
-                        Log.d(TAG, "**************************************************");
-                        Log.d(TAG, "roomMemberDeleteDB (volley) : 채팅방 나가기 클릭 시 서버로 ~님이 나갑니다. 메세지 보내기");
-                        Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "roomMemberDeleteDB (volley) : 채팅방 나가기 클릭 시 서버로 ~님이 나갑니다. 메세지 보내기");
+                    Log.d(TAG, "**************************************************");
 
-                        // 메세지를 서비스로 보내는 곳
-                        JSONObject object = new JSONObject();
-                        object.put("room_status", "2");
-                        object.put("room_number", room_number);
-                        object.put("email_sender", Login_Email);
-                        object.put("content_message", response+"님이 나가셨습니다.");
-                        String Object_Data = object.toString();
+                    // 메세지를 서비스로 보내는 곳
+                    JSONObject object = new JSONObject();
+                    object.put("room_status", "2");
+                    object.put("room_number", room_number);
+                    object.put("email_sender", Login_Email);
+                    object.put("content_message", response + "님이 나가셨습니다.");
+                    String Object_Data = object.toString();
 
-                        Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
-                        intent.putExtra("command", Object_Data);
-                        startService(intent);
-                        dlDrawer.closeDrawer(linearLayout);
-                        finish();
+                    Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
+                    intent.putExtra("command", Object_Data);
+                    startService(intent);
+                    dlDrawer.closeDrawer(linearLayout);
+                    finish();
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
 
             }
@@ -923,8 +1015,8 @@ public class Chat_Chatting extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-                Log.d(TAG, "Delete DB 입력값 Login_Email : "+Login_Email);
-                Log.d(TAG, "Delete DB 입력값 room_number : "+room_number);
+                Log.d(TAG, "Delete DB 입력값 Login_Email : " + Login_Email);
+                Log.d(TAG, "Delete DB 입력값 room_number : " + room_number);
                 Map<String, String> map = new Hashtable<>();
                 map.put("Login_Email", Login_Email);
                 map.put("room_number", room_number);
@@ -936,6 +1028,138 @@ public class Chat_Chatting extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+
+    //=========================================================================================================
+    // 이미지 전송을 위한 앨범 호출
+    //=========================================================================================================
+
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "사진 보내기"), REQUEST_ALBUM);
+    }
+
+    private String getStringImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        return encodedImage;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_ALBUM:
+                album_uri = data.getData();
+//                Glide.with(this).load(album_uri).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into();
+
+                try {
+                    // 앨범에서 비트맵 값 얻어내기
+                    album_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), album_uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String imagePath = getStringImage(album_bitmap);
+                String imageName = "photo_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
+                photoUpdateDB(imagePath, imageName);
+                break;
+        }
+    }
+
+    // 보내고자 하는 사진을 서버에 업로드
+    private void photoUpdateDB(final String imagePath, final String imageName) {
+        long now = System.currentTimeMillis();
+        simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a", Locale.KOREA);
+        final String Show_Time = simpleDateFormat.format(new Date(now));
+
+        String[] time_split = Show_Time.split("_");
+        final String Time = time_split[1];
+
+        String url = "http://115.71.239.151/photoUpdateDB.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                // 업로드에 성공하면 saveMessage & addItem
+                Log.d(TAG, "photoUpdateDB response : "+response);
+
+
+                String Path=response; // DB에 저장된 사진의 경로
+
+
+
+                // 나에게 추가
+                adapter.addImage(Login_Email, Login_Name, Time, "http://115.71.239.151/"+Path, "http://115.71.239.151/" + Login_Image); // 서버 보내지 않고도 자체적으로 ListView에 띄우기
+                adapter.notifyDataSetChanged();
+
+
+
+                try {
+
+                    Log.d(TAG, "**************************************************");
+                    Log.d(TAG, "이미지 보내기!!!");
+                    Log.d(TAG, "**************************************************");
+
+                    // 메세지를 서비스로 보내는 곳
+                    JSONObject object = new JSONObject();
+                    object.put("room_status", "999");
+                    object.put("room_number", room_number);
+                    object.put("email_sender", Login_Email);
+                    object.put("content_message", Path); // DB 이미지 경로
+                    object.put("content_time", Show_Time);
+                    String Object_Data = object.toString();
+
+                    Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
+                    intent.putExtra("command", Object_Data);
+                    startService(intent);
+
+                    addNumMessage();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Anything you want
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String,String> map = new Hashtable<>();
+
+                // 메세지 및 이미지 경로 DB에 저장 -> 메세지 뿌리기
+                map.put("imagePath", imagePath);
+                map.put("imageName", imageName);
+                map.put("room_status", "999"); // 메세지 상태 (이미지 999)
+                map.put("room_number", room_number); // 방 번호
+                map.put("email_sender", Login_Email); // 로그인 이메일 (보내는 사람 이메일)
+                map.put("content_time", Show_Time);
+                return map;
+
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+    //=========================================================================================================
+
+
+
+    //=========================================================================================================
+    // 네비게이션 드로어 함수 부분 (채팅방 정보 표시)
+    //=========================================================================================================
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
 
         @Override
@@ -961,7 +1185,6 @@ public class Chat_Chatting extends AppCompatActivity {
         }
 
     }
-
 
     // 뷰로 inflate 시켜주기
     @Override
@@ -997,42 +1220,47 @@ public class Chat_Chatting extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+    //=========================================================================================================
 
 
 
+
+    //=========================================================================================================
     //리스트뷰 위치 기억을 하기 위한 함수들
-    @Override
-    protected void onRestoreInstanceState(Bundle state) {
-        super.onRestoreInstanceState(state);
-        mListState = state.getParcelable(LIST_STATE);
-    }
+    //=========================================================================================================
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-        if (mListState != null)
-            listView.onRestoreInstanceState(mListState);
-        mListState = null;
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-        mListState = listView.onSaveInstanceState();
-        state.putParcelable(LIST_STATE, mListState);
-    }
+//    @Override
+//    protected void onRestoreInstanceState(Bundle state) {
+//        super.onRestoreInstanceState(state);
+//        mListState = state.getParcelable(LIST_STATE);
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//
+//        if (mListState != null)
+//            listView.onRestoreInstanceState(mListState);
+//        mListState = null;
+//    }
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle state) {
+//        super.onSaveInstanceState(state);
+//        mListState = listView.onSaveInstanceState();
+//        state.putParcelable(LIST_STATE, mListState);
+//    }
 
     @Override
     public void onPause() {
         super.onPause();
-        resetNumMessage();
+        resetNumMessage(); // 채팅방 목록 다시 뿌려 주기
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
+        unregisterReceiver(mReceiver); // 브로드 캐스트 리시버 끊기
     }
 }

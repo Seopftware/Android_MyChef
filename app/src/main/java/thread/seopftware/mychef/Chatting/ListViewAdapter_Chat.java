@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -32,17 +33,18 @@ import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 public class ListViewAdapter_Chat extends BaseAdapter {
 
     private static final String TAG = "ListViewAdapter_Chat";
-    private static final int ENTRANCE = 0 ;
-    private static final int MESSAGE = 1 ;
-    private static final int DATE = 2 ;
-    private static final int ITEM_VIEW_TYPE_MAX = 3;
+    private static final int ENTRANCE = 0;
+    private static final int MESSAGE = 1;
+    private static final int DATE = 2;
+    private static final int IMAGE = 3;
+    private static final int ITEM_VIEW_TYPE_MAX = 4;
 
     private TextView tv_MeEmail, tv_YouEmail;
     private TextView tv_MeMessage, tv_YouMessage; // 메세지
     private TextView tv_MeTime, tv_YouTime;
     private TextView tv_YouName;
     private TextView tv_Status;
-    private ImageView iv_YouProfile;
+    private ImageView iv_YouProfile, iv_MeImage, iv_YouImage;
     private LinearLayout LinearMe, LinearYou, LinearEntrance;
     ArrayList<ListViewItem_Chat> listViewItemList = new ArrayList<ListViewItem_Chat>(); // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
 
@@ -68,7 +70,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return ITEM_VIEW_TYPE_MAX ;
+        return ITEM_VIEW_TYPE_MAX;
     }
 
     @Override
@@ -78,30 +80,29 @@ public class ListViewAdapter_Chat extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final Context context=parent.getContext();
+        final Context context = parent.getContext();
         int viewType = 0;
 
         // 세션 유지를 위한 이메일 값 불러들이기
         SharedPreferences pref1 = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
+        KAKAO_LOGINCHECK = pref1.getString(KAAPI, "0");
 
         SharedPreferences pref2 = context.getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-        FB_LOGINCHECK=pref2.getString(FBAPI, "0");
+        FB_LOGINCHECK = pref2.getString(FBAPI, "0");
 
-        if(!FB_LOGINCHECK.equals("0")) {
+        if (!FB_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
-            Login_Email=pref.getString(FBEMAIL, "");
-        } else if(!KAKAO_LOGINCHECK.equals("0")) {
+            Login_Email = pref.getString(FBEMAIL, "");
+        } else if (!KAKAO_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
-            Login_Email=pref.getString(KAEMAIL, "");
+            Login_Email = pref.getString(KAEMAIL, "");
         } else { // 일반
             SharedPreferences pref = context.getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
-            Login_Email=pref.getString(CHEFNORMALLEMAIL, "");
+            Login_Email = pref.getString(CHEFNORMALLEMAIL, "");
         }
 
 
-
-        if(convertView==null) {
+        if (convertView == null) {
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             viewType = getItemViewType(position);
 
@@ -117,87 +118,166 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                 case DATE:
                     viewType = R.layout.listview_chatting_entrance;
                     break;
+
+                case IMAGE:
+                    viewType = R.layout.listview_chatting_room_image;
+                    break;
             }
+
             convertView = mInflater.inflate(viewType, parent, false);
         }
 
         viewType = getItemViewType(position);
         ListViewItem_Chat listViewItem_chat = listViewItemList.get(position);
-            switch (viewType) {
-                case ENTRANCE:
-                    convertView = mInflater.inflate(R.layout.listview_chatting_entrance, parent, false);
-                    TextView tv_Entrance = (TextView) convertView.findViewById(R.id.tv_Entrance);
-                    tv_Entrance.setText(listViewItem_chat.getName());
-                    break;
+        switch (viewType) {
+            case ENTRANCE:
+                convertView = mInflater.inflate(R.layout.listview_chatting_entrance, parent, false);
+                TextView tv_Entrance = (TextView) convertView.findViewById(R.id.tv_Entrance);
+                tv_Entrance.setText(listViewItem_chat.getName());
+                break;
 
-                case MESSAGE:
-                    convertView = mInflater.inflate(R.layout.listview_chatting_room, parent, false);
+            case MESSAGE:
+                convertView = mInflater.inflate(R.layout.listview_chatting_room, parent, false);
 
-                    // 나의 정보 레이아웃 객체 선언
-                    LinearMe = (LinearLayout) convertView.findViewById(R.id.LinearMe);
-                    tv_MeMessage = (TextView) convertView.findViewById(R.id.tv_MeMessage);
-                    tv_MeTime= (TextView) convertView.findViewById(R.id.tv_MeTime);
-                    tv_MeEmail= (TextView) convertView.findViewById(R.id.tv_MeEmail);
-                    tv_Status= (TextView) convertView.findViewById(R.id.tv_Status);
+                // 나의 정보 레이아웃 객체 선언
+                LinearMe = (LinearLayout) convertView.findViewById(R.id.LinearMe);
+                tv_MeMessage = (TextView) convertView.findViewById(R.id.tv_MeMessage);
+                tv_MeTime = (TextView) convertView.findViewById(R.id.tv_MeTime);
+                tv_MeEmail = (TextView) convertView.findViewById(R.id.tv_MeEmail);
+                tv_Status = (TextView) convertView.findViewById(R.id.tv_Status);
 
-                    // 상대방 정보 레이아웃 객체 선언
-                    LinearYou= (LinearLayout) convertView.findViewById(R.id.LinearYou);
-                    tv_YouMessage = (TextView) convertView.findViewById(R.id.tv_YouMessage);
-                    tv_YouName= (TextView) convertView.findViewById(R.id.tv_YouName);
-                    tv_YouTime= (TextView) convertView.findViewById(R.id.tv_YouTime);
-                    iv_YouProfile= (ImageView) convertView.findViewById(R.id.iv_YouProfile);
-                    tv_YouEmail= (TextView) convertView.findViewById(R.id.tv_YouEmail);
+                // 상대방 정보 레이아웃 객체 선언
+                LinearYou = (LinearLayout) convertView.findViewById(R.id.LinearYou);
+                tv_YouMessage = (TextView) convertView.findViewById(R.id.tv_YouMessage);
+                tv_YouName = (TextView) convertView.findViewById(R.id.tv_YouName);
+                tv_YouTime = (TextView) convertView.findViewById(R.id.tv_YouTime);
+                iv_YouProfile = (ImageView) convertView.findViewById(R.id.iv_YouProfile);
+                tv_YouEmail = (TextView) convertView.findViewById(R.id.tv_YouEmail);
 
-                    // 나의 정보 레이아웃 값 입력
-                    tv_MeMessage.setText(listViewItem_chat.getMessage()); // 메세지 내용
-                    tv_MeTime.setText(listViewItem_chat.getTime()); // 보내는 시간
-                    tv_MeEmail.setText(listViewItem_chat.getEmail());
+                // 나의 정보 레이아웃 값 입력
+                tv_MeMessage.setText(listViewItem_chat.getMessage()); // 메세지 내용
+                tv_MeTime.setText(listViewItem_chat.getTime()); // 보내는 시간
+                tv_MeEmail.setText(listViewItem_chat.getEmail());
 
-                    // 상대방 정보 레이아웃 값 입력
-                    tv_YouName.setText(listViewItem_chat.getName()); // 이름
-                    tv_YouTime.setText(listViewItem_chat.getTime()); // 보내는 시간
-                    tv_YouMessage.setText(listViewItem_chat.getMessage()); // 메세지 내용
-                    tv_YouEmail.setText(listViewItem_chat.getEmail());
-                    Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
+                // 상대방 정보 레이아웃 값 입력
+                tv_YouName.setText(listViewItem_chat.getName()); // 이름
+                tv_YouTime.setText(listViewItem_chat.getTime()); // 보내는 시간
+                tv_YouMessage.setText(listViewItem_chat.getMessage()); // 메세지 내용
+                tv_YouEmail.setText(listViewItem_chat.getEmail());
+                Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
 
-                    if(listViewItemList.get(position).getEmail().equals(Login_Email)) {
-                        LinearMe.setVisibility(View.VISIBLE);
-                        LinearYou.setVisibility(View.GONE);
+                if (listViewItemList.get(position).getEmail().equals(Login_Email)) {
+                    LinearMe.setVisibility(View.VISIBLE);
+                    LinearYou.setVisibility(View.GONE);
 
-                        if(position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position-1).getEmail())) {
-                            listViewItemList.get(position-1).setTime("");
-                        }
-
-                    } else {
-                        LinearMe.setVisibility(View.GONE);
-                        LinearYou.setVisibility(View.VISIBLE);
-
-                        if(position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position-1).getEmail())) {
-                            listViewItemList.get(position-1).setTime("");
-                            tv_YouName.setVisibility(View.GONE);
-                            iv_YouProfile.setVisibility(View.INVISIBLE);
-                        } else {
-                            tv_YouName.setVisibility(View.VISIBLE);
-                            iv_YouProfile.setVisibility(View.VISIBLE);
-                        }
+                    if (position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position - 1).getEmail())) {
+                        listViewItemList.get(position - 1).setTime("");
                     }
-                    break;
 
-                case DATE:
-                    convertView = mInflater.inflate(R.layout.listview_chatting_date, parent, false);
+                } else {
+                    LinearMe.setVisibility(View.GONE);
+                    LinearYou.setVisibility(View.VISIBLE);
 
-                    TextView tv_ShowDate = (TextView) convertView.findViewById(R.id.tv_ShowDate);
-                    tv_ShowDate.setText(listViewItem_chat.getTime());
-                    break;
-            }
-
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
+                    if (position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position - 1).getEmail())) {
+                        listViewItemList.get(position - 1).setTime("");
+                        tv_YouName.setVisibility(View.GONE);
+                        iv_YouProfile.setVisibility(View.INVISIBLE);
+                    } else {
+                        tv_YouName.setVisibility(View.VISIBLE);
+                        iv_YouProfile.setVisibility(View.VISIBLE);
+                    }
                 }
-            });
+                break;
+
+            case DATE:
+                convertView = mInflater.inflate(R.layout.listview_chatting_date, parent, false);
+
+                TextView tv_ShowDate = (TextView) convertView.findViewById(R.id.tv_ShowDate);
+                tv_ShowDate.setText(listViewItem_chat.getTime());
+                break;
+
+            case IMAGE:
+                convertView = mInflater.inflate(R.layout.listview_chatting_room_image, parent, false);
+
+                // 나의 정보 레이아웃 객체 선언
+                LinearMe = (LinearLayout) convertView.findViewById(R.id.LinearMe);
+                tv_MeTime = (TextView) convertView.findViewById(R.id.tv_MeTime);
+                tv_MeEmail = (TextView) convertView.findViewById(R.id.tv_MeEmail);
+                tv_Status = (TextView) convertView.findViewById(R.id.tv_Status);
+
+                // 이미지 전송 (나)
+                iv_MeImage = (ImageView) convertView.findViewById(R.id.iv_MeImage);
+                Glide.with(context).load(listViewItem_chat.getChatting_image()).into(iv_MeImage);
+
+                iv_MeImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "이미지 클릭!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+                // 나의 정보 레이아웃 값 입력
+                tv_MeTime.setText(listViewItem_chat.getTime()); // 보내는 시간
+                tv_MeEmail.setText(listViewItem_chat.getEmail());
+
+
+
+
+                // 상대방 정보 레이아웃 객체 선언
+                LinearYou = (LinearLayout) convertView.findViewById(R.id.LinearYou);
+                tv_YouName = (TextView) convertView.findViewById(R.id.tv_YouName);
+                tv_YouTime = (TextView) convertView.findViewById(R.id.tv_YouTime);
+                tv_YouEmail = (TextView) convertView.findViewById(R.id.tv_YouEmail);
+
+                // 이미지 전송 (상대방)
+                iv_YouImage = (ImageView) convertView.findViewById(R.id.iv_YouImage);
+                Glide.with(context).load(listViewItem_chat.getChatting_image()).into(iv_YouImage);
+
+
+                // 이미지 경로 저장할 get/set 추가 하고 glide에 때려 박음 된다. 상대방의 프로필 이미지 띄우는 거랑 똑같다. 똑같은 원리로 적용하면 된다.
+                // 상대방 정보 레이아웃 값 입력
+                tv_YouName.setText(listViewItem_chat.getName()); // 이름
+                tv_YouTime.setText(listViewItem_chat.getTime()); // 보내는 시간
+                tv_YouEmail.setText(listViewItem_chat.getEmail());
+
+                iv_YouProfile = (ImageView) convertView.findViewById(R.id.iv_YouProfile); // 프로필 사진
+                Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
+
+
+                // 메세지를 보내는 사람에 따라서 보이는 View 설정
+                if (listViewItemList.get(position).getEmail().equals(Login_Email)) {
+                    LinearMe.setVisibility(View.VISIBLE);
+                    LinearYou.setVisibility(View.GONE);
+
+                    if (position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position - 1).getEmail())) {
+                        listViewItemList.get(position - 1).setTime("");
+                    }
+
+                } else {
+                    LinearMe.setVisibility(View.GONE);
+                    LinearYou.setVisibility(View.VISIBLE);
+
+                    if (position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position - 1).getEmail())) {
+                        listViewItemList.get(position - 1).setTime("");
+                        tv_YouName.setVisibility(View.GONE);
+                        iv_YouProfile.setVisibility(View.INVISIBLE);
+                    } else {
+                        tv_YouName.setVisibility(View.VISIBLE);
+                        iv_YouProfile.setVisibility(View.VISIBLE);
+                    }
+                }
+
+        }
+
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         return convertView;
     }
 
@@ -213,6 +293,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         return position;
     }
 
+    // 입장 메세지
     public void addItem(String name) { // 최초 입장시 ~님이 입장하셨습니다.
         ListViewItem_Chat item = new ListViewItem_Chat();
 
@@ -222,6 +303,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         listViewItemList.add(item);
     }
 
+    // 일반 메세지
     public void addItem(String email, String name, String time, String message, String profile) {
         ListViewItem_Chat item = new ListViewItem_Chat();
 
@@ -235,6 +317,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         listViewItemList.add(item);
     }
 
+    // 시간 표시
     public void addItemTime(String Date) { // 최초 입장시 최상단에 시간 표시
         ListViewItem_Chat item = new ListViewItem_Chat();
 
@@ -244,6 +327,19 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         listViewItemList.add(item);
     }
 
+    // 사진 메세지
+    public void addImage(String email, String name, String time, String image, String profile) {
+        ListViewItem_Chat item = new ListViewItem_Chat();
+
+        item.setType(IMAGE);
+        item.setEmail(email);
+        item.setName(name);
+        item.setTime(time);
+        item.setChatting_image(image);
+        item.setProfile(profile);
+
+        listViewItemList.add(item);
+    }
 
 
 }

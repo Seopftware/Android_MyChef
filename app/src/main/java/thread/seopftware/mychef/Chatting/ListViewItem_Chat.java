@@ -13,6 +13,7 @@ public class ListViewItem_Chat {
     private String time;
     private String message;
     private String profile;
+    private String chatting_image;
 
 //    private String othername;
 //    private String other
@@ -45,6 +46,10 @@ public class ListViewItem_Chat {
         this.profile = profile;
     }
 
+    public void setChatting_image(String chatting_image) {
+        this.chatting_image = chatting_image;
+    }
+
     public int getType() {
         return type;
     }
@@ -71,5 +76,10 @@ public class ListViewItem_Chat {
 
     public String getProfile() {
         return profile;
+    }
+
+    public String getChatting_image() {
+
+        return chatting_image;
     }
 }

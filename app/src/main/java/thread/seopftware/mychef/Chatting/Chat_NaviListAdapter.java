@@ -3,6 +3,8 @@ package thread.seopftware.mychef.Chatting;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,19 +92,13 @@ public class Chat_NaviListAdapter extends BaseAdapter{
         if(!FB_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(FBEMAIL, "");
-            Log.d(TAG, "FB email: "+Login_Email);
         } else if(!KAKAO_LOGINCHECK.equals("0")) {
             SharedPreferences pref = context.getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(KAEMAIL, "");
-            Log.d(TAG, "KA email: "+Login_Email);
         } else { // 일반
             SharedPreferences pref = context.getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
             Login_Email=pref.getString(CHEFNORMALLEMAIL, "");
-            Log.d(TAG, "Normal email: "+Login_Email);
         }
-        Log.d(TAG, "UserEmail : "+Login_Email);
-
-
 
 
         if(convertView == null) {
@@ -115,25 +111,26 @@ public class Chat_NaviListAdapter extends BaseAdapter{
         Chat_NaviListItem listViewItem = listViewItemList.get(position);
         TextView tv_Name = (TextView) convertView.findViewById(R.id.tv_Name);
         TextView tv_Friend = (TextView) convertView.findViewById(R.id.tv_Friend);
+        TextView tv_Email = (TextView) convertView.findViewById(R.id.tv_Email);
         ImageView iv_Profile = (ImageView) convertView.findViewById(R.id.iv_Profile);
         Glide.with(context).load(listViewItem.getImage()).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_Profile);
         ibtn_addFriend = (ImageButton) convertView.findViewById(R.id.ibtn_addFriend);
 
-
         ibtn_addFriend.setOnClickListener(new View.OnClickListener() { // 친구 추가 버튼 클릭 시 -> 친구 추가 버튼 사라지기
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "친구추가 클릭!!", Toast.LENGTH_SHORT).show();
-
-                // todo ListView Adapter : 포지션값도 제대로 들어갔는데.. 왜 다른 값들이 사라지는 걸까?
-                Log.d(TAG, "position : " + position);
-                ibtn_addFriend.setVisibility(View.INVISIBLE);
-                notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), "친구 추가가 되었습니다.", Toast.LENGTH_SHORT).show();
 
                 String friend_email = listViewItemList.get(position).getEmail();
                 Log.d(TAG, "friend_email :  " + friend_email);
+
+
+//                ibtn_addFriend.setVisibility(View.INVISIBLE);
+//                notifyDataSetChanged();
+
                 addFriendDB(friend_email, position); // chat_friend DB 테이블에 insert 를 해준다.
 
+                Log.d(TAG, "position : " + position);
 
             }
         });
@@ -154,15 +151,26 @@ public class Chat_NaviListAdapter extends BaseAdapter{
             }
         });
 
-
         tv_Name.setText(listViewItem.getName());
         tv_Friend.setText(listViewItem.getFriend());
+        tv_Email.setText(listViewItem.getEmail());
         ibtn_addFriend.setImageDrawable(listViewItem.getIconDrawable());
 
-        if(listViewItemList.get(position).getFriend().equals("1") || listViewItemList.get(position).getEmail().equals(Login_Email)) {
+        // 만약 친구면 Friend 값에 1 값을 set 시킴. 따라서, 값이 getFriend()의 값이 1이라면 => 친구라는 뜻. ( addFriend 아이콘 없어도 됨 )
+        // 로그인 이메일과 해당 이메일이 같아도 친구 추가 버튼 안뜨게끔.
+        if(listViewItemList.get(position).getFriend().equals("1")) {
 
-            ibtn_addFriend.setVisibility(View.GONE);
+            ibtn_addFriend.setVisibility(View.INVISIBLE);
+            notifyDataSetChanged();
 
+        } else if(listViewItemList.get(position).getEmail().equals(Login_Email)) {
+
+            ibtn_addFriend.setVisibility(View.INVISIBLE);
+            notifyDataSetChanged();
+
+        } else {
+            ibtn_addFriend.setVisibility(View.VISIBLE);
+            notifyDataSetChanged();
         }
 
 
@@ -181,9 +189,11 @@ public class Chat_NaviListAdapter extends BaseAdapter{
 
                 Log.d("addFriendDB parsing", response);
                 if(response.equals("0")) { // 쿼리문 성공! 만약 쿼리문이 성공하면,
+                    Log.d(TAG, "친구 추가 완료!!! adapter부분에서 notifychanged() 작동");
 
-
-
+                    Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.addfriend2);
+                    listViewItemList.get(position).setIconDrawable(drawable);
+                    notifyDataSetChanged();
                 }
 
 

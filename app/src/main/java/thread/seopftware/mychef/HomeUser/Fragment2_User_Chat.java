@@ -1,10 +1,11 @@
 package thread.seopftware.mychef.HomeUser;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +14,31 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import thread.seopftware.mychef.Chatting.Chat_Service;
 import thread.seopftware.mychef.Chatting.Viewpager2_ChatList;
 import thread.seopftware.mychef.Chatting.Viewpager_FriendList;
 import thread.seopftware.mychef.R;
 
-public class Fragment2_User_Chat extends ListFragment {
+import static android.content.Context.MODE_PRIVATE;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.FBAPI;
+import static thread.seopftware.mychef.Login.Login_login.FBEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.FB_LOGINCHECK;
+import static thread.seopftware.mychef.Login.Login_login.KAAPI;
+import static thread.seopftware.mychef.Login.Login_login.KAEMAIL;
+import static thread.seopftware.mychef.Login.Login_login.KAKAOLOGIN;
+import static thread.seopftware.mychef.Login.Login_login.KAKAO_LOGINCHECK;
 
+public class Fragment2_User_Chat extends Fragment {
 
+    private static final String TAG="Fragment2_User_Chat";
     ViewPager viewPager;
     PagerSlidingTabStrip tabs;
-    String UserEmail;
 
     // 생성자
     public Fragment2_User_Chat() {
@@ -50,6 +66,55 @@ public class Fragment2_User_Chat extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        String UserEmail;
+
+        SharedPreferences pref1 = getActivity().getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+        KAKAO_LOGINCHECK=pref1.getString(KAAPI, "0");
+
+        SharedPreferences pref2 = getActivity().getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+        FB_LOGINCHECK=pref2.getString(FBAPI, "0");
+
+        Log.d(TAG, "KAKAO API :"+KAKAO_LOGINCHECK);
+        Log.d(TAG, "FB API :"+FB_LOGINCHECK);
+
+        if(!FB_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = getActivity().getSharedPreferences(FACEBOOKLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(FBEMAIL, "");
+            Log.d(TAG, "FB UserEmail: "+UserEmail);
+        } else if(!KAKAO_LOGINCHECK.equals("0")) {
+            SharedPreferences pref = getActivity().getSharedPreferences(KAKAOLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(KAEMAIL, "");
+            Log.d(TAG, "KA UserEmail: "+UserEmail);
+        } else { // 일반
+            SharedPreferences pref = getActivity().getSharedPreferences(CHEFNORMALLOGIN, MODE_PRIVATE);
+            UserEmail=pref.getString(CHEFNORMALLEMAIL, "");
+            Log.d(TAG, "Normal UserEmail: "+UserEmail);
+        }
+
+        Log.d(TAG, "Chef UserEmail: "+UserEmail);
+
+        try{
+
+            Log.d(TAG, "**************************************************");
+            Log.d(TAG, "Fragement2_User_Chat : 이메일을 서버로 보내 접속자 리스트에 추가한다.");
+            Log.d(TAG, "**************************************************");
+
+            // 메세지를 서비스로 보내는 곳
+            JSONObject object = new JSONObject();
+            object.put("room_status", "10");
+            object.put("email_sender", UserEmail);
+            String Object_Data = object.toString();
+
+/*            Toast.makeText(getContext(), "소켓 서비스 시작", Toast.LENGTH_SHORT).show();*/
+            Intent intent1=new Intent(getContext(), Chat_Service.class);
+            intent1.putExtra("command", Object_Data);
+            Log.d(TAG, "이메일을 서버에 보낸다.");
+            getContext().startService(intent1);
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
 
 
     }

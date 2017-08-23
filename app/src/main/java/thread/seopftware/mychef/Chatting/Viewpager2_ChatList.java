@@ -156,7 +156,7 @@ public class Viewpager2_ChatList extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(300);
+                                Thread.sleep(500);
                                 getRoomInfoDB();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -203,6 +203,12 @@ public class Viewpager2_ChatList extends Fragment {
 
                             String Content_Message= jo.getString("Content_Message"); // 7 방의 마지막 메세지
                             String Content_Date = jo.getString("Content_Date"); // 6 방의 마지막 메세지 날짜
+
+                            Log.d(TAG, "*******************************************************************");
+                            Log.d(TAG, "*******************************************************************");
+                            Log.d(TAG, "Room_NumMessage 어디감!!? : " + Room_NumMessage);
+                            Log.d(TAG, "*******************************************************************");
+                            Log.d(TAG, "*******************************************************************");
 
                             listViewItem = new ListViewItem_ViewPager2_ChatList();
 
@@ -254,4 +260,7 @@ public class Viewpager2_ChatList extends Fragment {
 
 //        ParseDB(); // db 데이터 삽입
     }
+
+
+    
 }

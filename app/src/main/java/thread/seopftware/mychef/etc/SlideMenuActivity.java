@@ -141,7 +141,8 @@ public class SlideMenuActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 listViewItemList_drawer = new ArrayList<Chat_NaviListItem>();
 
-                Log.d("parsing", response);
+                Log.d(TAG, "getNaviMemberDB parsing : " + response);
+
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -155,7 +156,7 @@ public class SlideMenuActivity extends AppCompatActivity {
                         String profile = jo.getString("profile");
                         String friend = jo.getString("friend");
 
-                        Log.d(TAG, "friend : " + friend);
+                        Log.d(TAG, "getNaviMemberDB friend : " + friend);
 
                         // 데이터 뷰에 입력시키기
                         listViewItem_drawer=new Chat_NaviListItem();

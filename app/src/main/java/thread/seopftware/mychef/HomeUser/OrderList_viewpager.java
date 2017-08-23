@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.Chatting.Chat_Client;
 import thread.seopftware.mychef.Chatting.User_Reply;
 import thread.seopftware.mychef.HomeChef.Home_Foodlook;
 import thread.seopftware.mychef.R;
@@ -126,7 +125,7 @@ public class OrderList_viewpager extends ListFragment {
                 tv_Chef_Email= (TextView) view.findViewById(R.id.tv_Chef_Email);
 
 
-                final CharSequence[] items=new CharSequence[] {"쉐프에게 전화걸기", "쉐프에게 1:1 문의하기", "출장 완료","예약 취소하기"};
+                final CharSequence[] items=new CharSequence[] {"쉐프에게 전화걸기", "쉐프에게 1:1 문의 요청", "출장 완료","예약 취소하기"};
                 AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
                 dialog.setTitle("MENU");
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
@@ -142,7 +141,7 @@ public class OrderList_viewpager extends ListFragment {
                             startActivity(intent);
                         }
 
-                        if(items[which]=="쉐프에게 1:1 문의하기") {
+                        if(items[which]=="쉐프에게 1:1 문의 요청") {
 
 /*                            SharedPreferences pref = getContext().getSharedPreferences(EMAIL_SENDER, MODE_PRIVATE);
                             SharedPreferences.Editor editor = pref.edit();
@@ -153,15 +152,16 @@ public class OrderList_viewpager extends ListFragment {
                             editor.commit();*/
 
 
-                            String Name = tv_Chef_Name.getText().toString();
-                            String Email = tv_Chef_Email.getText().toString();
+                            String Chef_Name = tv_Chef_Name.getText().toString();
+                            String Chef_Email = tv_Chef_Email.getText().toString();
 
-                            Log.d (TAG, "Name : "+Name+" Email : "+Email);
-                            Intent intent = new Intent(getContext(), Chat_Client.class);
-                            intent.putExtra("email", Email);
-                            intent.putExtra("name", Name);
-                            startActivity(intent);
-                            // 채팅창으로 이동
+                            Log.d (TAG, "Chef_Name : "+Chef_Name+" Chef_Email : "+Chef_Email);
+
+                            // POST: 이메일 주소 값을 보내고  (쉐프메일+유저메일)
+                            // GET: 방 번호
+                            // 만약에 쉐프메일+유저메일이 존재하면 방번호 가져오고, 만약 존재하지 않으면 방번호 생성 후 가져온다
+                            getRoomNumberDB(Chef_Email, UserEmail, Chef_Name);
+
                         }
 
                         if(items[which]=="출장 완료") {
@@ -358,6 +358,42 @@ public class OrderList_viewpager extends ListFragment {
                 return map;
             }
         };
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+    // POST: 이메일 주소 값을 보내고  (쉐프메일+유저메일)
+    // GET: 방 번호
+    // 만약에 쉐프메일+유저메일이 존재하면 방번호 가져오고, 만약 존재하지 않으면 방번호 생성 후 가져온다
+    private void getRoomNumberDB(final String chef_email, final String user_email, final String chef_name) {
+
+        String url = "http://115.71.239.151/chat_CreateRoom.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "getRoomNumberDB response (room_number): "+response);
+
+                final String room_number = response;
+
+                Toast.makeText(getContext(), "1:1문의 요청 완료!", Toast.LENGTH_SHORT).show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new Hashtable<>();
+                map.put("chef_email", chef_email);
+                map.put("user_email", user_email);
+                return map;
+            }
+        };
+
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }

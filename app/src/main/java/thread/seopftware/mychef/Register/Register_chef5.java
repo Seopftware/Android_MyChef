@@ -1,5 +1,6 @@
 package thread.seopftware.mychef.Register;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -53,9 +53,9 @@ public class Register_chef5 extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    static final int REQUEST_CAMERA = 2001;
-    static final int REQUEST_ALBUM = 2002;
-    static final int REQUEST_IMAGE_CROP = 2003;
+    private static final int REQUEST_CAMERA = 2001;
+    private static final int REQUEST_ALBUM = 2002;
+    private static final int REQUEST_IMAGE_CROP = 2003;
 
     //카메라
     boolean isAlbum=false; // 카메라인지 앨범인지 구별하기 위한 변수

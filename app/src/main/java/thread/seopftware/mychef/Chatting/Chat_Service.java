@@ -181,6 +181,8 @@ public class Chat_Service extends Service {
 
                         String email = jo.getString("email_sender");
                         String content = jo.getString("content_message");
+                        String room_number = jo.getString("room_number");
+                        String room_status = jo.getString("room_status");
 
 
                         if(email.equals(Login_Email)) {
@@ -189,7 +191,12 @@ public class Chat_Service extends Service {
 
                         } else {
 
-                            getNotifyInfo(email, content); // 메세지를 보낸 사람의 프로필 사진과 메세지 내용을 노티피케이션을 통해 띄우기
+                            if(room_status.equals("999")) { // 이미지를 보내거나 받았을 경우 (이미지 경로가 아닌 이미지
+                                content="image";
+                                getNotifyInfo(email, content, room_number);
+                            }
+
+                            getNotifyInfo(email, content, room_number); // 메세지를 보낸 사람의 프로필 사진과 메세지 내용을 노티피케이션을 통해 띄우기
 
                         }
 
@@ -332,7 +339,7 @@ public class Chat_Service extends Service {
         }
     }
 
-    private void getNotifyInfo(final String email, final String content) {
+    private void getNotifyInfo(final String email, final String content, final String room_number) {
 
         String url = "http://115.71.239.151/getNotifyInfo.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -373,7 +380,7 @@ public class Chat_Service extends Service {
 
                                     // 알람을 클릭했을 때, 특정 액티비티를 활성화시킬 인텐트 객체 준비
                                     Intent intent = new Intent(Chat_Service.this, Chat_Chatting.class);
-//                                intent.putExtra("room_number", room_number);
+                                    intent.putExtra("room_number", room_number);
                                     PendingIntent pendingIntent = PendingIntent.getActivity(Chat_Service.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                     Notifi_Message = new Notification.Builder(getApplicationContext())

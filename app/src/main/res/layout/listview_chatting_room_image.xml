@@ -11,8 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="right"
-        android:layout_marginRight="8dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:id="@+id/tv_MeEmail"
@@ -27,15 +28,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="13:00 pm"
-            />
+            android:layout_marginRight="10dp"
+            android:text="13:00 pm" />
 
-        <TextView
-            android:id="@+id/tv_MeMessage"
+        <ImageView
+            android:id="@+id/iv_MeImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bubble_a"
-            android:text="내용" />
+            android:adjustViewBounds="true"
+            android:maxHeight="250dp"
+            android:maxWidth="250dp"
+            app:srcCompat="@drawable/chef" />
+
+
     </LinearLayout>
 
     <TextView
@@ -78,14 +83,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
+                android:layout_marginLeft="10dp"
                 android:text="상대방" />
 
-            <TextView
-                android:id="@+id/tv_YouMessage"
+            <ImageView
+                android:id="@+id/iv_YouImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bubble_b"
-                android:text="내용" />
+                android:maxHeight="250dp"
+                android:maxWidth="250dp"
+                android:adjustViewBounds="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@drawable/chef" />
+
         </LinearLayout>
 
         <TextView
@@ -93,7 +105,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="12:45" />
+            android:layout_marginLeft="10dp"
+            android:text="13:00 pm" />
 
     </LinearLayout>
 

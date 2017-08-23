@@ -121,12 +121,6 @@ public class Home_user extends AppCompatActivity
         }*/
 
 
-
-
-
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -350,6 +344,10 @@ public class Home_user extends AppCompatActivity
                 }
 
                 else {
+
+                    Intent intent5=new Intent(Home_user.this, Chat_Service.class);
+                    stopService(intent5);
+
                     Intent intent2=new Intent(getApplicationContext(), Login_choose.class);
                     startActivity(intent2);
                     finish();
