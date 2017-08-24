@@ -121,6 +121,8 @@ public class User_Payment extends AppCompatActivity {
                         OrderList_User(); // 유저 주문 리스트 DB에 추가 + 장바구니 db 삭제
                         btn_Payment.setBackgroundColor(Color.rgb(224, 103, 54));
 
+                        push_notification();
+
                         Intent intent=new Intent();
                         setResult(RESULT_OK, intent);
                         finish();
@@ -472,6 +474,42 @@ public class User_Payment extends AppCompatActivity {
                 map.put("Order_Time", Order_Time);
                 map.put("Food_Place", Customer_Location);
                 map.put("Payment_method", Payment_method);
+
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+    private void push_notification() {
+
+        String url = "http://115.71.239.151/push_notification.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d(TAG, "push_notification response : " + response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Anything you want
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String,String> map = new Hashtable<>();
+
+                String customer_name=tv_Name.getText().toString();
+//                String Customer_Location=tv_Address.getText().toString();
+
+                String email = "inseop0813@gmail.com";
+                map.put("email", email);
+                map.put("message", customer_name+" 고객님으로 부터 온 출장 요청입니다.");
 
                 return map;
             }

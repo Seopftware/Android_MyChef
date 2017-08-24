@@ -1,7 +1,9 @@
 package thread.seopftware.mychef.Chatting;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import thread.seopftware.mychef.R;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLEMAIL;
 import static thread.seopftware.mychef.Login.Login_login.CHEFNORMALLOGIN;
 import static thread.seopftware.mychef.Login.Login_login.FACEBOOKLOGIN;
@@ -78,7 +81,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         return listViewItemList.get(position).getType();
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         final Context context = parent.getContext();
         int viewType = 0;
@@ -166,6 +169,19 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                 tv_YouEmail.setText(listViewItem_chat.getEmail());
                 Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
 
+                iv_YouProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String email = listViewItemList.get(position).getEmail();
+                        Log.d(TAG, "email : " + email);
+
+                        Intent intent = new Intent(context, Chat_UserInfo.class);
+                        intent.putExtra("email", email);
+                        context.startActivity(intent);
+                    }
+                });
+
                 if (listViewItemList.get(position).getEmail().equals(Login_Email)) {
                     LinearMe.setVisibility(View.VISIBLE);
                     LinearYou.setVisibility(View.GONE);
@@ -213,6 +229,17 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(context, "이미지 클릭!!!", Toast.LENGTH_SHORT).show();
+
+                        String profile = listViewItemList.get(position).getChatting_image();
+
+                        Log.d(TAG, "**************************************************");
+                        Log.d(TAG, "이미지 확대 보기 ( Pinch Zoom )");
+                        Log.d(TAG, "보내는 이미지 url 값 send_profile : " + profile);
+                        Log.d(TAG, "**************************************************");
+
+                        Intent intent = new Intent(getApplicationContext(), Chat_PinchZoom.class);
+                        intent.putExtra("profile", profile); // url 주소 인텐트로 넘겨주기
+                        context.startActivity(intent);
                     }
                 });
 
@@ -244,6 +271,20 @@ public class ListViewAdapter_Chat extends BaseAdapter {
 
                 iv_YouProfile = (ImageView) convertView.findViewById(R.id.iv_YouProfile); // 프로필 사진
                 Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
+
+
+                iv_YouProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String email = listViewItemList.get(position).getEmail();
+                        Log.d(TAG, "email : " + email);
+
+                        Intent intent = new Intent(context, Chat_UserInfo.class);
+                        intent.putExtra("email", email);
+                        context.startActivity(intent);
+                    }
+                });
 
 
                 // 메세지를 보내는 사람에 따라서 보이는 View 설정

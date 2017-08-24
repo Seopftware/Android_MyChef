@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import thread.seopftware.mychef.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -119,7 +120,7 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
         TextView tv_RoomNumber = (TextView) convertView.findViewById(R.id.tv_RoomNumber);
 
         ImageView iv_Profile = (ImageView) convertView.findViewById(R.id.iv_Profile);
-        Glide.with(context).load(listViewItem.getProfile()).into(iv_Profile);
+        Glide.with(context).load(listViewItem.getProfile()).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_Profile);
 
         Button btn_NumMessage = (Button) convertView.findViewById(R.id.btn_NumMessage);
         Button btn_NumPeople = (Button) convertView.findViewById(R.id.btn_NumPeople);
@@ -158,10 +159,15 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
             public void onClick(View v) {
 
                 String room = listViewItemList.get(position).getRoomNumber();
+                String name = listViewItemList.get(position).getName();
+                String people = listViewItemList.get(position).getNumPeople();
                 Log.e(TAG, "클릭시 room 번호 : " + room);
 
                 Intent intent = new Intent(context, Chat_Chatting.class);
+                intent.putExtra("entrance", "entrance");
                 intent.putExtra("room_number", room);
+                intent.putExtra("name", name);
+                intent.putExtra("people", people);
                 context.startActivity(intent);
 
             }
@@ -215,7 +221,11 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
                         }
 
                         if (items[which] == "사진 변경") {
-
+                            Intent sendIntent = new Intent("CHATROOM_NAME_UPDATE");
+                            sendIntent.putExtra("MessageFromAdapter", "photo");
+                            sendIntent.putExtra("room_number", room);
+                            sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.sendBroadcast(sendIntent);
                         }
                     }
                 });
@@ -251,7 +261,13 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
 
                 Log.d(TAG, "updateChatNameDB parsing: " + response);
 
-                notifyDataSetChanged();
+                Log.d(TAG, "**************************************************");
+                Log.d(TAG, "브로드 캐스트 액션 ( CHATROOM_NAME_UPDATE )");
+                Log.d(TAG, "**************************************************");
+
+                Intent sendIntent = new Intent("CHATROOM_NAME_UPDATE");
+                sendIntent.putExtra("MessageFromAdapter", "name");
+                context.sendBroadcast(sendIntent);
 
             }
         }, new Response.ErrorListener() {
@@ -276,5 +292,9 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
+
+
+
+
 
 }

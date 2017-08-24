@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +29,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
@@ -58,6 +65,13 @@ public class Viewpager2_ChatList extends Fragment {
     BroadcastReceiver mReceiver;
 
 
+    // 이미지 호출 변수들
+    private static final int REQUEST_ALBUM = 2002;
+    Bitmap album_bitmap;
+    Uri album_uri;
+    SimpleDateFormat simpleDateFormat;
+    String room_number;
+
     public Viewpager2_ChatList() {
 
     }
@@ -68,6 +82,15 @@ public class Viewpager2_ChatList extends Fragment {
         getActivity().setTitle("MyChef_Chat");
 
         listView= (ListView) rootview.findViewById(R.id.listView);
+
+//        listView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                Toast.makeText(getContext(), "롱클릭", Toast.LENGTH_SHORT).show();
+//
+//                return false;
+//            }
+//        });
 
         return rootview;
     }
@@ -132,14 +155,16 @@ public class Viewpager2_ChatList extends Fragment {
 
         IntentFilter intentfilter = new IntentFilter();
         intentfilter.addAction("com.dwfox.myapplication.SEND_BROAD_CAST");
-
+        intentfilter.addAction("CHATROOM_NAME_UPDATE");
 
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String getMessage = intent.getStringExtra("MessageFromService");
+                String getMessage = intent.getStringExtra("MessageFromService"); // 서비스에서 보내는 브로드 캐스트
+                String chatRoomUpdate = intent.getStringExtra("MessageFromAdapter"); // 어댑터에서 보내는 브로드 캐스트
 
                 Log.d(TAG, "getMessage : " + getMessage);
+                Log.d(TAG, "chatRoomUpdate : " + chatRoomUpdate);
 
 
                 Log.d(TAG, "*******************************************************************");
@@ -163,10 +188,29 @@ public class Viewpager2_ChatList extends Fragment {
                             }
                         }
                     }).start();
-
-
-
                 }
+
+                else if (chatRoomUpdate.equals("name")) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(300);
+                                getRoomInfoDB();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                }
+
+                else if (chatRoomUpdate.equals("photo")) {
+                    room_number = intent.getStringExtra("room_number");
+                    Log.d(TAG, "Viewpager2 채팅방 목록 room_number" + room_number);
+
+                    showFileChooser();
+                }
+
             }
         };
         getContext().registerReceiver(mReceiver, intentfilter);
@@ -262,5 +306,95 @@ public class Viewpager2_ChatList extends Fragment {
     }
 
 
+    //=========================================================================================================
+    // 이미지 전송을 위한 앨범 호출
+    //=========================================================================================================
+
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "사진 보내기"), REQUEST_ALBUM);
+    }
+
+    private String getStringImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        return encodedImage;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_ALBUM:
+                album_uri = data.getData();
+//                Glide.with(this).load(album_uri).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into();
+
+                try {
+                    // 앨범에서 비트맵 값 얻어내기
+                    album_bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), album_uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String imagePath = getStringImage(album_bitmap);
+                String imageName = "photo_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
+                updateChatPhoto(imagePath, imageName);
+                break;
+        }
+    }
+
+    // 보내고자 하는 사진을 서버에 업로드
+    private void updateChatPhoto(final String imagePath, final String imageName) {
+        String url = "http://115.71.239.151/updateChatPhoto.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                // 업로드에 성공하면 saveMessage & addItem
+                Log.d(TAG, "updateChatPhoto response : "+response);
+
+                getRoomInfoDB();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Anything you want
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String,String> map = new Hashtable<>();
+
+                // 메세지 및 이미지 경로 DB에 저장 -> 메세지 뿌리기
+                map.put("imagePath", imagePath);
+                map.put("imageName", imageName);
+
+                map.put("room_number", room_number); // 방 번호
+                map.put("email_sender", Login_Email); // 로그인 이메일 (보내는 사람 이메일)
+                return map;
+
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+    //=========================================================================================================
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getContext().unregisterReceiver(mReceiver); // 브로드 캐스트 리시버 끊기
+    }
     
 }

@@ -27,6 +27,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.login.LoginManager;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
@@ -128,6 +130,13 @@ public class Home_user extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View headerview = navigationView.getHeaderView(0);
         tv_UserName= (TextView) headerview.findViewById(R.id.tv_UserName);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("USER"); // 나중에 주제별로 메세지를 선택해서 보낼 수 있음 ( 쉐프 / 유저 )
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        Log.d(TAG, "**************************************************");
+        Log.d(TAG, "토큰값 : " + token);
+        Log.d(TAG, "**************************************************");
 
         getName();
 

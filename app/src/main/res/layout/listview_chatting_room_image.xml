@@ -37,8 +37,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:maxHeight="250dp"
-            android:maxWidth="250dp"
-            app:srcCompat="@drawable/chef" />
+            android:maxWidth="250dp"/>
 
 
     </LinearLayout>
@@ -95,8 +94,7 @@
                 android:adjustViewBounds="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                app:srcCompat="@drawable/chef" />
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
 

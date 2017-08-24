@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "335333810333",
+    "firebase_url": "https://mychef-bfcfb.firebaseio.com",
+    "project_id": "mychef-bfcfb",
+    "storage_bucket": "mychef-bfcfb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335333810333:android:039754a3fa1778e3",
+        "android_client_info": {
+          "package_name": "thread.seopftware.mychef"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335333810333-en95u9lee9g6plpl4lpju07u6v7681lf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCORUID5dNGtMDzvikt_rnUte6m0kU6XiY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

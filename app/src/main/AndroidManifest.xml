@@ -33,7 +33,7 @@
             android:value="@string/googlemap_api_key" />
 
         <activity android:name=".Login.IntroActivity">
-                <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -104,14 +104,6 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".Chatting.KeepAliveService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".Chatting.Connectwith_Activity"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".Chatting.MainService"
             android:enabled="true"
             android:exported="true" />
@@ -120,14 +112,37 @@
         <activity android:name=".Chatting.Chat_Chatting" />
         <activity android:name=".Chatting.chat_navi_example" />
         <activity android:name=".etc.SlideMenuActivity">
-<!--            <intent-filter>
+
+            <!--
+                <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity android:name=".Chatting.Chat_PinchZoom" />
-        <activity android:name=".Chatting.Chat_Invite_Friendlist"></activity>
+        <activity android:name=".Chatting.Chat_Invite_Friendlist" />
+
+        <service
+            android:name=".FCMessanging.FirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+        <service
+            android:name=".FCMessanging.FirebaseInstanceIDService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

@@ -36,8 +36,8 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
-import thread.seopftware.mychef.HomeUser.User_Payment;
 import thread.seopftware.mychef.HomeUser.Home_Foodlook_Review;
+import thread.seopftware.mychef.HomeUser.User_Payment;
 import thread.seopftware.mychef.R;
 
 import static thread.seopftware.mychef.Login.Login_choose.AUTOLOGIN;
@@ -159,14 +159,19 @@ public class Home_Foodlook extends AppCompatActivity {
         SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
         int status=autologin.getInt("Status", 0);
 
-        Log.d("TAG", "Food look status :" + status);
+        Log.d("TAG", "Food look status onCreate :" + status);
+
         if (status==2) {
             // 만약 Chef로 화면 클릭 시 결제버튼 막기
             ConstraintLayout ll = (ConstraintLayout) findViewById(R.id.PaymentLayout);
             ll.removeAllViews();
-            getDataFromDB();
+
             Button btn= (Button) findViewById(R.id.btn_CartTotal);
             btn.setVisibility(View.GONE);
+
+            getDataFromDB();
+
+
         } else {
             getDataFromDB();
 
@@ -258,7 +263,22 @@ public class Home_Foodlook extends AppCompatActivity {
                     tv_Ingredients.setText(Ingredients);
                     tv_Area.setText(Area);
 
-                    CartTotal();
+                    SharedPreferences autologin=getSharedPreferences(AUTOLOGIN, Activity.MODE_PRIVATE);
+                    int status=autologin.getInt("Status", 0);
+
+                    Log.d("TAG", "Food look status :" + status);
+
+                    if (status==2) {
+
+                        Log.d("TAG", "결제 버튼 막기");
+
+                    } else {
+
+                        CartTotal();
+
+                    }
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -368,13 +388,16 @@ public class Home_Foodlook extends AppCompatActivity {
                     button.setText(TotalNum); // 토탈 장바구니 갯수
                     button1.setBackgroundColor(Color.rgb(255, 0, 0));
                     button1.setEnabled(true);
+
                 }
 
                 if(TotalNum.equals("4")) {
+
                     button1.setBackgroundColor(Color.rgb(189, 189, 189));
                     button1.setEnabled(false);
                     button.setVisibility(View.VISIBLE);
                     button.setText(TotalNum); // 토탈 장바구니 갯수
+
                 } else if(TotalNum.equals("0")) {
                     button.setVisibility(View.INVISIBLE);
                 } else {

@@ -104,9 +104,15 @@ public class Chat_Chatting extends AppCompatActivity {
     Button btn_Invite;
     ImageButton ibtn_Transfer;
     String UserEmail;
+    ActionBar actionBar;
+
+    // 방의 타이틀 및 인원수
+    String title = null;
+    String numpeople = null;
 
     // 이미지 호출 변수들
     private static final int REQUEST_ALBUM = 2002;
+    private static final int REQUEST_AUDIO = 3333;
     Bitmap album_bitmap;
     Uri album_uri;
 
@@ -118,7 +124,20 @@ public class Chat_Chatting extends AppCompatActivity {
         setContentView(R.layout.activity_chat_chatting);
 
         Intent intent1 = getIntent();
-        room_number = intent1.getStringExtra("room_number");
+
+
+
+        if(intent1.getStringExtra("entrance").equals("entrance")) {
+
+            title = intent1.getStringExtra("name");
+            numpeople = intent1.getStringExtra("people");
+            room_number = intent1.getStringExtra("room_number");
+        }
+
+        else {
+            room_number = intent1.getStringExtra("room_number");
+        }
+
 
 
         // 브로드 캐스트 메세지를 받기 위한 intent filter 동적 생성 (브로드 캐스트 리시버)
@@ -130,11 +149,13 @@ public class Chat_Chatting extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
+
+        actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setTitle("채팅방");
+        actionBar.setTitle(title+" ("+numpeople+")");
+
 
         adapter = new ListViewAdapter_Chat();
         listView = (ListView) findViewById(R.id.listView);
@@ -153,7 +174,7 @@ public class Chat_Chatting extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "이미지 버튼 클릭!!");
-                final CharSequence[] items = new CharSequence[]{"사진 보내기"};
+                final CharSequence[] items = new CharSequence[]{"사진 보내기", "음성 보내기"};
                 AlertDialog.Builder dialog = new  AlertDialog.Builder(Chat_Chatting.this);
                 dialog.setTitle("메뉴");
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
@@ -161,6 +182,10 @@ public class Chat_Chatting extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(items[which]=="사진 보내기") {
                             showFileChooser();
+                        }
+
+                        if(items[which]=="음성 보내기") {
+                            showAudioChooser();
                         }
                     }
                 });
@@ -910,6 +935,12 @@ public class Chat_Chatting extends AppCompatActivity {
                 listViewItemList_drawer = new ArrayList<Chat_NaviListItem>();
 
                 Log.d(TAG, "getNaviMemberDB parsing: " + response);
+
+                String[] split = response.split("_@#@_");
+                String json = split[0];
+                String newpeople = split[1];
+
+                Log.d(TAG, "getNaviMemberDB : json" + json + " newpeople : " + newpeople);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -940,6 +971,9 @@ public class Chat_Chatting extends AppCompatActivity {
 
                     adapter_drawer = new Chat_NaviListAdapter(getApplicationContext(), R.layout.custom_drawer_item, listViewItemList_drawer);
                     lvNavList.setAdapter(adapter_drawer);
+
+                    actionBar.setTitle(title+" ("+newpeople+")");
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1028,6 +1062,20 @@ public class Chat_Chatting extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    //=========================================================================================================
+    // 오디오 전송을 위한 앨범 호출
+    //=========================================================================================================
+
+    private void showAudioChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "음성 보내기"), REQUEST_AUDIO);
+    }
+
+
+
+
 
     //=========================================================================================================
     // 이미지 전송을 위한 앨범 호출
@@ -1035,7 +1083,7 @@ public class Chat_Chatting extends AppCompatActivity {
 
     private void showFileChooser() {
         Intent intent = new Intent();
-        intent.setType("image/*");
+        intent.setType("mp3/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "사진 보내기"), REQUEST_ALBUM);
     }

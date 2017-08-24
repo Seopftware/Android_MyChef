@@ -58,8 +58,7 @@
             <ImageView
                 android:id="@+id/iv_Profile"
                 android:layout_width="65dp"
-                android:layout_height="65dp"
-                app:srcCompat="@drawable/chef" />
+                android:layout_height="65dp" />
 
             <TextView
                 android:id="@+id/tv_Name"
@@ -109,7 +108,6 @@
                 android:layout_marginTop="3dp"
                 android:background="#BDBDBD" />
         </LinearLayout>
-
 
     </LinearLayout>
 
