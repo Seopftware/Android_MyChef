@@ -81,6 +81,12 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/iv_Icon"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/chatroundbtn" />
+
                 <TextView
                     android:id="@+id/tv_Message"
                     android:layout_width="wrap_content"

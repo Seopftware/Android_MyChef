@@ -8,6 +8,7 @@ public class ListViewItem_ViewPager2_ChatList {
 
     String Profile, NumPeople, NumMessage;
     String Name, Date, Message, RoomNumber;
+    String Icon;
 
 
     public String getProfile() {
@@ -38,6 +39,10 @@ public class ListViewItem_ViewPager2_ChatList {
         return this.RoomNumber;
     }
 
+    public String getIcon() {
+        return this.Icon;
+    }
+
     public void setProfile(String profile) {
         Profile = profile;
     }
@@ -64,5 +69,9 @@ public class ListViewItem_ViewPager2_ChatList {
 
     public void setRoomNumber(String roomNumber) {
         RoomNumber = roomNumber;
+    }
+
+    public void setIcon(String icon) {
+        Icon = icon;
     }
 }

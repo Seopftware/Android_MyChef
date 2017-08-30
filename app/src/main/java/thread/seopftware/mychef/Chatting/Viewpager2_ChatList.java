@@ -247,11 +247,10 @@ public class Viewpager2_ChatList extends Fragment {
 
                             String Content_Message= jo.getString("Content_Message"); // 7 방의 마지막 메세지
                             String Content_Date = jo.getString("Content_Date"); // 6 방의 마지막 메세지 날짜
+                            String Message_Icon = jo.getString("Message_Icon"); // 7 어떤 아이콘을 사용할지 여부
 
                             Log.d(TAG, "*******************************************************************");
-                            Log.d(TAG, "*******************************************************************");
                             Log.d(TAG, "Room_NumMessage 어디감!!? : " + Room_NumMessage);
-                            Log.d(TAG, "*******************************************************************");
                             Log.d(TAG, "*******************************************************************");
 
                             listViewItem = new ListViewItem_ViewPager2_ChatList();
@@ -264,11 +263,12 @@ public class Viewpager2_ChatList extends Fragment {
                             listViewItem.setDate(Content_Date); // 5
                             listViewItem.setProfile("http://115.71.239.151/" + Room_Profile); // 6
                             listViewItem.setRoomNumber(Room_Number); // 7
+                            listViewItem.setIcon(Message_Icon);
 
                             listViewItemList.add(listViewItem);
 
                         }
-                    adapter = new ListViewAdapter_ViewPager2_ChatList(getContext(), R.layout.listview_chat_friendlist, listViewItemList);
+                    adapter = new ListViewAdapter_ViewPager2_ChatList(getContext(), R.layout.listview_chat_roomlist, listViewItemList);
                     listView.setAdapter(adapter);
 
 

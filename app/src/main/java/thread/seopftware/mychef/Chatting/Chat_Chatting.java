@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
@@ -78,20 +77,21 @@ public class Chat_Chatting extends AppCompatActivity {
     // 채팅 리스트뷰
     ListView listView;
     ListViewAdapter_Chat adapter;
-    ListViewItem_Chat listViewItem_chat;
     ArrayList<ListViewItem_Chat> listViewItemList;
 
-    String Login_Email;
-    String room_number;
+
+
+    // 메세지 JSON 전역 변수들
+    String Login_Email; // 나의 이메일 주소
+    String room_number; // 현재 내가 속해 있는 방 번호
+
+
     String Login_Name, Login_Image; // 로그인된 나의 이름 및 사진
     String Sender_Name, Sender_Image; // 로그인된 나의 이름 및 사진
     String content_time, content_message; // 메세지 시간 및 내용
-    String email_receiver, email_sender; // 메세지를 받는 사람, 메세지를 보내는 사람
-    String Receiver_name;
-    SimpleDateFormat simpleDateFormat;
 
-    private static final String LIST_STATE = "listState";
-    private Parcelable mListState = null;
+
+    SimpleDateFormat simpleDateFormat;
 
 
     private ConstraintLayout flContainer;
@@ -103,7 +103,6 @@ public class Chat_Chatting extends AppCompatActivity {
     LinearLayout linearLayout;
     Button btn_Invite;
     ImageButton ibtn_Transfer;
-    String UserEmail;
     ActionBar actionBar;
 
     // 방의 타이틀 및 인원수
@@ -117,7 +116,6 @@ public class Chat_Chatting extends AppCompatActivity {
     Uri album_uri;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,17 +123,18 @@ public class Chat_Chatting extends AppCompatActivity {
 
         Intent intent1 = getIntent();
 
-
-
         if(intent1.getStringExtra("entrance").equals("entrance")) {
 
             title = intent1.getStringExtra("name");
             numpeople = intent1.getStringExtra("people");
             room_number = intent1.getStringExtra("room_number");
-        }
 
-        else {
+        } else if(intent1.getStringExtra("entrance").equals("chat")) {
+
+            title = intent1.getStringExtra("room_name");
+            numpeople = intent1.getStringExtra("people");
             room_number = intent1.getStringExtra("room_number");
+
         }
 
 
@@ -160,6 +159,8 @@ public class Chat_Chatting extends AppCompatActivity {
         adapter = new ListViewAdapter_Chat();
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
+        listView.setTranscriptMode(listView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+
 
 
         // drawer
@@ -185,7 +186,18 @@ public class Chat_Chatting extends AppCompatActivity {
                         }
 
                         if(items[which]=="음성 보내기") {
-                            showAudioChooser();
+
+                            long now = System.currentTimeMillis();
+                            simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a", Locale.KOREA);
+                            Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
+                            String Show_Time = simpleDateFormat.format(new Date(now));
+
+                            Intent intent = new Intent(getApplicationContext(), VoiceRecord.class);
+                            intent.putExtra("room_number", room_number);
+                            intent.putExtra("email_sender", Login_Email);
+                            intent.putExtra("content_time", Show_Time);
+
+                            startActivity(intent);
                         }
                     }
                 });
@@ -271,6 +283,7 @@ public class Chat_Chatting extends AppCompatActivity {
                     simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a", Locale.KOREA);
                     Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
                     String Show_Time = simpleDateFormat.format(new Date(now));
+
                     String[] time_split = Show_Time.split("_");
                     String Date = time_split[0];
                     String Time = time_split[1];
@@ -345,15 +358,28 @@ public class Chat_Chatting extends AppCompatActivity {
 
                             }
 
-//                            else if(room_status.equals("1")) {
-//                                Log.d(TAG, "내가 보낸 메세지 room_status : " + room_status);
-//                                Log.d(TAG, "내가 보낸 메세지 상태 1일 때 메세지를 저장하는 곳");
-//
-//                                String content_time = jsonObject.getString("content_time");
-//                                Log.d("content_time", content_time);
-//
-//                                senderInfoDB(room_status, room_number, email_sender, content_message, content_time); // 보내는 사람의 이메일 값을 DB로 보낸 다음 닉네임/프로필 사진 받아옴
-//                            }
+                            else if(room_status.equals("888")) {
+                                Log.d(TAG, "내가 보낸 메세지 room_status : " + room_status);
+                                Log.d(TAG, "내가 보낸 메세지 상태 888일 때 메세지를 추가 곳");
+
+                                String content_time = jsonObject.getString("content_time");
+                                Log.d("content_time", content_time);
+
+                                String[] time_split = content_time.split("_");
+                                String Date = time_split[0];
+                                String Time = time_split[1];
+                                Log.d("sender Info 시간 확인", "Date : " + Date + " Time : " + Time);
+
+                                if(adapter.isEmpty() == false) {
+                                    listView.setSelection(listViewItemList.size());
+                                }
+
+                                adapter.addVoice(email_sender, Sender_Name, Time, "http://115.71.239.151/"+ content_message, "http://115.71.239.151/" + Sender_Image);
+                                adapter.notifyDataSetChanged();
+
+
+
+                            }
 
 
                             // 상대방이 내가 보낸 메세지를 저장하는 곳
@@ -401,8 +427,19 @@ public class Chat_Chatting extends AppCompatActivity {
 
 
 
-                            } else if(room_status.equals("999")) {
-                                Log.d(TAG, "Handler room_status 999 일 때 (이미지 전송)");
+                            }
+
+                            else if(room_status.equals("888")) {
+                                Log.d(TAG, "Handler room_status 888 일 때 (음성 메세지 추가)");
+
+                                String content_time = jsonObject.getString("content_time");
+                                Log.d("content_time", content_time);
+
+                                senderInfoDB(room_status, room_number, email_sender, content_message, content_time); // 보내는 사람의 이메일 값을 DB로 보낸 다음 닉네임/프로필 사진 받아옴
+                            }
+
+                            else if(room_status.equals("999")) {
+                                Log.d(TAG, "Handler room_status 999 일 때 (이미지 추가)");
 
                                 String content_time = jsonObject.getString("content_time");
                                 Log.d("content_time", content_time);
@@ -511,9 +548,26 @@ public class Chat_Chatting extends AppCompatActivity {
                         // 여기서 Login_Name은 자기 이름임. 보내는 사람의 이메일을 웹서버로 보낸 다음 그 값을 기반으로 닉네임/이미지를 불러와야함.
                     }
 
+                    else if(room_status1.equals("888")) { // 이미지 보여주기
+                        Log.d(TAG, "senderInfoDB status : 888 일 때");
+                        Log.d(TAG, "senderInfoDB 까지 오는가? (888) : 음성 파일 경로는?" + content_message1);
+
+                        if(adapter.isEmpty() == false) {
+                            listView.setSelection(listViewItemList.size());
+                        }
+
+                        adapter.addVoice(email_sender1, Sender_Name, Time, "http://115.71.239.151/"+ content_message1, "http://115.71.239.151/" + Sender_Image);
+                        adapter.notifyDataSetChanged();
+                    }
+
                     else if(room_status1.equals("999")) { // 이미지 보여주기
                         Log.d(TAG, "senderInfoDB status : 999 일 때");
                         Log.d(TAG, "senderInfoDB 까지 오는가? (999) : 이미지 경로는?" + content_message1);
+
+
+                        if(adapter.isEmpty() == false) {
+                            listView.setSelection(listViewItemList.size());
+                        }
 
                         adapter.addImage(email_sender1, Sender_Name, Time, "http://115.71.239.151/"+ content_message1, "http://115.71.239.151/" + Sender_Image);
                         adapter.notifyDataSetChanged();
@@ -569,7 +623,6 @@ public class Chat_Chatting extends AppCompatActivity {
                         String name = jo.getString("name");
                         String photostring = jo.getString("photostring");
 
-
                         Log.d(TAG, "room_status : " + room_status);
                         Log.d(TAG, "email_sender : " + email_sender);
                         Log.d(TAG, "content_message : " + content_message);
@@ -592,8 +645,13 @@ public class Chat_Chatting extends AppCompatActivity {
                             adapter.addItemTime(entrance_time); // 맨 처음 접속시 날짜 띄우기
 
                         } else if (room_status.equals("1")) { // 채팅 메세지
+
                             Log.d(TAG, "room_status 가 1일 때 : 메세지를 주고 받을 때");
                             adapter.addItem(email_sender, name, Time, content_message, "http://115.71.239.151/" + photostring);
+
+
+
+
 
                         } else if (room_status.equals("2")) {
                             Log.d(TAG, "room_status 가 2일 때 : 채팅방을 나갔을 때 (~님이 나가셨습니다.)");
@@ -604,10 +662,14 @@ public class Chat_Chatting extends AppCompatActivity {
                             Log.d(TAG, "room_status 가 6일 때");
 
 
+                        } else if (room_status.equals("888")) { // 이미지 불러들이기
+                            Log.d(TAG, "room_status 가 888일 때");
+                            adapter.addVoice(email_sender, Sender_Name, Time, "http://115.71.239.151/"+ content_message, "http://115.71.239.151/" + Sender_Image);
+
+
                         } else if (room_status.equals("999")) { // 이미지 불러들이기
                             Log.d(TAG, "room_status 가 999일 때");
                             adapter.addImage(Login_Email, Login_Name, Time, "http://115.71.239.151/"+content_message, "http://115.71.239.151/" + Login_Image); // 서버 보내지 않고도 자체적으로 ListView에 띄우기
-
 
                         }
 
@@ -1075,17 +1137,15 @@ public class Chat_Chatting extends AppCompatActivity {
 
 
 
-
-
     //=========================================================================================================
     // 이미지 전송을 위한 앨범 호출
     //=========================================================================================================
 
     private void showFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("mp3/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "사진 보내기"), REQUEST_ALBUM);
+        Intent intent1 = new Intent();
+        intent1.setType("image/*");
+        intent1.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent1, "사진 보내기"), REQUEST_ALBUM);
     }
 
     private String getStringImage(Bitmap bitmap) {
@@ -1299,6 +1359,21 @@ public class Chat_Chatting extends AppCompatActivity {
 //        mListState = listView.onSaveInstanceState();
 //        state.putParcelable(LIST_STATE, mListState);
 //    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        listView.post(new Runnable() {
+            @Override
+            public void run() {
+                listView.setSelection(adapter.getCount() - 1);
+
+            }
+        });
+    }
+
 
     @Override
     public void onPause() {

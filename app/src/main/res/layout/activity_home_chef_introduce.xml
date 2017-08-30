@@ -7,7 +7,7 @@
     tools:context="thread.seopftware.mychef.HomeChef.Home_Chef_Introduce">
 
     <TextView
-        android:id="@+id/textView21"
+        android:id="@+id/tv_YouPlayTime"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:background="#FFFFFF"
@@ -44,7 +44,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView21">
+        app:layout_constraintTop_toBottomOf="@+id/tv_YouPlayTime">
 
         <LinearLayout
             android:layout_width="match_parent"

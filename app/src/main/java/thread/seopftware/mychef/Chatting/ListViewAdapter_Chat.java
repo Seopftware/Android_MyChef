@@ -3,11 +3,13 @@ package thread.seopftware.mychef.Chatting;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +42,8 @@ public class ListViewAdapter_Chat extends BaseAdapter {
     private static final int MESSAGE = 1;
     private static final int DATE = 2;
     private static final int IMAGE = 3;
-    private static final int ITEM_VIEW_TYPE_MAX = 4;
+    private static final int AUDIO = 4;
+    private static final int ITEM_VIEW_TYPE_MAX = 5;
 
     private TextView tv_MeEmail, tv_YouEmail;
     private TextView tv_MeMessage, tv_YouMessage; // 메세지
@@ -49,6 +52,13 @@ public class ListViewAdapter_Chat extends BaseAdapter {
     private TextView tv_Status;
     private ImageView iv_YouProfile, iv_MeImage, iv_YouImage;
     private LinearLayout LinearMe, LinearYou, LinearEntrance;
+
+
+    // Voice
+    private ImageButton ibtn_MePlay, ibtn_YouPlay; // 플레이 버튼
+    private TextView tv_MePlayTime, tv_YouPlayTime;
+    MediaPlayer mediaPlayer;
+
     ArrayList<ListViewItem_Chat> listViewItemList = new ArrayList<ListViewItem_Chat>(); // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
 
     Context context;
@@ -124,6 +134,10 @@ public class ListViewAdapter_Chat extends BaseAdapter {
 
                 case IMAGE:
                     viewType = R.layout.listview_chatting_room_image;
+                    break;
+
+                case AUDIO:
+                    viewType = R.layout.listview_chatting_room_voice;
                     break;
             }
 
@@ -250,8 +264,6 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                 tv_MeEmail.setText(listViewItem_chat.getEmail());
 
 
-
-
                 // 상대방 정보 레이아웃 객체 선언
                 LinearYou = (LinearLayout) convertView.findViewById(R.id.LinearYou);
                 tv_YouName = (TextView) convertView.findViewById(R.id.tv_YouName);
@@ -301,6 +313,108 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                     LinearYou.setVisibility(View.VISIBLE);
 
                     if (position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position - 1).getEmail())) {
+
+                        listViewItemList.get(position - 1).setTime("");
+                        tv_YouName.setVisibility(View.GONE);
+                        iv_YouProfile.setVisibility(View.GONE);
+
+                    } else {
+
+                        tv_YouName.setVisibility(View.VISIBLE);
+                        iv_YouProfile.setVisibility(View.VISIBLE);
+                    }
+                }
+                break;
+
+            case AUDIO:
+                convertView = mInflater.inflate(R.layout.listview_chatting_room_voice, parent, false);
+
+                // 나의 정보 레이아웃 객체 선언
+                LinearMe = (LinearLayout) convertView.findViewById(R.id.LinearMe);
+                tv_MeTime = (TextView) convertView.findViewById(R.id.tv_MeTime);
+                tv_MeEmail = (TextView) convertView.findViewById(R.id.tv_MeEmail);
+                tv_Status = (TextView) convertView.findViewById(R.id.tv_Status);
+                ibtn_MePlay = (ImageButton) convertView.findViewById(R.id.ibtn_MePlay); // 재생 버튼 클릭
+                tv_MePlayTime = (TextView) convertView.findViewById(R.id.tv_MePlayTime); // 재생 시간 표시
+
+                ibtn_MePlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String url = listViewItemList.get(position).getMessage();
+                        try {
+
+                            playAudio(url);
+                            Toast.makeText(getApplicationContext(), "재생 시작", Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+                // 상대방 정보 레이아웃 객체 선언
+                LinearYou = (LinearLayout) convertView.findViewById(R.id.LinearYou);
+                tv_YouName = (TextView) convertView.findViewById(R.id.tv_YouName);
+                tv_YouTime = (TextView) convertView.findViewById(R.id.tv_YouTime);
+                iv_YouProfile = (ImageView) convertView.findViewById(R.id.iv_YouProfile);
+                tv_YouEmail = (TextView) convertView.findViewById(R.id.tv_YouEmail);
+                ibtn_YouPlay = (ImageButton) convertView.findViewById(R.id.ibtn_YouPlay); // 재생 버튼 클릭
+                tv_YouPlayTime = (TextView) convertView.findViewById(R.id.tv_YouPlayTime); // 재생 시간 표시
+
+                // 나의 정보 레이아웃 값 입력
+                tv_MeTime.setText(listViewItem_chat.getTime()); // 보내는 시간
+                tv_MeEmail.setText(listViewItem_chat.getEmail());
+
+                // 상대방 정보 레이아웃 값 입력
+                tv_YouName.setText(listViewItem_chat.getName()); // 이름
+                tv_YouTime.setText(listViewItem_chat.getTime()); // 보내는 시간
+                tv_YouEmail.setText(listViewItem_chat.getEmail());
+                Glide.with(context).load(listViewItem_chat.getProfile()).into(iv_YouProfile); // 프로필
+
+                iv_YouProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String email = listViewItemList.get(position).getEmail();
+                        Log.d(TAG, "email : " + email);
+
+                        Intent intent = new Intent(context, Chat_UserInfo.class);
+                        intent.putExtra("email", email);
+                        context.startActivity(intent);
+                    }
+                });
+
+                ibtn_YouPlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String url = listViewItemList.get(position).getMessage();
+                        try {
+
+                            playAudio(url);
+                            Toast.makeText(getApplicationContext(), "재생 시작", Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                if (listViewItemList.get(position).getEmail().equals(Login_Email)) {
+                    LinearMe.setVisibility(View.VISIBLE);
+                    LinearYou.setVisibility(View.GONE);
+
+                    if (position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position - 1).getEmail())) {
+                        listViewItemList.get(position - 1).setTime("");
+                    }
+
+                } else {
+                    LinearMe.setVisibility(View.GONE);
+                    LinearYou.setVisibility(View.VISIBLE);
+
+                    if (position > 0 && listViewItemList.get(position).getEmail().equals(listViewItemList.get(position - 1).getEmail())) {
                         listViewItemList.get(position - 1).setTime("");
                         tv_YouName.setVisibility(View.GONE);
                         iv_YouProfile.setVisibility(View.INVISIBLE);
@@ -309,7 +423,7 @@ public class ListViewAdapter_Chat extends BaseAdapter {
                         iv_YouProfile.setVisibility(View.VISIBLE);
                     }
                 }
-
+                break;
         }
 
 
@@ -382,5 +496,33 @@ public class ListViewAdapter_Chat extends BaseAdapter {
         listViewItemList.add(item);
     }
 
+    // 음성 메세지
+    public void addVoice(String email, String name, String time, String voiceurl, String profile) {
+        ListViewItem_Chat item = new ListViewItem_Chat();
+
+        item.setType(AUDIO);
+        item.setEmail(email);
+        item.setName(name);
+        item.setTime(time);
+        item.setMessage(voiceurl);
+        item.setProfile(profile);
+
+        listViewItemList.add(item);
+    }
+
+    private void playAudio(String url) throws Exception {
+        killMediaPlayer();
+
+        mediaPlayer = new MediaPlayer(); // 미디어 객체 생성하고 초기화 후 시작
+        mediaPlayer.setDataSource(url);
+        mediaPlayer.prepare();
+        mediaPlayer.start();
+    }
+
+    private void killMediaPlayer() {
+        if(mediaPlayer != null) {
+            mediaPlayer.release(); // 미디어 플레이어 리소스 해제
+        }
+    }
 
 }

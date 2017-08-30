@@ -99,10 +99,6 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
 
 
 
-
-
-
-
         // "ListViewItem_Menu" Layout을 inflate하여 convertView 참조 획득
 
         if (convertView == null) {
@@ -121,6 +117,11 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
 
         ImageView iv_Profile = (ImageView) convertView.findViewById(R.id.iv_Profile);
         Glide.with(context).load(listViewItem.getProfile()).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into(iv_Profile);
+
+
+        ImageView iv_Icon = (ImageView) convertView.findViewById(R.id.iv_Icon); // 아이콘 나타내기 (이미지뷰 or 녹음)
+
+
 
         Button btn_NumMessage = (Button) convertView.findViewById(R.id.btn_NumMessage);
         Button btn_NumPeople = (Button) convertView.findViewById(R.id.btn_NumPeople);
@@ -151,6 +152,17 @@ public class ListViewAdapter_ViewPager2_ChatList extends BaseAdapter {
         } else {
             tv_Message.setVisibility(View.VISIBLE);
         }
+
+        if(listViewItemList.get(position).getIcon().equals("image")) {
+            Glide.with(context).load("http://115.71.239.151/images/icon_image.png").into(iv_Icon);
+        } else if(listViewItemList.get(position).getIcon().equals("voice")) {
+            Glide.with(context).load("http://115.71.239.151/images/icon_voice.png").into(iv_Icon);
+        } else {
+            Glide.with(context).load("http://115.71.239.151/images/white.png").into(iv_Icon);
+        }
+
+
+
 
 
         // 한번 클릭 시 채팅방 입장

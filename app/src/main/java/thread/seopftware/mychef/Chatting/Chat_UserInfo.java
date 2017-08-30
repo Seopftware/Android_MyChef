@@ -179,10 +179,16 @@ public class Chat_UserInfo extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d(TAG, "makeRoomDB response (room_number): " + response);
 
-                final String room_number = response;
+                String[] split = response.split("_#@#_");
+                String room_number = split[0];
+                String room_name = split[1];
+
 
                     Intent intent1= new Intent(Chat_UserInfo.this, Chat_Chatting.class);
+                    intent1.putExtra("entrance", "chat");
                     intent1.putExtra("room_number", room_number);
+                    intent1.putExtra("room_name", room_name);
+                    intent1.putExtra("people", "2");
                     startActivity(intent1);
 
             }

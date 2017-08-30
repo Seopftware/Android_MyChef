@@ -4,18 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="right"
-    android:focusable="false"
-    android:focusableInTouchMode="false"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_VoiceURL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/LinearMe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="right"
-        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
+        android:gravity="right"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_MeEmail"
@@ -33,14 +38,31 @@
             android:layout_marginRight="10dp"
             android:text="13:00 pm" />
 
-        <ImageView
-            android:id="@+id/iv_MeImage"
+        <LinearLayout
+            android:id="@+id/MeBubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:focusable="false"
-            android:maxHeight="250dp"
-            android:maxWidth="250dp"/>
+            android:background="@drawable/bubble_a"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ibtn_MePlay"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:background="#00000000"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/chat_play_start" />
+
+            <TextView
+                android:id="@+id/tv_MePlayTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:text="음성 메세지"
+                android:textSize="20sp" />
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -85,20 +107,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_marginLeft="10dp"
                 android:text="상대방" />
 
-            <ImageView
-                android:id="@+id/iv_YouImage"
+            <LinearLayout
+                android:id="@+id/YouBubble"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxHeight="250dp"
-                android:maxWidth="250dp"
-                android:focusable="false"
-                android:adjustViewBounds="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"/>
+                android:background="@drawable/bubble_b"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ibtn_YouPlay"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#00000000"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/chat_play_start" />
+
+                <TextView
+                    android:id="@+id/tv_YouPlayTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="음성 메세지"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

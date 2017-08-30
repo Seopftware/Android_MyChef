@@ -75,7 +75,6 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
             public void onResponse(String response) {
                 Log.d(TAG, "sendTokenNumberDB response : "+response);
 
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -88,7 +87,7 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
                 Map<String,String> map = new Hashtable<>();
 
-                map.put("token", token); // 방 번호
+                map.put("token", token); // 토큰 번호
                 map.put("email", email); // 로그인 이메일 (보내는 사람 이메일)
                 return map;
 
