@@ -145,8 +145,8 @@
 
         <activity
             android:name=".Chatting.VoiceRecord"
-            android:theme="@style/mytheme">
-        </activity>
+            android:theme="@style/mytheme"></activity>
+        <activity android:name=".Chatting.Chat_SendPicture"></activity>
     </application>
 
 </manifest>

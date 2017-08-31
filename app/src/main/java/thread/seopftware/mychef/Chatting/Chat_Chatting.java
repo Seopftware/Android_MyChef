@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,8 +43,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -359,7 +357,6 @@ public class Chat_Chatting extends AppCompatActivity {
                             }
 
                             else if(room_status.equals("888")) {
-                                Log.d(TAG, "내가 보낸 메세지 room_status : " + room_status);
                                 Log.d(TAG, "내가 보낸 메세지 상태 888일 때 메세지를 추가 곳");
 
                                 String content_time = jsonObject.getString("content_time");
@@ -377,7 +374,22 @@ public class Chat_Chatting extends AppCompatActivity {
                                 adapter.addVoice(email_sender, Sender_Name, Time, "http://115.71.239.151/"+ content_message, "http://115.71.239.151/" + Sender_Image);
                                 adapter.notifyDataSetChanged();
 
+                            }
 
+                            else if(room_status.equals("999")) {
+                                String content_time = jsonObject.getString("content_time");
+
+                                String[] time_split = content_time.split("_");
+                                String Date = time_split[0];
+                                String Time = time_split[1];
+                                Log.d("sender Info 시간 확인", "Date : " + Date + " Time : " + Time);
+
+                                if(adapter.isEmpty() == false) {
+                                    listView.setSelection(listViewItemList.size());
+                                }
+
+                                adapter.addImage(email_sender, Sender_Name, Time, "http://115.71.239.151/"+ content_message, "http://115.71.239.151/" + Sender_Image);
+                                adapter.notifyDataSetChanged();
 
                             }
 
@@ -548,7 +560,7 @@ public class Chat_Chatting extends AppCompatActivity {
                         // 여기서 Login_Name은 자기 이름임. 보내는 사람의 이메일을 웹서버로 보낸 다음 그 값을 기반으로 닉네임/이미지를 불러와야함.
                     }
 
-                    else if(room_status1.equals("888")) { // 이미지 보여주기
+                    else if(room_status1.equals("888")) { // 음성 파일 보여주기
                         Log.d(TAG, "senderInfoDB status : 888 일 때");
                         Log.d(TAG, "senderInfoDB 까지 오는가? (888) : 음성 파일 경로는?" + content_message1);
 
@@ -648,10 +660,6 @@ public class Chat_Chatting extends AppCompatActivity {
 
                             Log.d(TAG, "room_status 가 1일 때 : 메세지를 주고 받을 때");
                             adapter.addItem(email_sender, name, Time, content_message, "http://115.71.239.151/" + photostring);
-
-
-
-
 
                         } else if (room_status.equals("2")) {
                             Log.d(TAG, "room_status 가 2일 때 : 채팅방을 나갔을 때 (~님이 나가셨습니다.)");
@@ -1124,18 +1132,6 @@ public class Chat_Chatting extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    //=========================================================================================================
-    // 오디오 전송을 위한 앨범 호출
-    //=========================================================================================================
-
-    private void showAudioChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "음성 보내기"), REQUEST_AUDIO);
-    }
-
-
 
     //=========================================================================================================
     // 이미지 전송을 위한 앨범 호출
@@ -1148,14 +1144,6 @@ public class Chat_Chatting extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent1, "사진 보내기"), REQUEST_ALBUM);
     }
 
-    private String getStringImage(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-
-        return encodedImage;
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1164,101 +1152,33 @@ public class Chat_Chatting extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_ALBUM:
                 album_uri = data.getData();
-//                Glide.with(this).load(album_uri).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into();
+                String image_uri = String.valueOf(album_uri);
+                String image_path = UritoPath(album_uri);
+                Log.d(TAG, "이미지 절대 경로: " + image_path);
 
-                try {
-                    // 앨범에서 비트맵 값 얻어내기
-                    album_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), album_uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                long now = System.currentTimeMillis();
+                simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a", Locale.KOREA);
+                Log.d("시간이 이상함", String.valueOf(simpleDateFormat));
+                String Show_Time = simpleDateFormat.format(new Date(now));
 
-                String imagePath = getStringImage(album_bitmap);
-                String imageName = "photo_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-                photoUpdateDB(imagePath, imageName);
+                Intent intent = new Intent(getApplicationContext(), Chat_SendPicture.class);
+                intent.putExtra("room_number", room_number);
+                intent.putExtra("email_sender", Login_Email);
+                intent.putExtra("content_time", Show_Time);
+                intent.putExtra("image_path", image_path);
+                intent.putExtra("image_uri", image_uri);
+                startActivity(intent);
                 break;
         }
     }
 
-    // 보내고자 하는 사진을 서버에 업로드
-    private void photoUpdateDB(final String imagePath, final String imageName) {
-        long now = System.currentTimeMillis();
-        simpleDateFormat = new SimpleDateFormat("yyyyMMdd_hh:dd a", Locale.KOREA);
-        final String Show_Time = simpleDateFormat.format(new Date(now));
-
-        String[] time_split = Show_Time.split("_");
-        final String Time = time_split[1];
-
-        String url = "http://115.71.239.151/photoUpdateDB.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                // 업로드에 성공하면 saveMessage & addItem
-                Log.d(TAG, "photoUpdateDB response : "+response);
-
-
-                String Path=response; // DB에 저장된 사진의 경로
-
-
-
-                // 나에게 추가
-                adapter.addImage(Login_Email, Login_Name, Time, "http://115.71.239.151/"+Path, "http://115.71.239.151/" + Login_Image); // 서버 보내지 않고도 자체적으로 ListView에 띄우기
-                adapter.notifyDataSetChanged();
-
-
-
-                try {
-
-                    Log.d(TAG, "**************************************************");
-                    Log.d(TAG, "이미지 보내기!!!");
-                    Log.d(TAG, "**************************************************");
-
-                    // 메세지를 서비스로 보내는 곳
-                    JSONObject object = new JSONObject();
-                    object.put("room_status", "999");
-                    object.put("room_number", room_number);
-                    object.put("email_sender", Login_Email);
-                    object.put("content_message", Path); // DB 이미지 경로
-                    object.put("content_time", Show_Time);
-                    String Object_Data = object.toString();
-
-                    Intent intent = new Intent(Chat_Chatting.this, Chat_Service.class); // 액티비티 ㅡ> 서비스로 메세지 전달
-                    intent.putExtra("command", Object_Data);
-                    startService(intent);
-
-                    addNumMessage();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Anything you want
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String,String> map = new Hashtable<>();
-
-                // 메세지 및 이미지 경로 DB에 저장 -> 메세지 뿌리기
-                map.put("imagePath", imagePath);
-                map.put("imageName", imageName);
-                map.put("room_status", "999"); // 메세지 상태 (이미지 999)
-                map.put("room_number", room_number); // 방 번호
-                map.put("email_sender", Login_Email); // 로그인 이메일 (보내는 사람 이메일)
-                map.put("content_time", Show_Time);
-                return map;
-
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(stringRequest);
+    public String UritoPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        startManagingCursor(cursor);
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(columnIndex);
     }
 
     //=========================================================================================================

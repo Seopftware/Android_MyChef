@@ -92,7 +92,6 @@ public class VoiceRecord extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
                 try {
 
                     Log.d(TAG, "**************************************************");
