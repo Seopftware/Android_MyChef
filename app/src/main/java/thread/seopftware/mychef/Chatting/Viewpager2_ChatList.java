@@ -333,7 +333,6 @@ public class Viewpager2_ChatList extends Fragment {
         switch (requestCode) {
             case REQUEST_ALBUM:
                 album_uri = data.getData();
-//                Glide.with(this).load(album_uri).bitmapTransform(new CropCircleTransformation(getApplicationContext())).into();
 
                 try {
                     // 앨범에서 비트맵 값 얻어내기

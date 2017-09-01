@@ -37,7 +37,7 @@
         android:background="#FFFFFF"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="프로필 사진을 등록해 주세요."
+        android:text="프로필 사진을 등록해 주세요. "
         android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -61,17 +61,18 @@
 
     <ImageButton
         android:id="@+id/iv_capture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
+        android:background="#00000000"
         android:clickable="true"
-        app:srcCompat="@drawable/user"
+        android:scaleType="fitXY"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/progressBar4"
-        android:background="#00000000"/>
+        app:srcCompat="@drawable/user" />
 
     <LinearLayout
         android:layout_width="0dp"
